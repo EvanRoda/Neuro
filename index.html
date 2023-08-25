@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Neuro</title>
+    <script src="https://kit.fontawesome.com/6b7472338b.js" crossorigin="anonymous"></script>
+    <script src="bot.js"></script>
+    <script src="neuroBuilder.js"></script>
+    <script src="perceptron.js"></script>
+    <script src="utils.js"></script>
+    <script src="world.js"></script>
+    <script src="test.js"></script>
+    <style>
+        .custom-button {
+            width: 50px;
+            height: 50px;
+            border: 0.5px solid grey;
+            font-size: 25px;
+            border-radius: 5px;
+            background-color: forestgreen;
+            color: aliceblue;
+        }
+        .custom-button:disabled {
+            background-color: grey;
+        }
+
+        .separator {
+            margin: 10px 0;
+            border-top: 0.5px solid grey;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1281px 500px;
+        }
+
+        .hud {
+            height: 100%;
+            margin-left: 10px;
+            padding: 10px;
+            border-left-color: grey;
+            border-left-width: 0.5px;
+            border-left-style: solid;
+        }
+
+        .counter-container {
+            line-height: 50px;
+            float: right;
+            font-size: 25px;
+            font-family: monospace;
+        }
+
+        .times-container {
+            font-size: 25px;
+            font-family: monospace;
+        }
+
+        .bot {
+            font-size: 25px;
+            font-family: monospace;
+        }
+
+        .small-text {
+            font-size: 15px;
+            font-family: monospace;
+        }
+
+        .log-container {
+            height: 500px;
+            overflow-y: scroll;
+            font-size: 15px;
+            font-family: monospace;
+            line-height: 15px;
+            border: 0.5px solid grey;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="item">
+            <canvas id="screen"></canvas>
+        </div>
+        <div class="item">
+            <div class="hud">
+                <div class="buttons">
+                    <button class="custom-button" id="renderToggle">
+                        <i class="fa-solid fa-display"></i>
+                    </button>
+                    <button class="custom-button" id="pauseButton">
+                        <i class="fa-solid fa-pause"></i>
+                    </button>
+                    <button class="custom-button" id="stepButton" disabled>
+                        <i class="fa-solid fa-forward-step"></i>
+                    </button>
+                    <button class="custom-button" id="paintBotButton">
+                        <i class="fa-solid fa-paintbrush"></i>
+                    </button>
+
+                    <div class="counter-container">
+                        <div id="counter"></div>
+                    </div>
+                </div>
+                <div class="separator"></div>
+                <div class="world">
+                    <div class="times-container">
+                        <span id="times"></span>
+                        <span style="float: right">
+                            <i class="fa-regular fa-sun"></i>
+                            <span id="coefficient"></span>
+                        </span>
+
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+                <div class="bot">
+                    <div class="bot-item" id="alive"></div>
+                    <div class="bot-item small-text" id="genome"></div>
+                    <div class="bot-item small-text" id="uuid"></div>
+                    <div class="bot-item">
+                        <span>Age</span>
+                        <span id="age" style="float: right"></span>
+                    </div>
+                    <div class="bot-item">
+                        <span>Energy</span>
+                        <span id="energy" style="float: right"></span>
+                    </div>
+                    <div class="bot-item">
+                        <span>Mutate counter</span>
+                        <span id="mutateCounter" style="float: right"></span>
+                    </div>
+                    <div class="bot-item">
+                        <span>Coordinates</span>
+                        <span id="coord" style="float: right"></span>
+                    </div>
+                    <div class="bot-item">
+                        <span>RGB</span>
+                        <span id="rgb" style="float: right"></span>
+                    </div>
+                </div>
+                <div class="separator"></div>
+                <button class="custom-button" id="showLog">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="log-container hidden" id="logContainer"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
