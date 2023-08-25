@@ -65,26 +65,28 @@ class Bot {
     static rotate(self) {
         if (self.energy <= 0) return "Rotate: No energy";
 
-        self.decreaseEnergy(.12);
         self.direction = randomInt(8);
+        self.decreaseEnergy(1);
         return "Rotate " + self.direction;
     };
 
     static move(self) {
         if (self.energy <= 0) return "Move: No energy";
+        self.decreaseEnergy(1);
 
         const stepCell = self.cell.world.getStepCell(self.direction, self.cell.x, self.cell.y);
-        self.decreaseEnergy(0.25);
+
         if (!stepCell.isFree()) return "Move: No free cell";
 
         self.moveTo(stepCell);
+
 
         return "Move to: (" + stepCell.x + ", " + stepCell.y + ")"
     };
 
     static photo(self) {
         if (self.energy <= 0) return "Photo: No energy";
-
+        self.decreaseEnergy(0.4);
         const income = self.cell.getLight() / 100;
         self.energy += income;
 
@@ -106,7 +108,8 @@ class Bot {
     };
 
     static multiply(self) {
-        if (self.energy < 10) return "Multiply: No energy";
+        self.decreaseEnergy(1);
+        if (self.energy < 2) return "Multiply: No energy";
 
         const freeCells = self.cell.world.findFreeCells(self.cell.x, self.cell.y);
 
@@ -118,25 +121,14 @@ class Bot {
             if (self.mutateCounter === MUTATE_COUNT) {
                 self.mutateCounter = 0;
                 child.brain.hardMutate();
-                // child.colorInt = changeColorInt(child.colorInt);
-                // child.color = getColor(child.colorInt);
             } else {
                 child.brain.mutate();
                 self.mutateCounter++;
             }
 
-            // if (Math.random() > 0.8) {
-            //     child.brain.hardMutate();
-            //     // child.colorInt = changeColorInt(child.colorInt);
-            //     // child.color = getColor(child.colorInt);
-            // } else {
-            //     child.brain.mutate();
-            // }
-
             freeCell.come(child);
 
             self.cell.world.newBots.push(child);
-            self.decreaseEnergy(1);
             return "Multiply";
         } else if (freeCells.length === 0) {
             self.energy = -MAX_ENERGY;
@@ -150,7 +142,7 @@ class Bot {
         if (self.energy <= 0) return "Attack: No energy";
 
         const stepCell = self.cell.world.getStepCell(self.direction, self.cell.x, self.cell.y);
-        self.decreaseEnergy(1);
+        self.decreaseEnergy(0.2);
         if (!stepCell.isFree() && stepCell.bot.energy > 0) {
             const income = 1 * stepCell.bot.energy;
             self.energy += income;

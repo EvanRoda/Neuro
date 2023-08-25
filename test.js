@@ -65,7 +65,7 @@ let rgb;
 const WORLD_WIDTH = 128;
 const WORLD_HEIGHT = 96;
 const MAX_ENERGY = 250;
-const MUTATE_COUNT = 3;
+const MUTATE_COUNT = 1;
 const builder = new NeuroBuilder();
 
 builder
@@ -136,7 +136,7 @@ function evaluate() {
 
         bot.evaluate();
 
-        if (bot.energy < 0) {
+        if (bot.energy <= 0) {
             bot.isDead = true;
             world.deathNote.push(bot.uuid);
         }
