@@ -84,7 +84,7 @@ builder
     .addReaction(Bot.photo)
     .addReaction(Bot.multiply)
     .addReaction(Bot.attack)
-
+    .addReaction(Bot.death)
 
 
 const world = new World(WORLD_WIDTH, WORLD_HEIGHT, builder);

@@ -40,7 +40,7 @@ class Bot {
         this.cell = stepCell;
     }
 
-    death() {
+    die() {
         this.isDead = true;
     }
 
@@ -168,10 +168,15 @@ class Bot {
                 self.r = 255;
             }
 
-            stepCell.bot.death()
+            stepCell.bot.die()
             return "Attack: +" + income + " energy";
         }
 
         return "Attack: Nobody to attack";
     };
+
+    static death(self) {
+        self.die();
+        return "Death: Success";
+    }
 }
