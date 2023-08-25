@@ -44,7 +44,7 @@
         }
 
         .counter-container {
-            line-height: 50px;
+            line-height: 27px;
             float: right;
             font-size: 25px;
             font-family: monospace;
@@ -77,6 +77,10 @@
         .hidden {
             display: none;
         }
+
+        .iconed-text {
+            float: right;
+        }
     </style>
 </head>
 <body>
@@ -101,14 +105,22 @@
                     </button>
 
                     <div class="counter-container">
-                        <div id="counter"></div>
+                        <div >
+                            <i class="fa-regular fa-clock"></i>
+                            <span id="counter"></span>
+                        </div>
+                        <div >
+                            <i class="fa-solid fa-bacteria"></i>
+                            <span id="bots-counter"></span>
+                        </div>
+
                     </div>
                 </div>
                 <div class="separator"></div>
                 <div class="world">
                     <div class="times-container">
                         <span id="times"></span>
-                        <span style="float: right">
+                        <span class="iconed-text">
                             <i class="fa-regular fa-sun"></i>
                             <span id="coefficient"></span>
                         </span>

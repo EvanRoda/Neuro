@@ -37,6 +37,7 @@ let ctx;
 let hidden;
 let hctx;
 let counter;
+let botsCounter;
 let times;
 let coefficient;
 let renderToggle = true;
@@ -264,6 +265,8 @@ function draw() {
     }
 
     counter.innerText = world.age++;
+    botsCounter.innerText = Object.keys(world.bots).length;
+
     times.innerText = getTimes();
     coefficient.innerText = world.seasonLightCoef.toFixed(2);
     renderBot();
@@ -316,6 +319,7 @@ function initUI() {
 
 
     counter = document.getElementById("counter");
+    botsCounter = document.getElementById("bots-counter");
     times = document.getElementById("times");
     coefficient = document.getElementById("coefficient");
 
