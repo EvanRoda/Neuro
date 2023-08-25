@@ -28,9 +28,9 @@ function randomHandler() {
     if (c < 0.7) {
         return ["A", (value) => { return value > 0 ? 1 : -1; }];
     } else if (c < 0.99) {
-        return ["B", (value) => { return value > -1 && value < 1 ? 1 : -1; }];
+        return ["B", (value) => { return value > -0.5 && value < 0.5 ? 1 : -1; }];
     } else {
-        return ["C", (value) => { return Math.abs(value / 7) >= Math.random() ? 1 : -1; }];
+        return ["C", (value) => { return Math.abs(value) >= Math.random() ? 1 : -1; }];
     }
 }
 

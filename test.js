@@ -69,12 +69,12 @@ const MUTATE_COUNT = 1;
 const builder = new NeuroBuilder();
 
 builder
-    .addSensor((value) => { return value / 8 })           // Rotation
-    .addSensor((value) => { return value / 2 })           // Eyes 0-empty, 1-ally, 2-enemy
-    .addSensor((value) => { return value / 100 })         // Light
-    .addSensor((value) => { return value / MAX_ENERGY })  // Energy
-    .addSensor((value) => { return value / 7 })           // Free cells around
-    .addSensor((value) => { return value })               // Light on step cell
+    .addSensor((value) => { return -1 + 2 * value / 8 })           // Rotation
+    .addSensor((value) => { return -1 + 2 * value / 2 })           // Eyes 0-empty, 1-ally, 2-enemy
+    .addSensor((value) => { return -1 + 2 * value / 100 })         // Light
+    .addSensor((value) => { return -1 + 2 * value / MAX_ENERGY })  // Energy
+    .addSensor((value) => { return -1 + 2 * value / 7 })           // Free cells around
+    .addSensor((value) => { return -1 + 2 * value / 100 })               // Light on step cell
     .addSensor(() => { return 1 })                        // Balancer
 
     .addHiddenLayers(5, 8)
