@@ -14,7 +14,6 @@
  * eyes (0-nothing, 1-other bot)
  * geom difference (check bot on view sight)
  * light
- * humidity
  * energy
  *
  * */
@@ -73,12 +72,11 @@ builder
     .addSensor((value) => { return value / 8 })           // Rotation
     .addSensor((value) => { return value / 2 })           // Eyes 0-empty, 1-ally, 2-enemy
     .addSensor((value) => { return value / 100 })         // Light
-    // .addSensor((value) => { return -1 + 2 * value / 100 })             // Humidity
     .addSensor((value) => { return value / MAX_ENERGY })  // Energy
     .addSensor((value) => { return value / MAX_AGE })     // Age
     .addSensor((value) => { return value / 7 })           // Free cells around
     .addSensor((value) => { return value })               // Light on step cell
-    .addSensor((value) => { return 1 })                   // Balancer
+    .addSensor(() => { return 1 })                        // Balancer
 
     .addHiddenLayers(5, 8)
 
@@ -93,82 +91,10 @@ builder
 const world = new World(WORLD_WIDTH, WORLD_HEIGHT, builder);
 
 
-window.addEventListener('load', (event) => {
+window.addEventListener('load', () => {
     console.log('page is fully loaded');
-    buttonPause = document.getElementById("pauseButton");
-    buttonPause.addEventListener("click", () => {
-        playToggle = !playToggle;
-        buttonStep.disabled = playToggle;
 
-        if (playToggle) {
-            buttonPause.innerHTML = "<i class=\"fa-solid fa-pause\"></i>";
-        } else {
-            buttonPause.innerHTML = "<i class=\"fa-solid fa-play\"></i>";
-        }
-    });
-
-    buttonRenderToggle = document.getElementById("renderToggle");
-    buttonRenderToggle.addEventListener('click', (event) => {
-       renderToggle = !renderToggle;
-    });
-
-    buttonStep = document.getElementById("stepButton");
-    buttonStep.addEventListener('click', (event) => {
-        oneStep();
-    });
-
-
-    buttonBotPaint = document.getElementById("paintBotButton");
-    buttonBotPaint.addEventListener('click', (event) => {
-        botPaintToggle = !botPaintToggle;
-    });
-
-    showLog = document.getElementById("showLog");
-    showLog.addEventListener('click', (event) => {
-        showLogToggle = !showLogToggle
-         if (showLogToggle) {
-             logContainer.classList.remove("hidden");
-             renderLog();
-         } else {
-             logContainer.classList.add("hidden");
-         }
-    });
-
-
-    counter = document.getElementById("counter");
-    times = document.getElementById("times");
-    coefficient = document.getElementById("coefficient");
-
-    alive = document.getElementById("alive");
-    genome = document.getElementById("genome");
-    uuid = document.getElementById("uuid");
-    age = document.getElementById("age");
-    energy = document.getElementById("energy");
-    mutateCounter = document.getElementById("mutateCounter");
-    coord = document.getElementById("coord");
-    rgb = document.getElementById("rgb");
-    logContainer = document.getElementById("logContainer");
-
-    canvas = document.getElementById("screen");
-    canvas.addEventListener("click", (event) => {
-        const cell = world.getCell(Math.floor(event.offsetX / 10) , Math.floor(event.offsetY / 10));
-        console.log(cell.x, cell.y);
-        if (!cell.isFree()) {
-            console.log(cell.bot);
-            selectedBotUuid = cell.bot.uuid;
-            showLogToggle = false;
-            logContainer.classList.add("hidden");
-            takeACopy(cell.bot);
-            renderBot()
-        }
-    });
-
-    ctx = canvas.getContext("2d");
-
-    hidden = document.createElement("canvas");
-    hctx = hidden.getContext("2d");
-    hctx.strokeStyle = "white";
-
+    initUI();
     animRedraw();
 });
 
@@ -346,6 +272,82 @@ function draw() {
 function oneStep() {
     calculate();
     draw();
+}
+
+function initUI() {
+    buttonPause = document.getElementById("pauseButton");
+    buttonPause.addEventListener("click", () => {
+        playToggle = !playToggle;
+        buttonStep.disabled = playToggle;
+
+        if (playToggle) {
+            buttonPause.innerHTML = "<i class=\"fa-solid fa-pause\"></i>";
+        } else {
+            buttonPause.innerHTML = "<i class=\"fa-solid fa-play\"></i>";
+        }
+    });
+
+    buttonRenderToggle = document.getElementById("renderToggle");
+    buttonRenderToggle.addEventListener('click', () => {
+        renderToggle = !renderToggle;
+    });
+
+    buttonStep = document.getElementById("stepButton");
+    buttonStep.addEventListener('click', () => {
+        oneStep();
+    });
+
+
+    buttonBotPaint = document.getElementById("paintBotButton");
+    buttonBotPaint.addEventListener('click', () => {
+        botPaintToggle = !botPaintToggle;
+    });
+
+    showLog = document.getElementById("showLog");
+    showLog.addEventListener('click', () => {
+        showLogToggle = !showLogToggle
+        if (showLogToggle) {
+            logContainer.classList.remove("hidden");
+            renderLog();
+        } else {
+            logContainer.classList.add("hidden");
+        }
+    });
+
+
+    counter = document.getElementById("counter");
+    times = document.getElementById("times");
+    coefficient = document.getElementById("coefficient");
+
+    alive = document.getElementById("alive");
+    genome = document.getElementById("genome");
+    uuid = document.getElementById("uuid");
+    age = document.getElementById("age");
+    energy = document.getElementById("energy");
+    mutateCounter = document.getElementById("mutateCounter");
+    coord = document.getElementById("coord");
+    rgb = document.getElementById("rgb");
+    logContainer = document.getElementById("logContainer");
+
+    canvas = document.getElementById("screen");
+    canvas.addEventListener("click", (event) => {
+        const cell = world.getCell(Math.floor(event.offsetX / 10) , Math.floor(event.offsetY / 10));
+        console.log(cell.x, cell.y);
+        if (!cell.isFree()) {
+            console.log(cell.bot);
+            selectedBotUuid = cell.bot.uuid;
+            showLogToggle = false;
+            logContainer.classList.add("hidden");
+            takeACopy(cell.bot);
+            renderBot()
+        }
+    });
+
+    ctx = canvas.getContext("2d");
+
+    hidden = document.createElement("canvas");
+    hctx = hidden.getContext("2d");
+    hctx.strokeStyle = "white";
 }
 
 function animRedraw() {

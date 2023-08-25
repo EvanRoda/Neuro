@@ -34,10 +34,6 @@ class Bot {
         this.energy -= value;
     }
 
-    getHumidity() {
-        return this.cell.humidity;
-    }
-
     moveTo(stepCell) {
         this.cell.leave(this);
         stepCell.come(this);
