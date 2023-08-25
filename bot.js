@@ -142,7 +142,7 @@ class Bot {
         if (self.energy <= 0) return "Attack: No energy";
 
         const stepCell = self.cell.world.getStepCell(self.direction, self.cell.x, self.cell.y);
-        self.decreaseEnergy(0.2);
+        self.decreaseEnergy(0.5);
         if (!stepCell.isFree() && stepCell.bot.energy > 0) {
             const income = 1 * stepCell.bot.energy;
             self.energy += income;
@@ -166,6 +166,11 @@ class Bot {
 
         return "Attack: Nobody to attack";
     };
+
+    static nothing(self) {
+        self.decreaseEnergy(0.1);
+        return "Nothing: Success";
+    }
 
     static death(self) {
         self.die();

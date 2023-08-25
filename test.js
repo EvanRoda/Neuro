@@ -46,6 +46,7 @@ let buttonRenderToggle;
 let buttonPause;
 let buttonStep;
 let selectedBotUuid = null;
+let clone = null;
 let selectedBotBinding = {};
 let logContainer;
 let showLog;
@@ -77,13 +78,14 @@ builder
     .addSensor((value) => { return -1 + 2 * value / 100 })               // Light on step cell
     .addSensor(() => { return 1 })                        // Balancer
 
-    .addHiddenLayers(5, 8)
+    .addHiddenLayers(4, 8)
 
     .addReaction(Bot.rotate)
     .addReaction(Bot.move)
     .addReaction(Bot.photo)
     .addReaction(Bot.multiply)
     .addReaction(Bot.attack)
+    .addReaction(Bot.nothing)
     .addReaction(Bot.death)
 
 
@@ -338,10 +340,16 @@ function initUI() {
         if (!cell.isFree()) {
             console.log(cell.bot);
             selectedBotUuid = cell.bot.uuid;
+            clone = new Bot(cell.bot.colorInt, cell.bot.brain.copy(), 128, cell, cell.bot.r, cell.bot.g, cell.bot.b);
             showLogToggle = false;
             logContainer.classList.add("hidden");
             takeACopy(cell.bot);
             renderBot()
+        } else {
+            const child = new Bot(clone.colorInt, clone.brain.copy(), 128, cell, clone.r, clone.g, clone.b);
+            cell.come(child);
+
+            world.newBots.push(child);
         }
     });
 
