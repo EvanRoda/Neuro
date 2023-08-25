@@ -65,7 +65,7 @@ class Bot {
     static rotate(self) {
         if (self.energy <= 0) return "Rotate: No energy";
 
-        // self.decreaseEnergy(.12);
+        self.decreaseEnergy(.12);
         self.direction = randomInt(8);
         return "Rotate " + self.direction;
     };
@@ -74,7 +74,7 @@ class Bot {
         if (self.energy <= 0) return "Move: No energy";
 
         const stepCell = self.cell.world.getStepCell(self.direction, self.cell.x, self.cell.y);
-        // self.decreaseEnergy(0.25);
+        self.decreaseEnergy(0.25);
         if (!stepCell.isFree()) return "Move: No free cell";
 
         self.moveTo(stepCell);
