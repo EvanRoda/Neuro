@@ -64,7 +64,6 @@ let rgb;
 
 const WORLD_WIDTH = 128;
 const WORLD_HEIGHT = 96;
-const MAX_AGE = 250;
 const MAX_ENERGY = 250;
 const MUTATE_COUNT = 3;
 const builder = new NeuroBuilder();
@@ -74,7 +73,6 @@ builder
     .addSensor((value) => { return value / 2 })           // Eyes 0-empty, 1-ally, 2-enemy
     .addSensor((value) => { return value / 100 })         // Light
     .addSensor((value) => { return value / MAX_ENERGY })  // Energy
-    .addSensor((value) => { return value / MAX_AGE })     // Age
     .addSensor((value) => { return value / 7 })           // Free cells around
     .addSensor((value) => { return value })               // Light on step cell
     .addSensor(() => { return 1 })                        // Balancer
@@ -138,7 +136,7 @@ function evaluate() {
 
         bot.evaluate();
 
-        if (bot.age > MAX_AGE || bot.energy < 0) {
+        if (bot.energy < 0) {
             bot.isDead = true;
             world.deathNote.push(bot.uuid);
         }

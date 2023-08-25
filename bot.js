@@ -57,7 +57,7 @@ class Bot {
 
         this.age += 1;
 
-        const reaction = this.brain.run(this.direction, eye, this.cell.getLight(), this.energy, this.age, freeCellsCount, stepCell.getLight());
+        const reaction = this.brain.run(this.direction, eye, this.cell.getLight(), this.energy, freeCellsCount, stepCell.getLight());
         this.reactionLog.push(reaction(this));
     }
 
