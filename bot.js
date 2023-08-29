@@ -70,6 +70,29 @@ class Bot {
         return "Rotate " + self.direction;
     };
 
+    static rotateLeft(self) {
+        if (self.energy <= 0) return "Rotate: No energy";
+
+        self.direction -= 1;
+        if (self.direction === -1) {
+            self.direction = 7;
+        }
+
+        self.decreaseEnergy(1);
+        return "Rotate left" + self.direction;
+    };
+
+    static rotateRight(self) {
+        if (self.energy <= 0) return "Rotate: No energy";
+
+        self.direction += 1;
+        if (self.direction === 8) {
+            self.direction = 0;
+        }
+        self.decreaseEnergy(1);
+        return "Rotate right" + self.direction;
+    };
+
     static move(self) {
         if (self.energy <= 0) return "Move: No energy";
         self.decreaseEnergy(1);

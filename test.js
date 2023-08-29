@@ -8,9 +8,9 @@
  * X
  * Y
  * Rotate (8 direction)
- *      0 1 2
- *      3 + 4
- *      5 6 7
+ *      7 0 1
+ *      6 + 2
+ *      5 4 3
  * eyes (0-nothing, 1-other bot)
  * geom difference (check bot on view sight)
  * light
@@ -80,7 +80,8 @@ builder
 
     .addHiddenLayers(4, 8)
 
-    .addReaction(Bot.rotate)
+    .addReaction(Bot.rotateLeft)
+    .addReaction(Bot.rotateRight)
     .addReaction(Bot.move)
     .addReaction(Bot.photo)
     .addReaction(Bot.multiply)
