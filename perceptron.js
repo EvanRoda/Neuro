@@ -79,7 +79,7 @@ class Perceptron {
             const element = layer.elements[elementIndex];
             if (element.relations.length > 0) {
                 const relationIndex = randomInt(element.relations.length);
-                element.relations[relationIndex] = randomInt(11) / 10;
+                element.relations[relationIndex] = Neuron.generateRelation();
             }
         });
     }
@@ -179,7 +179,7 @@ class Neuron {
     generateRelations() {
         if (this.layer.nextLayer != null) {
             for (let i = 0; i < this.layer.nextLayer.size; i++) {
-                this.relations[i] = randomInt(11) / 10;
+                this.relations[i] = Neuron.generateRelation();
             }
         }
     }
@@ -201,6 +201,10 @@ class Neuron {
         // this.inputSum = 0;
 
         return result;
+    }
+
+    static generateRelation() {
+        return Math.random() < 0.3 ? 0 : (1 + randomInt(10)) / 10;
     }
 }
 
