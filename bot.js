@@ -50,7 +50,7 @@ class Bot {
         if (stepCell.isFree()) {
             eye = 0;
         } else {
-            eye = stepCell.bot.colorInt === this.colorInt? 1 : 2;
+            eye = friendOrFoe(this.brain.getHash(), stepCell.bot.brain.getHash()) + 0.001;
         }
 
         const freeCellsCount = this.cell.world.findFreeCells(this.cell.x, this.cell.y).length;

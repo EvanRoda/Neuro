@@ -32,6 +32,19 @@ function randomHandler() {
     } else {
         return ["C", (value) => { return Math.abs(value) >= Math.random() ? 1 : -1; }];
     }
+
+    // var tanh = function(c) { return (Math.E ^ c - Math.E ^ (-c)) / (Math.E ^ c + Math.E ^ (-c)); }
+    // must use Math.tanh(x)
+}
+
+function friendOrFoe(a, b) {
+    let changes = 0;
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) {
+            changes++;
+        }
+    }
+    return changes / a.length;
 }
 
 const generateUUID = () => {

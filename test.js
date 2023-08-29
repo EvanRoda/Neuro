@@ -71,7 +71,7 @@ const builder = new NeuroBuilder();
 
 builder
     .addSensor((value) => { return -1 + 2 * value / 8 })           // Rotation
-    .addSensor((value) => { return -1 + 2 * value / 2 })           // Eyes 0-empty, 1-ally, 2-enemy
+    .addSensor((value) => { return value })                        // Eyes 0-empty, ~0 = ally, ~1 = enemy
     .addSensor((value) => { return -1 + 2 * value / 100 })         // Light
     .addSensor((value) => { return -1 + 2 * value / MAX_ENERGY })  // Energy
     .addSensor((value) => { return -1 + 2 * value / 7 })           // Free cells around

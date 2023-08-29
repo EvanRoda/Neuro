@@ -21,6 +21,12 @@ class Perceptron {
         });
     };
 
+    getHash() {
+        if (this.hash.length === 0) this.calcHash();
+
+        return this.hash;
+    }
+
     copy() {
         const layers = [];
 
