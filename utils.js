@@ -18,6 +18,24 @@ function randomColorInt() {
     return Math.floor(Math.random() * 16777215);
 }
 
+function stringToColorInt(str) {
+    // Вычисляем хеш строки
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    // Генерируем цвет в виде целого числа
+    const r = (hash & 0xFF0000) >> 16;
+    const g = (hash & 0x00FF00) >> 8;
+    const b = hash & 0x0000FF;
+
+    // Объединяем значения r, g и b в одно целое число
+    const colorInt = (r << 16) | (g << 8) | b;
+
+    return colorInt;
+}
+
 function changeColorInt(colorInt) {
     return (colorInt + 10) % 16777215;
 }

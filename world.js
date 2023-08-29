@@ -63,7 +63,7 @@ class World {
             const y = Math.floor(i / this.width);
             this.cells[i] = new Cell(this, i % this.width, y, Math.floor(100 * (this.height - y) / this.height));
             if (Math.random() < 0.2) {
-                const bot = new Bot(randomColorInt(), this.botBuilder.build(), 100, this.cells[i], 128, 128, 128);
+                const bot = new Bot(this.botBuilder.build(), 100, this.cells[i], 128, 128, 128);
                 this.bots[bot.uuid] = bot;
                 this.cells[i].come(bot);
             }

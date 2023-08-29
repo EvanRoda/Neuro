@@ -16,11 +16,11 @@ class Bot {
     g = 128;
     b = 128;
 
-    constructor(colorInt, brain, energy, cell, r, g, b) {
+    constructor(brain, energy, cell, r, g, b) {
         this.uuid = generateUUID();
         this.direction = randomInt(8);
         this.energy = energy;
-        this.colorInt = colorInt;
+        this.colorInt = stringToColorInt(brain.getHash());
         this.color = getColor(this.colorInt);
         this.brain = brain;
         this.cell = cell;
@@ -42,6 +42,10 @@ class Bot {
 
     die() {
         this.isDead = true;
+    }
+
+    checkColor() {
+        this.colorInt = stringToColorInt(this.brain.getHash());
     }
 
     evaluate() {
@@ -139,7 +143,7 @@ class Bot {
         if (freeCells.length > 4) {
             const freeCell = self.cell.world.getRandomCell(freeCells);
             self.energy = self.energy / 2;
-            const child = new Bot(self.colorInt, self.brain.copy(), self.energy, freeCell, self.r, self.g, self.b);
+            const child = new Bot(self.brain.copy(), self.energy, freeCell, self.r, self.g, self.b);
 
             if (self.mutateCounter === MUTATE_COUNT) {
                 self.mutateCounter = 0;
@@ -148,6 +152,9 @@ class Bot {
                 child.brain.mutate();
                 self.mutateCounter++;
             }
+
+            // Change color after mutate
+            child.checkColor();
 
             freeCell.come(child);
 

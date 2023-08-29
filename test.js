@@ -66,7 +66,7 @@ let rgb;
 const WORLD_WIDTH = 128;
 const WORLD_HEIGHT = 96;
 const MAX_ENERGY = 250;
-const MUTATE_COUNT = 1;
+const MUTATE_COUNT = 3;
 const builder = new NeuroBuilder();
 
 builder
@@ -341,13 +341,13 @@ function initUI() {
         if (!cell.isFree()) {
             console.log(cell.bot);
             selectedBotUuid = cell.bot.uuid;
-            clone = new Bot(cell.bot.colorInt, cell.bot.brain.copy(), 128, cell, cell.bot.r, cell.bot.g, cell.bot.b);
+            clone = new Bot(cell.bot.brain.copy(), 128, cell, cell.bot.r, cell.bot.g, cell.bot.b);
             showLogToggle = false;
             logContainer.classList.add("hidden");
             takeACopy(cell.bot);
             renderBot()
         } else {
-            const child = new Bot(clone.colorInt, clone.brain.copy(), 128, cell, clone.r, clone.g, clone.b);
+            const child = new Bot(clone.brain.copy(), 128, cell, clone.r, clone.g, clone.b);
             cell.come(child);
 
             world.newBots.push(child);
