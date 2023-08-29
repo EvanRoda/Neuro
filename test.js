@@ -51,7 +51,9 @@ let selectedBotBinding = {};
 let logContainer;
 let showLog;
 let showLogToggle = false;
-let botPaintToggle = false;
+let botPaintToggle = 0;         // 0 - basic
+                                // 1 - flora/fauna
+                                // 2 - energy
 let buttonBotPaint;
 
 let alive;
@@ -67,6 +69,7 @@ const WORLD_WIDTH = 128;
 const WORLD_HEIGHT = 96;
 const MAX_ENERGY = 250;
 const MUTATE_COUNT = 3;
+
 const builder = new NeuroBuilder();
 
 builder
@@ -180,10 +183,16 @@ function render() {
 
         if (bot == null) continue;
 
-        if (!botPaintToggle) {
-            hctx.fillStyle = bot.color;
-        } else {
-            hctx.fillStyle = "rgb(" + bot.r + ", " + bot.g + "," + bot.b + ")";
+        switch (botPaintToggle) {
+            case 0:
+                hctx.fillStyle = bot.color;
+                break;
+            case 1:
+                hctx.fillStyle = "rgb(" + bot.r + ", " + bot.g + "," + bot.b + ")";
+                break;
+            case 2:
+                hctx.fillStyle = "hsl(193, 100%, " + (90 - Math.floor(bot.energy * 0.24)) + "%)";
+                break;
         }
 
         hctx.fillRect(bot.cell.x * 10 + 1, bot.cell.y * 10 + 1, 9, 9);
@@ -304,7 +313,11 @@ function initUI() {
 
     buttonBotPaint = document.getElementById("paintBotButton");
     buttonBotPaint.addEventListener('click', () => {
-        botPaintToggle = !botPaintToggle;
+        botPaintToggle++;
+
+        if (botPaintToggle === 3) {
+            botPaintToggle = 0;
+        }
     });
 
     showLog = document.getElementById("showLog");
