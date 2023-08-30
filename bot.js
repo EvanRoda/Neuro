@@ -66,14 +66,6 @@ class Bot {
     }
 
     // reactions
-    static rotate(self) {
-        if (self.energy <= 0) return "Rotate: No energy";
-
-        self.direction = randomInt(8);
-        self.decreaseEnergy(1);
-        return "Rotate " + self.direction;
-    };
-
     static rotateLeft(self) {
         if (self.energy <= 0) return "Rotate: No energy";
 
@@ -145,10 +137,13 @@ class Bot {
             self.energy = self.energy / 2;
             const child = new Bot(self.brain.copy(), self.energy, freeCell, self.r, self.g, self.b);
 
-            if (self.mutateCounter === MUTATE_COUNT) {
+            if (self.mutateCounter === HARD_MUTATE_DELAY) {
                 self.mutateCounter = 0;
                 child.brain.hardMutate();
             } else {
+                for (let i = 0; i < SOFT_MUTATE_COUNT; i++) {
+                    child.brain.mutate();
+                }
                 child.brain.mutate();
                 self.mutateCounter++;
             }
@@ -177,7 +172,7 @@ class Bot {
             const income = 1 * stepCell.bot.energy;
             self.energy += income;
             if (self.energy > MAX_ENERGY) {
-                self.energy = MAX_ENERGY;
+                self.energy = -MAX_ENERGY;
             }
 
             self.g -= income;

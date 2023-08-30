@@ -68,7 +68,8 @@ let rgb;
 const WORLD_WIDTH = 128;
 const WORLD_HEIGHT = 96;
 const MAX_ENERGY = 250;
-const MUTATE_COUNT = 3;
+const HARD_MUTATE_DELAY = 3;
+const SOFT_MUTATE_COUNT = 3;
 
 const builder = new NeuroBuilder();
 
@@ -78,8 +79,8 @@ builder
     .addSensor((value) => { return -1 + 2 * value / 100 })         // Light
     .addSensor((value) => { return -1 + 2 * value / MAX_ENERGY })  // Energy
     .addSensor((value) => { return -1 + 2 * value / 7 })           // Free cells around
-    .addSensor((value) => { return -1 + 2 * value / 100 })               // Light on step cell
-    .addSensor(() => { return 1 })                        // Balancer
+    .addSensor((value) => { return -1 + 2 * value / 100 })         // Light on step cell
+    .addSensor(() => { return 1 })                                 // Balancer
 
     .addHiddenLayers(4, 8)
 

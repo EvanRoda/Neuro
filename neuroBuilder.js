@@ -56,7 +56,7 @@ class NeuroBuilder {
     }
 
     buildBalancer() {
-        return new Neuron("D", (value) => {return 1});
+        return new Neuron("D", () => {return 1});
     }
 
 

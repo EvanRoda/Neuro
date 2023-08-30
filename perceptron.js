@@ -74,14 +74,17 @@ class Perceptron {
     }
 
     mutate() {
-        this.layers.forEach(layer => {
-            const elementIndex = randomInt(layer.elements.length);
-            const element = layer.elements[elementIndex];
-            if (element.relations.length > 0) {
-                const relationIndex = randomInt(element.relations.length);
-                element.relations[relationIndex] = Neuron.generateRelation();
-            }
-        });
+        const layerIndex = randomInt(this.layers.length - 2) + 1;
+        const layer = this.layers[layerIndex];
+        const elementIndex = randomInt(layer.elements.length - 1);
+        const element = layer.elements[elementIndex];
+
+        if (element.relations.length > 0) {
+            const relationIndex = randomInt(element.relations.length);
+            element.relations[relationIndex] += Math.random() > 0.5 ? 0.1 : -0.1;
+            if (element.relations[relationIndex] < 0) element.relations[relationIndex] = 0
+            if (element.relations[relationIndex] > 1) element.relations[relationIndex] = 1
+        }
     }
 
     run() {
@@ -161,7 +164,6 @@ class Neuron {
     layer;
     relations = [];
     input = [];
-    inputSum = 0;
 
     handler = (value) => { return value }
 
