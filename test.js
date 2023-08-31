@@ -74,13 +74,13 @@ const SOFT_MUTATE_COUNT = 3;
 const builder = new NeuroBuilder();
 
 builder
-    .addSensor((value) => { return -1 + 2 * value / 8 })           // Rotation
-    .addSensor((value) => { return value })                        // Eyes 0-empty, ~0 = ally, ~1 = enemy
-    .addSensor((value) => { return -1 + 2 * value / 100 })         // Light
-    .addSensor((value) => { return -1 + 2 * value / MAX_ENERGY })  // Energy
-    .addSensor((value) => { return -1 + 2 * value / 7 })           // Free cells around
-    .addSensor((value) => { return -1 + 2 * value / 100 })         // Light on step cell
-    .addSensor(() => { return 1 })                                 // Balancer
+    .addSensor(ROTATION_HANDLER)            // Rotation
+    .addSensor(DEFAULT_HANDLER)             // Eyes 0-empty, ~0 = ally, ~1 = enemy
+    .addSensor(LIGHT_HANDLER)               // Light
+    .addSensor(ENERGY_HANDLER)              // Energy
+    .addSensor(FREE_CELLS_HANDLER)          // Free cells around
+    .addSensor(LIGHT_ON_STEP_CELL_HANDLER)  // Light on step cell
+    .addSensor(BALANCER_HANDLER)            // Balancer
 
     .addHiddenLayers(4, 8)
 
@@ -125,7 +125,9 @@ function takeACopy(bot) {
 }
 
 function evaluate() {
-    for (const uuid in world.bots) {
+    const uuids = Object.keys(world.bots);
+    for (let i = 0, l = uuids.length; i < l; i++) {
+        const uuid = uuids[i];
         const bot = world.bots[uuid];
 
         if (selectedBotUuid === uuid) {
@@ -148,6 +150,30 @@ function evaluate() {
             world.deathNote.push(bot.uuid);
         }
     }
+
+    // for (const uuid in world.bots) {
+    //     const bot = world.bots[uuid];
+    //
+    //     if (selectedBotUuid === uuid) {
+    //         takeACopy(bot);
+    //     }
+    //
+    //     if (bot == null) {
+    //         continue;
+    //     }
+    //
+    //     if (bot.isDead) {
+    //         world.deathNote.push(bot.uuid);
+    //         continue;
+    //     }
+    //
+    //     bot.evaluate();
+    //
+    //     if (bot.energy <= 0) {
+    //         bot.isDead = true;
+    //         world.deathNote.push(bot.uuid);
+    //     }
+    // }
 }
 
 function addNewBots() {

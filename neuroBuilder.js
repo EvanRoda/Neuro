@@ -1,3 +1,12 @@
+
+const ROTATION_HANDLER = (value) => { return -1 + 2 * value / 8 };
+const DEFAULT_HANDLER = (value) => { return value};
+const LIGHT_HANDLER = (value) => { return -1 + 2 * value / 100 };
+const ENERGY_HANDLER = (value) => { return -1 + 2 * value / MAX_ENERGY };
+const FREE_CELLS_HANDLER = (value) => { return -1 + 2 * value / 7 };
+const LIGHT_ON_STEP_CELL_HANDLER = (value) => { return -1 + 2 * value / 100 };
+const BALANCER_HANDLER = () => { return 1 };
+
 class NeuroBuilder {
     sensors = [];
     reactions = [];
@@ -56,7 +65,7 @@ class NeuroBuilder {
     }
 
     buildBalancer() {
-        return new Neuron("D", () => {return 1});
+        return new Neuron("D", BALANCER_HANDLER);
     }
 
 

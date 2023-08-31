@@ -40,15 +40,18 @@ function changeColorInt(colorInt) {
     return (colorInt + 10) % 16777215;
 }
 
+const aHandler = (value) => { return value > 0 ? 1 : -1; };
+const bHandler = (value) => { return value > -0.5 && value < 0.5 ? 1 : -1; };
+const cHandler = (value) => { return Math.abs(value) >= Math.random() ? 1 : -1; };
 
 function randomHandler() {
     const c = Math.random();
     if (c < 0.7) {
-        return ["A", (value) => { return value > 0 ? 1 : -1; }];
+        return ["A", aHandler];
     } else if (c < 0.99) {
-        return ["B", (value) => { return value > -0.5 && value < 0.5 ? 1 : -1; }];
+        return ["B", bHandler];
     } else {
-        return ["C", (value) => { return Math.abs(value) >= Math.random() ? 1 : -1; }];
+        return ["C", cHandler];
     }
 
     // var tanh = function(c) { return (Math.E ^ c - Math.E ^ (-c)) / (Math.E ^ c + Math.E ^ (-c)); }

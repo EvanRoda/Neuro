@@ -87,15 +87,15 @@ class Perceptron {
         }
     }
 
-    run() {
+    run(inputData) {
         const sensors = this.layers[0];
 
-        if (arguments.length !== sensors.size - 1) {
+        if (inputData.length !== sensors.size - 1) {
             throw new Error("The amount of data does not match the number of sensors.");
         }
 
-        for (let i = 0; i < arguments.length - 1; i++) {
-            const value = arguments[i];
+        for (let i = 0; i < inputData.length - 1; i++) {
+            const value = inputData[i];
 
             if (sensors.elements[i] !== null) {
                 sensors.elements[i].set(value);
@@ -103,7 +103,6 @@ class Perceptron {
         }
 
         this.evaluate();
-        return this.getReaction();
     }
 
     getReaction() {
@@ -112,28 +111,30 @@ class Perceptron {
             return "Default reaction";
         };
         let weight = 0;
-
-        this.layers[this.layers.length - 1].elements.forEach(neuron => {
-            const input = neuron.get();
+        const rElements = this.layers[this.layers.length - 1].elements;
+        for (let i = 0, l = rElements.length; i < l; i++) {
+            const neuron = rElements[i];
+            const input = neuron.calculate();
             if (weight < input) {
                 reaction = neuron.reaction;
                 weight = input;
             }
-        });
+        }
 
         return reaction;
     }
 
     evaluate() {
-        this.neurons.forEach(neuron => {
-            const value = neuron.get();
-            for (let i = 0; i < neuron.relations.length; i++) {
-                const weight = neuron.relations[i];
+        for (let i = 0, l = this.neurons.length; i < l; i++) {
+            const neuron = this.neurons[i];
+            const value = neuron.calculate();
+            for (let j = 0, k = neuron.relations.length; j < k; j++) {
+                const weight = neuron.relations[j];
                 if (weight > 0) {
-                    neuron.layer.nextLayer.elements[i].set(value * weight);
+                    neuron.layer.nextLayer.elements[j].set(value * weight);
                 }
             }
-        });
+        }
     }
 }
 
@@ -164,6 +165,7 @@ class Neuron {
     layer;
     relations = [];
     input = [];
+    calculatedValue = 0;
 
     handler = (value) => { return value }
 
@@ -191,18 +193,26 @@ class Neuron {
     }
 
     set(value) {
-        this.input.push(value);
-        // this.inputSum += value;
+        //this.input.push(value);
+        this.input[this.input.length] = value
+    }
+
+    calculate() {
+        let sum = 0;
+        const l = this.input.length;
+
+        for (let i = 0; i < l; ++i) {
+            sum += this.input[i];
+        }
+
+        this.calculatedValue = this.handler(sum / l);
+        this.input = [];
+
+        return this.calculatedValue;
     }
 
     get() {
-        const sum = this.input.reduce((p, a) => p + a, 0);
-        const result = this.handler(sum / this.input.length);
-        this.input = [];
-        // const result = this.handler(this.inputSum);
-        // this.inputSum = 0;
-
-        return result;
+        return this.calculatedValue;
     }
 
     static generateRelation() {
