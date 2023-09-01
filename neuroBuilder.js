@@ -1,11 +1,9 @@
 
-const ROTATION_HANDLER = (value) => { return -1 + 2 * value / 8 };
-const DEFAULT_HANDLER = (value) => { return value};
+const DIRECTION_HANDLER = (value) => { return -1 + 2 * value / 7 };
 const LIGHT_HANDLER = (value) => { return -1 + 2 * value / 100 };
 const ENERGY_HANDLER = (value) => { return -1 + 2 * value / MAX_ENERGY };
-const FREE_CELLS_HANDLER = (value) => { return -1 + 2 * value / 7 };
-const LIGHT_ON_STEP_CELL_HANDLER = (value) => { return -1 + 2 * value / 100 };
 const BALANCER_HANDLER = () => { return 1 };
+const DEFAULT_HANDLER = (value) => { return value};
 
 class NeuroBuilder {
     sensors = [];

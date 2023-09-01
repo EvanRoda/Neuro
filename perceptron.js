@@ -94,7 +94,7 @@ class Perceptron {
             throw new Error("The amount of data does not match the number of sensors.");
         }
 
-        for (let i = 0; i < inputData.length - 1; i++) {
+        for (let i = 0; i < inputData.length; i++) {
             const value = inputData[i];
 
             if (sensors.elements[i] !== null) {
@@ -161,6 +161,7 @@ class Layer {
 }
 
 class Neuron {
+    uuid = null;
     type = "";
     layer;
     relations = [];
@@ -170,6 +171,7 @@ class Neuron {
     handler = (value) => { return value }
 
     constructor(type, handler) {
+        this.uuid = generateUUID();
         this.type = type;
         if (handler) {
             this.handler = handler;

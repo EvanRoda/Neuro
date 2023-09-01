@@ -36,6 +36,10 @@ let canvas;
 let ctx;
 let hidden;
 let hctx;
+let pCanvas;
+let pCtx;
+let pHidden;
+let pHCtx;
 let counter;
 let botsCounter;
 let times;
@@ -48,6 +52,7 @@ let buttonStep;
 let selectedBotUuid = null;
 let clone = null;
 let selectedBotBinding = {};
+let selectedNeuronData = null;
 let logContainer;
 let showLog;
 let showLogToggle = false;
@@ -70,19 +75,31 @@ const WORLD_HEIGHT = 96;
 const MAX_ENERGY = 250;
 const HARD_MUTATE_DELAY = 3;
 const SOFT_MUTATE_COUNT = 3;
+const PERC_WIDTH = 500;
+const PERC_HEIGHT = 330;
+
+const NEURON_COLORS = {
+    S: '#dcdcdc',
+    A: '#d5f3a9',
+    B: '#a6e7d4',
+    C: '#ecbbeb',
+    D: '#f6c8c8',
+    R: '#dcdcdc',
+}
+
 
 const builder = new NeuroBuilder();
 
 builder
-    .addSensor(ROTATION_HANDLER)            // Rotation
+    .addSensor(DIRECTION_HANDLER)            // Rotation
     .addSensor(DEFAULT_HANDLER)             // Eyes 0-empty, ~0 = ally, ~1 = enemy
     .addSensor(LIGHT_HANDLER)               // Light
     .addSensor(ENERGY_HANDLER)              // Energy
-    .addSensor(FREE_CELLS_HANDLER)          // Free cells around
-    .addSensor(LIGHT_ON_STEP_CELL_HANDLER)  // Light on step cell
+    .addSensor(DIRECTION_HANDLER)          // Free cells around
+    .addSensor(LIGHT_HANDLER)               // Light on step cell
     .addSensor(BALANCER_HANDLER)            // Balancer
 
-    .addHiddenLayers(4, 8)
+    .addHiddenLayers(3, 6)
 
     .addReaction(Bot.rotateLeft)
     .addReaction(Bot.rotateRight)
@@ -203,7 +220,7 @@ function removeDeadBots() {
 }
 
 function render() {
-    setDims(hidden);
+    setDims(hidden, 1281, 961);
 
     for (const uuid in world.bots) {
         const bot = world.bots[uuid];
@@ -254,6 +271,138 @@ function renderBot() {
     rgb.innerText = selectedBotBinding.rgb;
 }
 
+function getNeuron(eventX, eventY) {
+    if (!selectedBotUuid || !world.bots[selectedBotUuid]) return;
+
+    const perceptron = world.bots[selectedBotUuid].brain;
+
+    const wSpace = Math.floor(PERC_WIDTH / (perceptron.layers.length));
+    let x = wSpace / 2;
+
+    for (let i = 0, l = perceptron.layers.length; i < l; i++) {
+        const layer = perceptron.layers[i];
+        const hSpace = Math.floor(PERC_HEIGHT / (layer.size));
+        let y = hSpace / 2;
+
+        for (let j = 0, k = layer.size; j < k; j++) {
+            const neuron = layer.elements[j];
+
+            if ((x - eventX) ** 2 + (y - eventY) ** 2 < 400) {
+                const relsIn = [];
+                if (i > 0) {
+                    const prevLayer = perceptron.layers[i - 1];
+                    for (const n of prevLayer.elements) {
+                        relsIn.push(n.relations[j]);
+                    }
+                }
+
+                return {
+                    uuid: neuron.uuid,
+                    relationsIn: relsIn,
+                    relationsOut: [...neuron.relations]
+                };
+            }
+            y += hSpace;
+        }
+        x += wSpace;
+    }
+    return null;
+}
+
+function renderPerceptron() {
+    setDims(pHidden, PERC_WIDTH, PERC_HEIGHT);
+    if (!selectedBotUuid || !world.bots[selectedBotUuid]) return;
+
+    const perceptron = world.bots[selectedBotUuid].brain;
+
+    const wSpace = Math.floor(PERC_WIDTH / (perceptron.layers.length));
+    let x = wSpace / 2;
+
+    for (let i = 0, l = perceptron.layers.length; i < l; i++) {
+        const layer = perceptron.layers[i];
+        const hSpace = Math.floor(PERC_HEIGHT / (layer.size));
+        let y = hSpace / 2;
+
+        for (let j = 0, k = layer.size; j < k; j++) {
+            const neuron = layer.elements[j];
+
+            drawNeuron(neuron, x, y);
+            y += hSpace;
+
+            if (selectedNeuronData != null && neuron.uuid === selectedNeuronData.uuid) {
+                drawRelations(i, x, wSpace);
+            }
+
+        }
+        x += wSpace;
+    }
+
+
+}
+
+function drawNeuron(neuron, x, y) {
+    const label = neuron.type + ":" + neuron.calculatedValue.toFixed(2);
+    const temp = document.createElement("canvas");
+    const tempCtx = temp.getContext('2d');
+    setDims(temp, 44, 22);
+
+    tempCtx.roundRect(2, 1, 40, 20, 10);
+    tempCtx.fillStyle = NEURON_COLORS[neuron.type];
+    tempCtx.strokeStyle = '#777777';
+    if (selectedNeuronData != null && neuron.uuid === selectedNeuronData.uuid) {
+        tempCtx.strokeStyle = '#f13838';
+    }
+    tempCtx.fill();
+    tempCtx.stroke();
+
+    tempCtx.textAlign = 'start';
+    tempCtx.fillStyle = 'black';
+    tempCtx.fillText(label, 8, 15);
+
+    pHCtx.drawImage(temp, x - 22, y - 11);
+
+}
+
+function drawRelations(layerIndex, x, wSpace) {
+    if (selectedNeuronData == null) return;
+    const temp = document.createElement("canvas");
+    const tempCtx = temp.getContext('2d');
+
+    if (selectedNeuronData.relationsIn.length > 0) {
+        setDims(temp, 30, PERC_HEIGHT);
+        tempCtx.font = '14px monospace'
+        const hSpace = Math.floor(PERC_HEIGHT / selectedNeuronData.relationsIn.length);
+        let y = hSpace / 2;
+
+        for (let i = 0, l = selectedNeuronData.relationsIn.length; i < l; i++) {
+            tempCtx.fillText(selectedNeuronData.relationsIn[i] + '', 2, y + 4);
+            y += hSpace;
+        }
+
+        pHCtx.drawImage(temp, x - wSpace + 20, 0);
+    }
+
+    if (selectedNeuronData.relationsOut.length > 0) {
+        setDims(temp, 30, PERC_HEIGHT);
+        tempCtx.font = '14px monospace'
+        const hSpaceOut = Math.floor(PERC_HEIGHT / selectedNeuronData.relationsOut.length);
+        let y = hSpaceOut / 2;
+
+        for (let i = 0, l = selectedNeuronData.relationsOut.length; i < l; i++) {
+
+            tempCtx.fillText(selectedNeuronData.relationsOut[i] + '', 2, y + 4);
+            y += hSpaceOut;
+        }
+
+        pHCtx.drawImage(temp, x + wSpace - 50, 0);
+    }
+}
+
+function redrawPerceptron() {
+    setDims(pCanvas, PERC_WIDTH, PERC_HEIGHT);
+    pCtx.drawImage(pHidden, 0, 0);
+}
+
 function renderLog() {
     let log = "<p>" + selectedBotBinding.log.length + "</p>";
     selectedBotBinding.log.forEach(str => {
@@ -264,15 +413,15 @@ function renderLog() {
 
 
 function redraw() {
-    setDims(canvas);
+    setDims(canvas, 1281, 961);
     ctx.drawImage(hidden, 0, 0);
 }
 
-function setDims(canvas) {
-    canvas.width = 1281;
-    canvas.height = 961;
-    canvas.style.width = "1281px";
-    canvas.style.height = "961px"
+function setDims(canvas, w, h) {
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px"
 }
 
 function getTimes() {
@@ -307,6 +456,10 @@ function draw() {
     times.innerText = getTimes();
     coefficient.innerText = world.seasonLightCoef.toFixed(2);
     renderBot();
+    if (selectedBotUuid && world.bots[selectedBotUuid]) {
+        renderPerceptron();
+        redrawPerceptron();
+    }
 }
 
 function oneStep() {
@@ -387,10 +540,16 @@ function initUI() {
             takeACopy(cell.bot);
             renderBot()
         } else {
-            const child = new Bot(clone.brain.copy(), 128, cell, clone.r, clone.g, clone.b);
-            cell.come(child);
+            selectedBotUuid =null;
+            // const child = new Bot(clone.brain.copy(), 128, cell, clone.r, clone.g, clone.b);
+            // cell.come(child);
+            //
+            // world.newBots.push(child);
+        }
 
-            world.newBots.push(child);
+        if (selectedBotUuid && world.bots[selectedBotUuid]) {
+            renderPerceptron();
+            redrawPerceptron();
         }
     });
 
@@ -399,6 +558,18 @@ function initUI() {
     hidden = document.createElement("canvas");
     hctx = hidden.getContext("2d");
     hctx.strokeStyle = "white";
+
+    pCanvas = document.getElementById("p-view");
+    pCanvas.addEventListener("click", (event) => {
+        console.log(event.offsetX, event.offsetY);
+        selectedNeuronData = getNeuron(event.offsetX, event.offsetY);
+        console.log(selectedNeuronData);
+    });
+
+    pCtx = pCanvas.getContext("2d");
+    pHidden = document.createElement("canvas");
+    pHCtx = pHidden.getContext("2d");
+    pHCtx.strokeStyle = "white";
 }
 
 function animRedraw() {
