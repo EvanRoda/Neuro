@@ -92,11 +92,11 @@ const NEURON_COLORS = {
 const builder = new NeuroBuilder();
 
 builder
-    .addSensor(DIRECTION_HANDLER)            // Rotation
+    .addSensor(DIRECTION_HANDLER)           // Rotation
     .addSensor(DEFAULT_HANDLER)             // Eyes 0-empty, ~0 = ally, ~1 = enemy
     .addSensor(LIGHT_HANDLER)               // Light
     .addSensor(ENERGY_HANDLER)              // Energy
-    .addSensor(DIRECTION_HANDLER)          // Free cells around
+    .addSensor(DIRECTION_HANDLER)           // Free cells around
     .addSensor(LIGHT_HANDLER)               // Light on step cell
     .addSensor(BALANCER_HANDLER)            // Balancer
 
@@ -168,30 +168,6 @@ function evaluate() {
             world.deathNote.push(bot.uuid);
         }
     }
-
-    // for (const uuid in world.bots) {
-    //     const bot = world.bots[uuid];
-    //
-    //     if (selectedBotUuid === uuid) {
-    //         takeACopy(bot);
-    //     }
-    //
-    //     if (bot == null) {
-    //         continue;
-    //     }
-    //
-    //     if (bot.isDead) {
-    //         world.deathNote.push(bot.uuid);
-    //         continue;
-    //     }
-    //
-    //     bot.evaluate();
-    //
-    //     if (bot.energy <= 0) {
-    //         bot.isDead = true;
-    //         world.deathNote.push(bot.uuid);
-    //     }
-    // }
 }
 
 function addNewBots() {
