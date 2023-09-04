@@ -1,7 +1,8 @@
 [Done] 1. Change font-awesome to line-awesome
-2. Restart Button
+2. Restart Button.
 3. Add initial color.
 4. Add color scheme for initial color.
 5. Pause day/night cycle.
-6. Add toggle light_by_height/simple_light
+6. Add toggle light_by_height/simple_light.
+7. Add separate buttons for colors schemes.
 
