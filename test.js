@@ -1,8 +1,3 @@
-/**
- *
- *
- * */
-
 
 /**
  * X
@@ -451,9 +446,9 @@ function initUI() {
         buttonStep.disabled = playToggle;
 
         if (playToggle) {
-            buttonPause.innerHTML = "<i class=\"fa-solid fa-pause\"></i>";
+            buttonPause.innerHTML = "<i class=\"las la-pause\"></i>";
         } else {
-            buttonPause.innerHTML = "<i class=\"fa-solid fa-play\"></i>";
+            buttonPause.innerHTML = "<i class=\"las la-play\"></i>";
         }
     });
 
@@ -517,7 +512,7 @@ function initUI() {
             takeACopy(cell.bot);
             renderBot()
         } else {
-            selectedBotUuid =null;
+            selectedBotUuid = null;
             // const child = new Bot(clone.brain.copy(), 128, cell, clone.r, clone.g, clone.b);
             // cell.come(child);
             //
