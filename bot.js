@@ -1,6 +1,7 @@
 class Bot {
     uuid;
     color;
+    initialColor;
     colorInt;
     brain;
 
@@ -16,7 +17,7 @@ class Bot {
     g = 128;
     b = 128;
 
-    constructor(brain, energy, cell, r, g, b) {
+    constructor(brain, energy, cell, initialColor, r, g, b) {
         this.uuid = generateUUID();
         this.direction = randomInt(8);
         this.energy = energy;
@@ -25,6 +26,12 @@ class Bot {
         this.brain = brain;
         this.cell = cell;
         this.age = 0;
+        this.initialColor = initialColor;
+
+        if (initialColor == null) {
+            this.initialColor = this.color;
+        }
+
         this.r = r;
         this.g = g;
         this.b = b;
@@ -136,7 +143,7 @@ class Bot {
         if (freeCells.length > 4) {
             const freeCell = self.cell.world.getRandomCell(freeCells);
             self.energy = self.energy / 2;
-            const child = new Bot(self.brain.copy(), self.energy, freeCell, self.r, self.g, self.b);
+            const child = new Bot(self.brain.copy(), self.energy, freeCell, self.initialColor, self.r, self.g, self.b);
 
             if (self.mutateCounter === HARD_MUTATE_DELAY) {
                 self.mutateCounter = 0;

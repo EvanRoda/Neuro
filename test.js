@@ -56,9 +56,11 @@ let showLogToggle = false;
 let botPaintToggle = 0;         // 0 - basic
                                 // 1 - flora/fauna
                                 // 2 - energy
+                                // 3 - clan (initialColor)
 let buttonBotColor;
 let buttonFloraFauna;
 let buttonEnergy;
+let buttonClanColor;
 
 let alive;
 let genome;
@@ -214,6 +216,9 @@ function render() {
                 break;
             case 2:
                 hctx.fillStyle = "hsl(193, 100%, " + (90 - Math.floor(bot.energy * (60 / MAX_ENERGY))) + "%)";
+                break;
+            case 3:
+                hctx.fillStyle = bot.initialColor;
                 break;
         }
 
@@ -468,6 +473,10 @@ function initUI() {
         oneStep();
     });
 
+    buttonClanColor = document.getElementById("clanColorsButton");
+    buttonClanColor.addEventListener('click', () => {
+        botPaintToggle = 3;
+    });
     buttonBotColor = document.getElementById("botColorsButton");
     buttonBotColor.addEventListener('click', () => {
         botPaintToggle = 0;
@@ -519,7 +528,7 @@ function initUI() {
         if (!cell.isFree()) {
             console.log(cell.bot);
             selectedBotUuid = cell.bot.uuid;
-            clone = new Bot(cell.bot.brain.copy(), 128, cell, cell.bot.r, cell.bot.g, cell.bot.b);
+            clone = new Bot(cell.bot.brain.copy(), 128, cell, cell.bot.initialColor, cell.bot.r, cell.bot.g, cell.bot.b);
             showLogToggle = false;
             logContainer.classList.add("hidden");
             takeACopy(cell.bot);
