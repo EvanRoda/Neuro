@@ -25,6 +25,7 @@
  *
  * */
 
+let world;
 let animationId;
 let needRedraw = true;
 let canvas;
@@ -44,6 +45,7 @@ let playToggle = true;
 let buttonRenderToggle;
 let buttonPause;
 let buttonStep;
+let buttonRestart;
 let selectedBotUuid = null;
 let clone = null;
 let selectedBotBinding = {};
@@ -106,16 +108,18 @@ builder
     .addReaction(Bot.nothing)
     .addReaction(Bot.death)
 
-
-const world = new World(WORLD_WIDTH, WORLD_HEIGHT, builder);
-
-
 window.addEventListener('load', () => {
     console.log('page is fully loaded');
 
     initUI();
+    start();
     animRedraw();
 });
+
+function start() {
+    world = new World(WORLD_WIDTH, WORLD_HEIGHT, builder);
+}
+
 
 function takeACopy(bot) {
     if (bot == null || bot.isDead) {
@@ -471,6 +475,9 @@ function initUI() {
             botPaintToggle = 0;
         }
     });
+
+    buttonRestart = document.getElementById("restartButton");
+    buttonRestart.addEventListener('click', start);
 
     showLog = document.getElementById("showLog");
     showLog.addEventListener('click', () => {

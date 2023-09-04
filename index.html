@@ -24,6 +24,14 @@
             background-color: grey;
         }
 
+        .danger {
+            background-color: crimson;
+        }
+
+        .right {
+            float: right;
+        }
+
         .separator {
             margin: 10px 0;
             border-top: 0.5px solid grey;
@@ -44,8 +52,8 @@
         }
 
         .counter-container {
+            margin-right: 16px;
             line-height: 27px;
-            float: right;
             font-size: 25px;
             font-family: monospace;
         }
@@ -103,9 +111,12 @@
                     <button class="custom-button" id="paintBotButton">
                         <i class="las la-paint-brush"></i>
                     </button>
+                    <button class="custom-button danger right" id="restartButton">
+                        <i class="las la-recycle"></i>
+                    </button>
 
-                    <div class="counter-container">
-                        <div >
+                    <div class="counter-container right">
+                        <div>
                             <i class="las la-stopwatch"></i>
                             <span id="counter"></span>
                         </div>
@@ -113,7 +124,6 @@
                             <i class="las la-biohazard"></i>
                             <span id="bots-counter"></span>
                         </div>
-
                     </div>
                 </div>
                 <div class="separator"></div>
@@ -124,7 +134,6 @@
                             <i class="lar la-sun"></i>
                             <span id="coefficient"></span>
                         </span>
-
                     </div>
                 </div>
 

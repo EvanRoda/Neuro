@@ -1,5 +1,5 @@
 [Done] 1. Change font-awesome to line-awesome
-2. Restart Button.
+[Done] 2. Restart Button.
 3. Add initial color.
 4. Add color scheme for initial color.
 5. Pause day/night cycle.
