@@ -56,7 +56,9 @@ let showLogToggle = false;
 let botPaintToggle = 0;         // 0 - basic
                                 // 1 - flora/fauna
                                 // 2 - energy
-let buttonBotPaint;
+let buttonBotColor;
+let buttonFloraFauna;
+let buttonEnergy;
 
 let alive;
 let genome;
@@ -466,15 +468,19 @@ function initUI() {
         oneStep();
     });
 
-
-    buttonBotPaint = document.getElementById("paintBotButton");
-    buttonBotPaint.addEventListener('click', () => {
-        botPaintToggle++;
-
-        if (botPaintToggle === 3) {
-            botPaintToggle = 0;
-        }
+    buttonBotColor = document.getElementById("botColorsButton");
+    buttonBotColor.addEventListener('click', () => {
+        botPaintToggle = 0;
     });
+    buttonFloraFauna = document.getElementById("floraFaunaButton");
+    buttonFloraFauna.addEventListener('click', () => {
+        botPaintToggle = 1;
+    });
+    buttonEnergy = document.getElementById("energyButton");
+    buttonEnergy.addEventListener('click', () => {
+        botPaintToggle = 2;
+    });
+
 
     buttonRestart = document.getElementById("restartButton");
     buttonRestart.addEventListener('click', start);
