@@ -61,7 +61,8 @@ class World {
         const size = this.width * this.height;
         for (let i = 0; i < size; i++) {
             const y = Math.floor(i / this.width);
-            this.cells[i] = new Cell(this, i % this.width, y, Math.floor(100 * (this.height - y) / this.height));
+            //this.cells[i] = new Cell(this, i % this.width, y, SIMPLE_LIGHT(y, this.height));
+            this.cells[i] = new Cell(this, i % this.width, y, LIGHT_BY_HEIGHT(y, this.height));
             if (Math.random() < 0.2) {
                 const bot = new Bot(this.botBuilder.build(), 100, this.cells[i], 128, 128, 128);
                 this.bots[bot.uuid] = bot;

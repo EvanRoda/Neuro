@@ -110,7 +110,7 @@ class Perceptron {
             self.decreaseEnergy(1);
             return "Default reaction";
         };
-        let weight = 0;
+        let weight = -1;
         const rElements = this.layers[this.layers.length - 1].elements;
         for (let i = 0, l = rElements.length; i < l; i++) {
             const neuron = rElements[i];
@@ -226,14 +226,6 @@ class Sensor extends Neuron {
 
     constructor(handler) {
         super("S", handler);
-    }
-
-    generateRelations() {
-        if (this.layer.nextLayer != null) {
-            for (let i = 0; i < this.layer.nextLayer.size; i++) {
-                this.relations[i] = 1;
-            }
-        }
     }
 }
 

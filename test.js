@@ -72,8 +72,8 @@ let rgb;
 
 const WORLD_WIDTH = 128;
 const WORLD_HEIGHT = 96;
-const MAX_ENERGY = 250;
-const HARD_MUTATE_DELAY = 3;
+const MAX_ENERGY = 500;
+const HARD_MUTATE_DELAY = 5;
 const SOFT_MUTATE_COUNT = 3;
 const PERC_WIDTH = 500;
 const PERC_HEIGHT = 330;
@@ -84,6 +84,7 @@ const NEURON_COLORS = {
     B: '#a6e7d4',
     C: '#ecbbeb',
     D: '#f6c8c8',
+    E: '#e8df98',
     R: '#dcdcdc',
 }
 
@@ -99,7 +100,7 @@ builder
     .addSensor(LIGHT_HANDLER)               // Light on step cell
     .addSensor(BALANCER_HANDLER)            // Balancer
 
-    .addHiddenLayers(3, 6)
+    .addHiddenLayers(4, 6)
 
     .addReaction(Bot.rotateLeft)
     .addReaction(Bot.rotateRight)
@@ -235,7 +236,7 @@ function render() {
                 hctx.fillStyle = "rgb(" + bot.r + ", " + bot.g + "," + bot.b + ")";
                 break;
             case 2:
-                hctx.fillStyle = "hsl(193, 100%, " + (90 - Math.floor(bot.energy * 0.24)) + "%)";
+                hctx.fillStyle = "hsl(193, 100%, " + (90 - Math.floor(bot.energy * (60 / MAX_ENERGY))) + "%)";
                 break;
         }
 

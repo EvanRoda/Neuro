@@ -43,13 +43,18 @@ function changeColorInt(colorInt) {
 const aHandler = (value) => { return value > 0 ? 1 : -1; };
 const bHandler = (value) => { return value > -0.5 && value < 0.5 ? 1 : -1; };
 const cHandler = (value) => { return Math.abs(value) >= Math.random() ? 1 : -1; };
+const eHandler = (value) => { return Math.tanh(value); };
+
+
 
 function randomHandler() {
     const c = Math.random();
-    if (c < 0.7) {
+    if (c < 0.4) {
         return ["A", aHandler];
-    } else if (c < 0.99) {
+    } else if (c < 0.8) {
         return ["B", bHandler];
+    } else if (c < 0.99) {
+        return ["E", eHandler];
     } else {
         return ["C", cHandler];
     }
@@ -68,6 +73,13 @@ function friendOrFoe(a, b) {
     return changes / a.length;
 }
 
+const LIGHT_BY_HEIGHT = (y, height) => {
+    return Math.floor(100 * (height - y) / height);
+}
+
+const SIMPLE_LIGHT = (y, height) => {
+    return 100;
+}
 const generateUUID = () => {
     let
         d = new Date().getTime(),
