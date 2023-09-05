@@ -62,6 +62,9 @@ let buttonFloraFauna;
 let buttonEnergy;
 let buttonClanColor;
 
+let buttonDayNight;
+let dayNightPlayToggle = true;
+
 let alive;
 let genome;
 let uuid;
@@ -408,7 +411,7 @@ function setDims(canvas, w, h) {
 }
 
 function getTimes() {
-    const t = world.age % 4000;
+    const t = world.dayTime % 4000;
     if (t > 3000) {
         return "Вечер";
     } else if (t > 2000) {
@@ -421,6 +424,10 @@ function getTimes() {
 }
 
 function calculate() {
+    world.age++;
+    if (dayNightPlayToggle) {
+        world.dayTime++;
+    }
     world.calcSeasonLightCoef();
     addNewBots();
     evaluate();
@@ -433,7 +440,7 @@ function draw() {
         redraw();
     }
 
-    counter.innerText = world.age++;
+    counter.innerText = world.age;
     botsCounter.innerText = Object.keys(world.bots).length;
 
     times.innerText = getTimes();
@@ -490,6 +497,16 @@ function initUI() {
         botPaintToggle = 2;
     });
 
+    buttonDayNight = document.getElementById("dayNightButton");
+    buttonDayNight.addEventListener('click', () => {
+        dayNightPlayToggle = !dayNightPlayToggle;
+
+        if (dayNightPlayToggle) {
+            buttonDayNight.innerHTML = "<i class=\"las la-pause\"></i>";
+        } else {
+            buttonDayNight.innerHTML = "<i class=\"las la-play\"></i>";
+        }
+    });
 
     buttonRestart = document.getElementById("restartButton");
     buttonRestart.addEventListener('click', start);

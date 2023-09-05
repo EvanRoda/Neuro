@@ -2,7 +2,7 @@
 [Done] 2. Restart Button.
 [Done] 3. Add initial color.
 [Done] 4. Add color scheme for initial color.
-5. Pause day/night cycle.
+[Done] 5. Pause day/night cycle.
 6. Add toggle light_by_height/simple_light.
 [Done] 7. Add separate buttons for colors schemes.
 

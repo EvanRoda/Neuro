@@ -46,7 +46,8 @@ class World {
     bots = {};
     newBots = [];
     deathNote = [];
-    age = 2000;
+    age = 0;
+    dayTime = 2000;
     seasonLightCoef = 1;
 
     constructor(width, height, botBuilder) {
@@ -134,10 +135,8 @@ class World {
     }
 
     calcSeasonLightCoef() {
-        // this.seasonLightCoef = 1;
-
-        const a = this.age % 4000;
-        const season =  Math.floor(this.age / 1000) % 4;
+        const a = this.dayTime % 4000;
+        const season =  Math.floor(this.dayTime / 1000) % 4;
         switch (season) {
             case 0:
                 this.seasonLightCoef = 0.00025 * a + 0.25;

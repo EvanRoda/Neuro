@@ -32,6 +32,10 @@
             float: right;
         }
 
+        .left {
+            float: left;
+        }
+
         .separator {
             margin: 10px 0;
             border-top: 0.5px solid grey;
@@ -87,6 +91,7 @@
         }
 
         .iconed-text {
+            line-height: 50px;
             float: right;
         }
     </style>
@@ -142,13 +147,17 @@
 
                 <div class="separator"></div>
                 <div class="world">
-                    <div class="times-container">
+                    <button class="custom-button" id="dayNightButton">
+                        <i class="las la-pause"></i>
+                    </button>
+
+                    <span class="times-container">
                         <span id="times"></span>
                         <span class="iconed-text">
                             <i class="lar la-sun"></i>
                             <span id="coefficient"></span>
                         </span>
-                    </div>
+                    </span>
                 </div>
 
                 <div class="separator"></div>
