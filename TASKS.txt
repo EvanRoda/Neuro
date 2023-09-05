@@ -8,4 +8,8 @@
 8. Hide bot information if no selected bot.
 9. Add button to show perceptron view to prevent freeze on selected bot.
 10. Fixed UI of bot log.
+11. Cherry-pick bots.
+12. Download bots to file.
+13. Upload from file.
+14. Save bots to browser cache.
 
