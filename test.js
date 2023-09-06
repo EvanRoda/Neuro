@@ -487,18 +487,22 @@ function initUI() {
     buttonClanColor = document.getElementById("clanColorsButton");
     buttonClanColor.addEventListener('click', () => {
         botPaintToggle = 3;
+        draw();
     });
     buttonBotColor = document.getElementById("botColorsButton");
     buttonBotColor.addEventListener('click', () => {
         botPaintToggle = 0;
+        draw();
     });
     buttonFloraFauna = document.getElementById("floraFaunaButton");
     buttonFloraFauna.addEventListener('click', () => {
         botPaintToggle = 1;
+        draw();
     });
     buttonEnergy = document.getElementById("energyButton");
     buttonEnergy.addEventListener('click', () => {
         botPaintToggle = 2;
+        draw();
     });
 
     buttonDayNight = document.getElementById("dayNightButton");
@@ -513,7 +517,10 @@ function initUI() {
     });
 
     buttonRestart = document.getElementById("restartButton");
-    buttonRestart.addEventListener('click', start);
+    buttonRestart.addEventListener('click', () => {
+        start();
+        draw();
+    });
 
     showLog = document.getElementById("showLog");
     showLog.addEventListener('click', () => {

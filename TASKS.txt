@@ -12,4 +12,5 @@
 12. Download bots to file.
 13. Upload from file.
 14. Save bots to browser cache.
+[Done] 15. Redraw on change color scheme in pause mode.
 
