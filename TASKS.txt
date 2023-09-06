@@ -9,8 +9,14 @@
 [Done] 9. Add button to show perceptron view to prevent freeze on selected bot.
 [Done] 10. Fixed UI of bot log.
 11. Cherry-pick bots.
+    Добавить панель: шесть ячеек для сохранения ботов и справа кнопка Рисовать.
+    При выборе рисования мир ставится на паузу и меняются действия на клик.
+    Использовать событие move при зажатой кнопке мыши для рисования.
+    Выйти из режима рисования можно нажав на Плей или снова на кнопку рисования.
 12. Download bots to file.
 13. Upload from file.
 14. Save bots to browser cache.
 [Done] 15. Redraw on change color scheme in pause mode.
+16. Add button clear canvas.
+17. Add button close for BotView to deselect the bot.
 
