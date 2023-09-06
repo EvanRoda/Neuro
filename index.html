@@ -11,7 +11,7 @@
     <script src="world.js"></script>
     <script src="test.js"></script>
     <style>
-        .custom-button {
+        .square-button {
             width: 50px;
             height: 50px;
             border: 0.5px solid grey;
@@ -20,8 +20,23 @@
             background-color: forestgreen;
             color: aliceblue;
         }
-        .custom-button:disabled {
+        .square-button:disabled {
             background-color: grey;
+        }
+
+        .tab-button {
+            margin: 0 2px;
+            width: 222px;
+            height: 24px;
+            font-size: 16px;
+            border: 0.5px solid grey;
+            border-radius: 5px;
+            background-color: forestgreen;
+            color: aliceblue;
+        }
+
+        .pressed {
+            background-color: #205220;
         }
 
         .danger {
@@ -103,16 +118,16 @@
         <div class="item">
             <div class="hud">
                 <div class="buttons">
-                    <button class="custom-button" id="renderToggle">
+                    <button class="square-button" id="renderToggle">
                         <i class="las la-desktop"></i>
                     </button>
-                    <button class="custom-button" id="pauseButton">
+                    <button class="square-button" id="pauseButton">
                         <i class="las la-pause"></i>
                     </button>
-                    <button class="custom-button" id="stepButton" disabled>
+                    <button class="square-button" id="stepButton" disabled>
                         <i class="las la-step-forward"></i>
                     </button>
-                    <button class="custom-button danger right" id="restartButton">
+                    <button class="square-button danger right" id="restartButton">
                         <i class="las la-recycle"></i>
                     </button>
 
@@ -130,23 +145,23 @@
 
                 <div class="separator"></div>
                 <div class="paint">
-                    <button class="custom-button" id="clanColorsButton">
+                    <button class="square-button" id="clanColorsButton">
                         <i class="las la-brush"></i>
                     </button>
-                    <button class="custom-button" id="botColorsButton">
+                    <button class="square-button" id="botColorsButton">
                         <i class="las la-paint-brush"></i>
                     </button>
-                    <button class="custom-button" id="floraFaunaButton">
+                    <button class="square-button" id="floraFaunaButton">
                         <i class="las la-dragon"></i>
                     </button>
-                    <button class="custom-button" id="energyButton">
+                    <button class="square-button" id="energyButton">
                         <i class="las la-bolt"></i>
                     </button>
                 </div>
 
                 <div class="separator"></div>
                 <div class="world">
-                    <button class="custom-button" id="dayNightButton">
+                    <button class="square-button" id="dayNightButton">
                         <i class="las la-pause"></i>
                     </button>
 
@@ -160,7 +175,7 @@
                 </div>
 
                 <div class="separator"></div>
-                <div class="bot">
+                <div class="bot hidden" id="botInfoContainer">
                     <div class="bot-item" id="alive"></div>
                     <div class="bot-item small-text" id="genome"></div>
                     <div class="bot-item small-text" id="uuid"></div>
@@ -184,16 +199,19 @@
                         <span>RGB</span>
                         <span id="rgb" style="float: right"></span>
                     </div>
+
+                    <div class="separator"></div>
+                    <button class="tab-button" id="showLog">
+                        <i class="las la-bars"></i> Log
+                    </button>
+                    <button class="tab-button" id="showPerceptron">
+                        Perceptron
+                    </button>
+                    <div class="perceptron-container hidden" id="perceptronContainer">
+                        <canvas id="p-view"></canvas>
+                    </div>
+                    <div class="log-container hidden" id="logContainer"></div>
                 </div>
-                <div class="separator"></div>
-                <div class="perceptron">
-                    <canvas id="p-view"></canvas>
-                </div>
-                <div class="separator"></div>
-                <button class="custom-button" id="showLog">
-                    <i class="las la-bars"></i>
-                </button>
-                <div class="log-container hidden" id="logContainer"></div>
             </div>
         </div>
     </div>

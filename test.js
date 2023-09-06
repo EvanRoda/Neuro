@@ -50,9 +50,13 @@ let selectedBotUuid = null;
 let clone = null;
 let selectedBotBinding = {};
 let selectedNeuronData = null;
+let botInfoContainer;
 let logContainer;
 let showLog;
 let showLogToggle = false;
+let showPerceptron;
+let showPerceptronToggle = false;
+let perceptronContainer;
 let botPaintToggle = 0;         // 0 - basic
                                 // 1 - flora/fauna
                                 // 2 - energy
@@ -79,7 +83,7 @@ const WORLD_HEIGHT = 96;
 const MAX_ENERGY = 500;
 const HARD_MUTATE_DELAY = 5;
 const SOFT_MUTATE_COUNT = 3;
-const PERC_WIDTH = 500;
+const PERC_WIDTH = 469;
 const PERC_HEIGHT = 330;
 
 const NEURON_COLORS = {
@@ -446,7 +450,7 @@ function draw() {
     times.innerText = getTimes();
     coefficient.innerText = world.seasonLightCoef.toFixed(2);
     renderBot();
-    if (selectedBotUuid && world.bots[selectedBotUuid]) {
+    if (selectedBotUuid && world.bots[selectedBotUuid] && showPerceptronToggle) {
         renderPerceptron();
         redrawPerceptron();
     }
@@ -514,14 +518,18 @@ function initUI() {
     showLog = document.getElementById("showLog");
     showLog.addEventListener('click', () => {
         showLogToggle = !showLogToggle
-        if (showLogToggle) {
-            logContainer.classList.remove("hidden");
-            renderLog();
-        } else {
-            logContainer.classList.add("hidden");
-        }
+        showPerceptronToggle = false;
+        onChangeLogToggle();
+        onChangePerceptronToggle();
     });
 
+    showPerceptron = document.getElementById("showPerceptron");
+    showPerceptron.addEventListener('click', () => {
+        showPerceptronToggle = !showPerceptronToggle
+        showLogToggle = false;
+        onChangeLogToggle();
+        onChangePerceptronToggle();
+    });
 
     counter = document.getElementById("counter");
     botsCounter = document.getElementById("bots-counter");
@@ -537,6 +545,8 @@ function initUI() {
     coord = document.getElementById("coord");
     rgb = document.getElementById("rgb");
     logContainer = document.getElementById("logContainer");
+    perceptronContainer = document.getElementById("perceptronContainer");
+    botInfoContainer = document.getElementById("botInfoContainer");
 
     canvas = document.getElementById("screen");
     canvas.addEventListener("click", (event) => {
@@ -547,11 +557,15 @@ function initUI() {
             selectedBotUuid = cell.bot.uuid;
             clone = new Bot(cell.bot.brain.copy(), 128, cell, cell.bot.initialColor, cell.bot.r, cell.bot.g, cell.bot.b);
             showLogToggle = false;
-            logContainer.classList.add("hidden");
+            showPerceptronToggle = false;
+            onChangeLogToggle();
+            onChangePerceptronToggle();
+            botInfoContainer.classList.remove("hidden");
             takeACopy(cell.bot);
             renderBot()
         } else {
             selectedBotUuid = null;
+            botInfoContainer.classList.add("hidden");
             // const child = new Bot(clone.brain.copy(), 128, cell, clone.r, clone.g, clone.b);
             // cell.come(child);
             //
@@ -581,6 +595,27 @@ function initUI() {
     pHidden = document.createElement("canvas");
     pHCtx = pHidden.getContext("2d");
     pHCtx.strokeStyle = "white";
+}
+
+function onChangeLogToggle() {
+    if (showLogToggle) {
+        showLog.classList.add("pressed");
+        logContainer.classList.remove("hidden");
+        renderLog();
+    } else {
+        showLog.classList.remove("pressed");
+        logContainer.classList.add("hidden");
+    }
+}
+
+function onChangePerceptronToggle() {
+    if (showPerceptronToggle) {
+        showPerceptron.classList.add("pressed");
+        perceptronContainer.classList.remove("hidden");
+    } else {
+        showPerceptron.classList.remove("pressed");
+        perceptronContainer.classList.add("hidden");
+    }
 }
 
 function animRedraw() {
