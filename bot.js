@@ -37,6 +37,10 @@ class Bot {
         this.b = b;
     }
 
+    clone() {
+        return new Bot(this.brain.copy(), 128, null, this.initialColor, this.r, this.g, this.b);
+    }
+
     decreaseEnergy(value) {
         this.energy -= value;
     }

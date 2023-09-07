@@ -96,6 +96,67 @@ const NEURON_COLORS = {
     R: '#dcdcdc',
 }
 
+const storage = [null, null, null, null, null, null];
+const buttonBox = [null, null, null, null, null, null];
+const buttonEmpty = [null, null, null, null, null, null];
+let buttonPaint;
+let paintingToggle = false;
+let mousePressed = false;
+
+function initStorageUI() {
+    buttonPaint = document.getElementById("paintButton");
+    buttonPaint.addEventListener('click', () => {
+        paintingToggle = !paintingToggle;
+        onChangePaintingToggle();
+    });
+
+    for (let i = 0; i < 6; i++) {
+        buttonBox[i] = document.getElementById(`boxButton${i}`);
+        buttonBox[i].addEventListener('click', () => {
+            onStorageClick(i);
+            storageBoxRedraw(i);
+        });
+
+        buttonEmpty[i] = document.getElementById(`emptyButton${i}`);
+        buttonEmpty[i].addEventListener('click', () => {
+            emptyBox(i);
+            storageBoxRedraw(i);
+        });
+    }
+}
+
+function onStorageClick(boxIndex) {
+    if (storage[boxIndex] === null) {
+        if (selectedBotUuid != null) {
+            storage[boxIndex] = clone.clone();
+        }
+    } else {
+        clone = storage[boxIndex].clone();
+        takeACopy(clone);
+    }
+}
+
+function storageBoxRedraw(boxIndex) {
+    if (storage[boxIndex] === null) {
+        buttonBox[boxIndex].style['background-color'] = '#adadad';
+        buttonBox[boxIndex].style['color'] = '#575757';
+    } else {
+        buttonBox[boxIndex].style['background-color'] = storage[boxIndex].color;
+        buttonBox[boxIndex].style['color'] = 'aliceblue';
+    }
+}
+
+function emptyBox(boxIndex) {
+    storage[boxIndex] = null;
+}
+
+function onChangePaintingToggle() {
+    if (paintingToggle) {
+        buttonPaint.classList.add("pressed");
+    } else {
+        buttonPaint.classList.remove("pressed");
+    }
+}
 
 const builder = new NeuroBuilder();
 
@@ -146,7 +207,7 @@ function takeACopy(bot) {
         age: bot.age,
         energy: bot.energy,
         mutateCounter: bot.mutateCounter,
-        coords: "(" + bot.cell.x + ", " + bot.cell.y + ")",
+        coords: bot.cell != null ? "(" + bot.cell.x + ", " + bot.cell.y + ")" : "(N/A, N/A)",
         rgb: "(" + bot.r.toFixed(0) + ", " + bot.g.toFixed(0) + "," + bot.b.toFixed(0) + ")",
         log: bot.reactionLog,
     }
@@ -240,7 +301,7 @@ function render() {
 }
 
 function renderBot() {
-    if (selectedBotUuid == null) return;
+    if (selectedBotUuid == null && clone == null) return;
 
     if (selectedBotBinding.dead) {
         alive.innerText = "Dead";
@@ -326,8 +387,6 @@ function renderPerceptron() {
         }
         x += wSpace;
     }
-
-
 }
 
 function drawNeuron(neuron, x, y) {
@@ -461,17 +520,21 @@ function oneStep() {
     draw();
 }
 
+function onChangePlayToggle() {
+    buttonStep.disabled = playToggle;
+
+    if (playToggle) {
+        buttonPause.innerHTML = "<i class=\"las la-pause\"></i>";
+    } else {
+        buttonPause.innerHTML = "<i class=\"las la-play\"></i>";
+    }
+}
+
 function initUI() {
     buttonPause = document.getElementById("pauseButton");
     buttonPause.addEventListener("click", () => {
         playToggle = !playToggle;
-        buttonStep.disabled = playToggle;
-
-        if (playToggle) {
-            buttonPause.innerHTML = "<i class=\"las la-pause\"></i>";
-        } else {
-            buttonPause.innerHTML = "<i class=\"las la-play\"></i>";
-        }
+        onChangePlayToggle();
     });
 
     buttonRenderToggle = document.getElementById("renderToggle");
@@ -557,31 +620,24 @@ function initUI() {
 
     canvas = document.getElementById("screen");
     canvas.addEventListener("click", (event) => {
-        const cell = world.getCell(Math.floor(event.offsetX / 10) , Math.floor(event.offsetY / 10));
-        console.log(cell.x, cell.y);
-        if (!cell.isFree()) {
-            console.log(cell.bot);
-            selectedBotUuid = cell.bot.uuid;
-            clone = new Bot(cell.bot.brain.copy(), 128, cell, cell.bot.initialColor, cell.bot.r, cell.bot.g, cell.bot.b);
-            showLogToggle = false;
-            showPerceptronToggle = false;
-            onChangeLogToggle();
-            onChangePerceptronToggle();
-            botInfoContainer.classList.remove("hidden");
-            takeACopy(cell.bot);
-            renderBot()
+        if (paintingToggle) {
+            onPaintingMode(event);
         } else {
-            selectedBotUuid = null;
-            botInfoContainer.classList.add("hidden");
-            // const child = new Bot(clone.brain.copy(), 128, cell, clone.r, clone.g, clone.b);
-            // cell.come(child);
-            //
-            // world.newBots.push(child);
+            onNormalMode(event);
         }
+    });
 
-        if (selectedBotUuid && world.bots[selectedBotUuid]) {
-            renderPerceptron();
-            redrawPerceptron();
+    canvas.addEventListener("mousedown", (event) => {
+        mousePressed = true;
+    });
+
+    window.addEventListener('mouseup', (event) => {
+        mousePressed = false;
+    })
+
+    canvas.addEventListener('mousemove', (event) => {
+        if (mousePressed && paintingToggle) {
+            onPaintingMode(event);
         }
     });
 
@@ -602,6 +658,47 @@ function initUI() {
     pHidden = document.createElement("canvas");
     pHCtx = pHidden.getContext("2d");
     pHCtx.strokeStyle = "white";
+
+    initStorageUI();
+}
+
+function onNormalMode(event) {
+    const cell = world.getCell(Math.floor(event.offsetX / 10) , Math.floor(event.offsetY / 10));
+    console.log(cell.x, cell.y);
+    if (!cell.isFree()) {
+        console.log(cell.bot);
+        selectedBotUuid = cell.bot.uuid;
+        clone = cell.bot.clone();
+        showLogToggle = false;
+        showPerceptronToggle = false;
+        onChangeLogToggle();
+        onChangePerceptronToggle();
+        botInfoContainer.classList.remove("hidden");
+        takeACopy(cell.bot);
+        renderBot()
+    } else {
+        selectedBotUuid = null;
+        clone = null;
+        botInfoContainer.classList.add("hidden");
+    }
+
+    if (selectedBotUuid && world.bots[selectedBotUuid]) {
+        renderPerceptron();
+        redrawPerceptron();
+    }
+}
+
+function onPaintingMode(event) {
+    const cell = world.getCell(Math.floor(event.offsetX / 10) , Math.floor(event.offsetY / 10));
+
+    if (cell.isFree()) {
+        const child = clone.clone();
+        child.initialColor = child.color;
+        cell.come(child);
+        child.cell = cell;
+        world.bots[child.uuid] = child;
+        draw();
+    }
 }
 
 function onChangeLogToggle() {
