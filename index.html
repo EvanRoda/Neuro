@@ -51,6 +51,13 @@
             vertical-align: top;
         }
 
+        .small {
+            width: 25px;
+            height: 25px;
+            font-size: 16px;
+            padding-inline: 3px;
+        }
+
         .pressed {
             background-color: #205220;
         }
@@ -226,6 +233,9 @@
 
                 <div class="separator"></div>
                 <div class="bot hidden" id="botInfoContainer">
+                    <button class="square-button small danger right" id="closeBotButton" title="Close bot view">
+                        <i class="las la-times"></i>
+                    </button>
                     <div class="bot-item" id="alive"></div>
                     <div class="bot-item small-text" id="genome"></div>
                     <div class="bot-item small-text" id="uuid"></div>

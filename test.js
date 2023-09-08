@@ -51,6 +51,7 @@ let clone = null;
 let selectedBotBinding = {};
 let selectedNeuronData = null;
 let botInfoContainer;
+let buttonCloseBot;
 let logContainer;
 let showLog;
 let showLogToggle = false;
@@ -585,6 +586,11 @@ function initUI() {
         draw();
     });
 
+    buttonCloseBot = document.getElementById("closeBotButton");
+    buttonCloseBot.addEventListener('click', () => {
+        hideBotInfo()
+    });
+
     showLog = document.getElementById("showLog");
     showLog.addEventListener('click', () => {
         showLogToggle = !showLogToggle
@@ -677,15 +683,19 @@ function onNormalMode(event) {
         takeACopy(cell.bot);
         renderBot()
     } else {
-        selectedBotUuid = null;
-        clone = null;
-        botInfoContainer.classList.add("hidden");
+        hideBotInfo()
     }
 
     if (selectedBotUuid && world.bots[selectedBotUuid]) {
         renderPerceptron();
         redrawPerceptron();
     }
+}
+
+function hideBotInfo() {
+    selectedBotUuid = null;
+    clone = null;
+    botInfoContainer.classList.add("hidden");
 }
 
 function onPaintingMode(event) {
