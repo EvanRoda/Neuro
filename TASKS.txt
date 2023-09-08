@@ -13,6 +13,6 @@
 13. Upload from file.
 14. Save bots to browser cache.
 [Done] 15. Redraw on change color scheme in pause mode.
-16. Add button clear canvas.
+[Done] 16. Add button clear canvas.
 [Done] 17. Add button close for BotView to deselect the bot.
 

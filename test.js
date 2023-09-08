@@ -46,6 +46,7 @@ let buttonRenderToggle;
 let buttonPause;
 let buttonStep;
 let buttonRestart;
+let buttonClear;
 let selectedBotUuid = null;
 let clone = null;
 let selectedBotBinding = {};
@@ -584,6 +585,14 @@ function initUI() {
     buttonRestart.addEventListener('click', () => {
         start();
         draw();
+    });
+
+    buttonClear = document.getElementById("clearButton");
+    buttonClear.addEventListener('click', () => {
+        world.newBots = [];
+        for (const uuid in world.bots) {
+            world.bots[uuid].isDead = true;
+        }
     });
 
     buttonCloseBot = document.getElementById("closeBotButton");
