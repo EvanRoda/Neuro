@@ -664,9 +664,11 @@ function initUI() {
 
     pCanvas = document.getElementById("p-view");
     pCanvas.addEventListener("click", (event) => {
-        console.log(event.offsetX, event.offsetY);
         selectedNeuronData = getNeuron(event.offsetX, event.offsetY);
-        console.log(selectedNeuronData);
+        if (selectedBotUuid && world.bots[selectedBotUuid]) {
+            renderPerceptron();
+            redrawPerceptron();
+        }
     });
 
     pCtx = pCanvas.getContext("2d");
