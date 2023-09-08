@@ -48,6 +48,10 @@ const eHandler = (value) => { return Math.tanh(value); };
 
 
 function randomHandler() {
+    // return ["A", aHandler];
+    // return ["B", bHandler];
+    // return ["C", cHandler];
+    // return ["E", eHandler];
     const c = Math.random();
     if (c < 0.4) {
         return ["A", aHandler];
@@ -58,9 +62,6 @@ function randomHandler() {
     } else {
         return ["C", cHandler];
     }
-
-    // var tanh = function(c) { return (Math.E ^ c - Math.E ^ (-c)) / (Math.E ^ c + Math.E ^ (-c)); }
-    // must use Math.tanh(x)
 }
 
 function friendOrFoe(a, b) {
