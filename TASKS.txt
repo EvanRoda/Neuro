@@ -1,4 +1,21 @@
-Archive
+Common
+1. Pretty index html (Two big buttons with projects preview)
+
+Piupiu
+1. Create canvas
+2. Add redraw cycle
+3. Draw bots
+4. Bots reaction
+    move_slow
+    move_fast
+    move_back
+    range_attack
+    melee_attack
+    rotate_left
+    rotate_right
+5. Bots sensors
+
+Lab
 
 6. Add toggle light_by_height/simple_light.
 12. Download bots to file.
