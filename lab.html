@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Laboratory</title>
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <link rel="stylesheet" href="main.css">
+    <script src="lab/bot.js"></script>
+    <script src="neuro/neuroBuilder.js"></script>
+    <script src="neuro/perceptron.js"></script>
+    <script src="neuro/utils.js"></script>
+    <script src="lab/world.js"></script>
+    <script src="lab/lab.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="item">
+            <canvas id="screen"></canvas>
+        </div>
+        <div class="item">
+            <div class="hud">
+                <div class="buttons">
+                    <button class="square-button" id="renderToggle" title="Disable rendering">
+                        <i class="las la-desktop"></i>
+                    </button>
+                    <button class="square-button" id="pauseButton" title="Pause">
+                        <i class="las la-pause"></i>
+                    </button>
+                    <button class="square-button" id="stepButton" disabled title="Step">
+                        <i class="las la-step-forward"></i>
+                    </button>
+                    <button class="square-button danger right" id="restartButton" title="Restart world">
+                        <i class="las la-recycle"></i>
+                    </button>
+                    <button class="square-button danger right" id="clearButton" title="Remove bots">
+                        <i class="las la-trash"></i>
+                    </button>
+
+                    <div class="counter-container right">
+                        <div>
+                            <i class="las la-stopwatch"></i>
+                            <span id="counter"></span>
+                        </div>
+                        <div >
+                            <i class="las la-biohazard"></i>
+                            <span id="bots-counter"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+                <div class="paint">
+                    <button class="square-button" id="clanColorsButton" title="Paints bots in the colors given during generation.">
+                        <i class="las la-brush"></i>
+                    </button>
+                    <button class="square-button" id="botColorsButton" title="Paints bots in the colors based on the perceptron hash.">
+                        <i class="las la-paint-brush"></i>
+                    </button>
+                    <button class="square-button" id="floraFaunaButton" title="Paints bots depending on how they get energy. Photosynthesis or eating other bots.">
+                        <i class="las la-dragon"></i>
+                    </button>
+                    <button class="square-button" id="energyButton" title="Colors bots depending on the accumulated energy.">
+                        <i class="las la-bolt"></i>
+                    </button>
+                </div>
+
+                <div class="separator"></div>
+                <div class="world">
+                    <button class="square-button" id="dayNightButton" title="Stop the day and night cycle.">
+                        <i class="las la-pause"></i>
+                    </button>
+
+                    <span class="times-container">
+                        <span id="times"></span>
+                        <span class="iconed-text">
+                            <i class="lar la-sun"></i>
+                            <span id="coefficient"></span>
+                        </span>
+                    </span>
+                </div>
+
+                <div class="separator"></div>
+                <div class="storageContainer">
+                    <span class="padded-right">
+                        <button class="square-button width35" id="boxButton0"></button>
+                        <button class="slim-button danger" id="emptyButton0"><i class="las la-trash"></i></button>
+                    </span>
+                    <span class="padded-right">
+                        <button class="square-button width35" id="boxButton1"></button>
+                        <button class="slim-button danger" id="emptyButton1"><i class="las la-trash"></i></button>
+                    </span>
+                    <span class="padded-right">
+                        <button class="square-button width35" id="boxButton2"></button>
+                        <button class="slim-button danger" id="emptyButton2"><i class="las la-trash"></i></button>
+                    </span>
+                    <span class="padded-right">
+                        <button class="square-button width35" id="boxButton3"></button>
+                        <button class="slim-button danger" id="emptyButton3"><i class="las la-trash"></i></button>
+                    </span>
+                    <span class="padded-right">
+                        <button class="square-button width35" id="boxButton4"></button>
+                        <button class="slim-button danger" id="emptyButton4"><i class="las la-trash"></i></button>
+                    </span>
+                    <span class="padded-right">
+                        <button class="square-button width35" id="boxButton5"></button>
+                        <button class="slim-button danger" id="emptyButton5"><i class="las la-trash"></i></button>
+                    </span>
+
+                    <button class="square-button right" id="paintButton"><i class="las la-paint-brush"></i></button>
+                </div>
+
+                <div class="separator"></div>
+                <div class="bot hidden" id="botInfoContainer">
+                    <button class="square-button small danger right" id="closeBotButton" title="Close bot view">
+                        <i class="las la-times"></i>
+                    </button>
+                    <div class="bot-item" id="alive"></div>
+                    <div class="bot-item small-text" id="genome"></div>
+                    <div class="bot-item small-text" id="uuid"></div>
+                    <div class="bot-item">
+                        <span>Age</span>
+                        <span id="age" style="float: right"></span>
+                    </div>
+                    <div class="bot-item">
+                        <span>Energy</span>
+                        <span id="energy" style="float: right"></span>
+                    </div>
+                    <div class="bot-item">
+                        <span>Mutate counter</span>
+                        <span id="mutateCounter" style="float: right"></span>
+                    </div>
+                    <div class="bot-item">
+                        <span>Coordinates</span>
+                        <span id="coord" style="float: right"></span>
+                    </div>
+                    <div class="bot-item">
+                        <span>RGB</span>
+                        <span id="rgb" style="float: right"></span>
+                    </div>
+
+                    <div class="separator"></div>
+                    <button class="tab-button" id="showLog">
+                        <i class="las la-bars"></i> Log
+                    </button>
+                    <button class="tab-button" id="showPerceptron">
+                        <i class="las la-project-diagram"></i> Perceptron
+                    </button>
+                    <div class="perceptron-container hidden" id="perceptronContainer">
+                        <canvas id="p-view"></canvas>
+                    </div>
+                    <div class="log-container hidden" id="logContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

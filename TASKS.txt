@@ -1,18 +1,7 @@
-[Done] 1. Change font-awesome to line-awesome
-[Done] 2. Restart Button.
-[Done] 3. Add initial color.
-[Done] 4. Add color scheme for initial color.
-[Done] 5. Pause day/night cycle.
+Archive
+
 6. Add toggle light_by_height/simple_light.
-[Done] 7. Add separate buttons for colors schemes.
-[Done] 8. Hide bot information if no selected bot.
-[Done] 9. Add button to show perceptron view to prevent freeze on selected bot.
-[Done] 10. Fixed UI of bot log.
-[Done] 11. Cherry-pick bots.
 12. Download bots to file.
 13. Upload from file.
 14. Save bots to browser cache.
-[Done] 15. Redraw on change color scheme in pause mode.
-[Done] 16. Add button clear canvas.
-[Done] 17. Add button close for BotView to deselect the bot.
 
