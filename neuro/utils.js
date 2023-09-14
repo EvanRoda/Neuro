@@ -2,6 +2,10 @@ function randomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
+function randomFloat(max) {
+    return Math.random() * max;
+}
+
 function randomMutation() {
     return (randomInt(3) / 10) - 0.1;
 }
