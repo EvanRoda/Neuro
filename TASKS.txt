@@ -17,7 +17,8 @@ Piupiu
 5. Bots sensors
 
 Lab
-1. GPU.js
+[Failed] 1. Try GPU.js
+2. Interface for percents of activation function in perceptron.
 6. Add toggle light_by_height/simple_light.
 12. Download bots to file.
 13. Upload from file.
