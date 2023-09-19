@@ -58,12 +58,12 @@ class NeuroBuilder {
     }
 
     buildANeuron() {
-        const [type, handler] = randomHandler()
-        return new Neuron(type, handler);
+        const [type, handler, gpuHandlerBuilder] = randomHandler()
+        return new Neuron(type, handler, gpuHandlerBuilder);
     }
 
     buildBalancer() {
-        return new Neuron("D", BALANCER_HANDLER);
+        return new Neuron("D", BALANCER_HANDLER, getDHandlerGpu);
     }
 
 

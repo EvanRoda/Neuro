@@ -44,12 +44,84 @@ function changeColorInt(colorInt) {
     return (colorInt + 10) % 16777215;
 }
 
+const gpu = new window.GPU();
+
+const getValue = gpu.createKernel(function(input, size) {
+    let sum = 0;
+
+    for (let i = 0; i < size; ++i) {
+        sum += input[i];
+    }
+
+    return sum / size;
+}).setOutput([1]);
+
+const aKernel = gpu.createKernel(function(value) {
+    if (value > 0) {
+        return 1;
+    } else {
+        return -1;
+    }
+}).setOutput([1]);
+
+const bKernel = gpu.createKernel(function(value) {
+    if (value > -0.5 && value < 0.5) {
+        return 1;
+    } else {
+        return -1;
+    }
+}).setOutput([1]);
+
+const cKernel = gpu.createKernel(function(value) {
+    if (Math.abs(value) >= Math.random()) {
+        return 1;
+    } else {
+        return -1;
+    }
+}).setOutput([1]);
+
+const dKernel = gpu.createKernel(function(value) {
+    return value;
+}).setOutput([1]);
+
+const eKernel = gpu.createKernel(function(value) {
+    return Math.tanh(value);
+}).setOutput([1]);
+
+function getAHandlerGpu(size) {
+    return gpu.combineKernels(getValue, aKernel, function(input, inputSize, relations) {
+        return relations[this.thread.x] * aKernel(getValue(input, inputSize));
+    }).setOutput([size]);
+}
+
+function getBHandlerGpu(size) {
+    return gpu.combineKernels(getValue, bKernel, function(input, inputSize, relations) {
+        return relations[this.thread.x] * bKernel(getValue(input, inputSize));
+    }).setOutput([size]);
+}
+
+function getCHandlerGpu(size) {
+    return gpu.combineKernels(getValue, cKernel, function(input, inputSize, relations) {
+        return relations[this.thread.x] * cKernel(getValue(input, inputSize));
+    }).setOutput([size]);
+}
+
+function getDHandlerGpu(size) {
+    return gpu.combineKernels(getValue, dKernel, function(input, inputSize, relations) {
+        return relations[this.thread.x] * dKernel(getValue(input, inputSize));
+    }).setOutput([size]);
+}
+
+function getEHandlerGpu(size) {
+    return gpu.combineKernels(getValue, eKernel, function(input, inputSize, relations) {
+        return relations[this.thread.x] * eKernel(getValue(input, inputSize));
+    }).setOutput([size]);
+}
+
 const aHandler = (value) => { return value > 0 ? 1 : -1; };
 const bHandler = (value) => { return value > -0.5 && value < 0.5 ? 1 : -1; };
 const cHandler = (value) => { return Math.abs(value) >= Math.random() ? 1 : -1; };
 const eHandler = (value) => { return Math.tanh(value); };
-
-
 
 function randomHandler() {
     // return ["A", aHandler];
@@ -58,13 +130,13 @@ function randomHandler() {
     // return ["E", eHandler];
     const c = Math.random();
     if (c < 0.4) {
-        return ["A", aHandler];
+        return ["A", aHandler, getAHandlerGpu];
     } else if (c < 0.8) {
-        return ["B", bHandler];
+        return ["B", bHandler, getBHandlerGpu];
     } else if (c < 0.99) {
-        return ["E", eHandler];
+        return ["E", eHandler, getEHandlerGpu];
     } else {
-        return ["C", cHandler];
+        return ["C", cHandler, getCHandlerGpu];
     }
 }
 

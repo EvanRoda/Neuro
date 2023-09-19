@@ -2,6 +2,7 @@ class Perceptron {
     layers;
     hash = "";
     neurons = [];
+    flattenedHiddenLayer = [];
 
     constructor(layers) {
         this.layers = layers;
@@ -20,6 +21,12 @@ class Perceptron {
             });
         });
     };
+
+    flatHidden() {
+        for (let i = 1, l = this.layers.length - 1; i < l; i++ ) {
+
+        }
+    }
 
     getHash() {
         if (this.hash.length === 0) this.calcHash();
@@ -47,7 +54,7 @@ class Perceptron {
 
             const elements = [];
             currentLayer.elements.forEach(neuron => {
-                const newElement = new Neuron(neuron.type, neuron.handler);
+                const newElement = new Neuron(neuron.type, neuron.handler, neuron.gpuHandler);
                 newElement.setRelations([...neuron.relations]);
                 elements.push(newElement);
             });
@@ -65,8 +72,8 @@ class Perceptron {
         const layer = this.layers[layerIndex];
         const elementIndex = randomInt(layer.elements.length - 1);
 
-        const [type, handler] = randomHandler()
-        const neuron = new Neuron(type, handler);
+        const [type, handler, gpuHandlerBuilder] = randomHandler()
+        const neuron = new Neuron(type, handler, gpuHandlerBuilder);
         neuron.setLayer(layer);
         neuron.generateRelations();
         layer.elements[elementIndex] = neuron;
@@ -127,7 +134,7 @@ class Perceptron {
     evaluate() {
         for (let i = 0, l = this.neurons.length; i < l; i++) {
             const neuron = this.neurons[i];
-            const value = neuron.calculate();
+            const value = neuron.calculateGPU();
             for (let j = 0, k = neuron.relations.length; j < k; j++) {
                 const weight = neuron.relations[j];
                 if (weight > 0) {
@@ -167,19 +174,26 @@ class Neuron {
     relations = [];
     input = [];
     calculatedValue = 0;
+    handler = (value) => { return value };
+    gpuHandler = (value) => { return value };
+    gpuBuilder = (value) => { return this.gpuHandler };
 
-    handler = (value) => { return value }
-
-    constructor(type, handler) {
+    constructor(type, handler, gpuBuilder) {
         this.uuid = generateUUID();
         this.type = type;
+
         if (handler) {
             this.handler = handler;
+        }
+
+        if (gpuBuilder) {
+            this.gpuBuilder = gpuBuilder;
         }
     }
 
     setLayer(layer) {
         this.layer = layer;
+        this.gpuHandler = this.gpuBuilder(layer.nextLayer.size);
     }
 
     generateRelations() {
@@ -197,6 +211,13 @@ class Neuron {
     set(value) {
         //this.input.push(value);
         this.input[this.input.length] = value
+    }
+
+    calculateGPU() {
+        const l = this.input.length;
+        this.calculatedValue = this.gpuHandler(this.input, l, this.relations);
+        this.input = [];
+        return this.calculatedValue;
     }
 
     calculate() {
