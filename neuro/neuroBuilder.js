@@ -67,7 +67,7 @@ class NeuroBuilder {
     }
 
 
-    build() {
+    make() {
         const layers = [];
 
         const rLayer = this.buildRLayer();

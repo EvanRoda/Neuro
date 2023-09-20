@@ -5,7 +5,7 @@ Piupiu
 [Done] 1. Create canvas
 [Done] 1.1 Renderer as class.
 [Done] 2. Add redraw cycle
-3. Draw bots
+[Done] 3. Draw bots
 4. Bots reaction
     move_slow
     move_fast
@@ -15,6 +15,7 @@ Piupiu
     rotate_left
     rotate_right
 5. Bots sensors
+
 
 Lab
 [Failed] 1. Try GPU.js
