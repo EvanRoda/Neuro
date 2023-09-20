@@ -1,12 +1,15 @@
-const MAX_SPEED = 10;
+const MAX_SPEED = 10;           // pixels per seconds
+const MAX_WAITING_TIME = 1000;  // milliseconds
 
 class Bot extends Entity {
     uuid;
     brain;
+    waitingTime = randomInt(MAX_WAITING_TIME);
 
     constructor(color, brain) {
         super(22, 32);
         this.uuid = generateUUID();
+        this.brain = brain;
         this.createSprite(color)
     }
 
@@ -20,8 +23,16 @@ class Bot extends Entity {
         ctx.stroke();
     }
 
-    evaluate() {
-
+    evaluate(frameTime) {
+        this.waitingTime -= frameTime;
+        // Do not think and make in one frame
+        if (this.waitingTime < 0) {
+            // Brain run
+            // Get reaction
+            // Get waitingTime from waiting reaction neuron
+        } else {
+            // Make reaction
+        }
     }
 
     static move_slow(self) {

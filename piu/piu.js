@@ -56,7 +56,7 @@ function calculate(elapsedTime) {
     const entities = [];
     for (const uuid in bots) {
         const bot = bots[uuid];
-        bot.evaluate();
+        bot.evaluate(elapsedTime);
         entities.push(bot);
     }
 
