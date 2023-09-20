@@ -51,7 +51,8 @@ function initUI() {
 }
 
 // Return list of Entities
-function calculate() {
+function calculate(elapsedTime) {
+
     const entities = [];
     for (const uuid in bots) {
         const bot = bots[uuid];

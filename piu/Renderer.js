@@ -12,6 +12,7 @@ class Renderer {
     needRedraw = true;
     playToggle = true;
     renderToggle = true;
+    startTime = 0;
 
     constructor(canvas, width, height, beforeDrawCallback, afterDrawCallback) {
         this.real = canvas;
@@ -29,14 +30,15 @@ class Renderer {
         Renderer.animRedraw(this);
     }
 
-    static animRedraw(that) {
+    static animRedraw(that, time) {
         let entities = [];
         if (that.playToggle) {
-            entities = that.before();
+            entities = that.before(time - that.startTime);
+            that.startTime = time;
         }
 
-        that.animationId = window.requestAnimationFrame(() => {
-            Renderer.animRedraw(that);
+        that.animationId = window.requestAnimationFrame((timeStamp) => {
+            Renderer.animRedraw(that, timeStamp);
         });
         if (!that.needRedraw) return;
 
