@@ -15,7 +15,8 @@ Piupiu
     rotate_left
     rotate_right
 5. Bots sensors
-
+6. Colliders
+7. Components
 
 Lab
 [Failed] 1. Try GPU.js

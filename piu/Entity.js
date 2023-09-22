@@ -1,19 +1,17 @@
 class Entity {
-    x = 0;
-    y = 0;
-    direction = 0; // in radians from 0 to 2 * Math.PI
-    canvas = null;
-    center = {x: 0, y: 0};
+    uuid;
+    components = {};
 
-    constructor(w, h) {
-        this.canvas = document.createElement('canvas');
+    constructor() {
+        this.uuid = generateUUID();
+    }
 
-        this.canvas.width = w;
-        this.canvas.height = h;
-        this.canvas.style.width = w + "px";
-        this.canvas.style.height = h + "px"
+    addComponent(component) {
+        this.components[component.constructor.name] = component;
+        return this;
+    }
 
-        this.center.x = w / 2;
-        this.center.y = h / 2;
+    getComponent(componentClass) {
+        return this.components[componentClass.name];
     }
 }
