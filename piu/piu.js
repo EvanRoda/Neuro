@@ -32,7 +32,6 @@ neuroFactory
     .addReaction(Bot.rotate_left)
     .addReaction(Bot.rotate_right)
     .addReaction(Bot.nothing)
-    .addReaction(Bot.waiting)
 
 window.addEventListener('load', () => {
     console.log('page is fully loaded');
@@ -52,7 +51,6 @@ function initUI() {
 
 // Return list of Entities
 function calculate(elapsedTime) {
-
     const entities = [];
     for (const uuid in bots) {
         const bot = bots[uuid];

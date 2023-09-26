@@ -1,7 +1,10 @@
-const MAX_SPEED = 10;           // pixels per seconds
-const MAX_WAITING_TIME = 1000;  // milliseconds
+const MAX_SPEED = 10;               // pixels per seconds
+const MAX_WAITING_TIME = 1000;      // milliseconds
+const ROTATION_SPEED = Math.PI / 4; // radians per second
 
 class Bot extends Entity {
+
+    currentReaction = (self, frameTime) => {}
     constructor(color, brain) {
         super();
         this.addComponent(new PositionComponent(this))
@@ -22,26 +25,49 @@ class Bot extends Entity {
     }
 
     evaluate(frameTime) {
-        this.waitingTime -= frameTime;
+        const neuro = this.getComponent(NeuroComponent);
+        neuro.waitingTime -= frameTime;
         // Do not think and make in one frame
-        if (this.waitingTime < 0) {
+        if (neuro.waitingTime < 0) {
             // Brain run
             // Get reaction
             // Get waitingTime from waiting reaction neuron
+            this.currentReaction = Bot.move_slow;
+            neuro.waitingTime = MAX_WAITING_TIME;
         } else {
-            // Make reaction
+            this.currentReaction(this, frameTime);
         }
     }
 
     static move_slow(self, frameTime) {
+        const position = self.getComponent(PositionComponent);
+
         const shift = (MAX_SPEED / 2) * frameTime / 1000;
-        self.x += shift;
+        const x = Math.cos(position.direction) * shift;
+        const y = Math.sin(position.direction) * shift;
+
+        position.x += x;
+        position.y += y;
     }
     static move_fast(self, frameTime) {
+        const position = self.getComponent(PositionComponent);
 
+        const shift = MAX_SPEED * frameTime / 1000;
+        const x = Math.cos(position.direction) * shift;
+        const y = Math.sin(position.direction) * shift;
+
+        position.x += x;
+        position.y += y;
     }
     static move_back(self, frameTime) {
+        const position = self.getComponent(PositionComponent);
 
+        const shift = (-MAX_SPEED / 2) * frameTime / 1000;
+        const x = Math.cos(position.direction) * shift;
+        const y = Math.sin(position.direction) * shift;
+
+        position.x += x;
+        position.y += y;
     }
     static range_attack(self, frameTime) {
 
@@ -50,13 +76,13 @@ class Bot extends Entity {
 
     }
     static rotate_left(self, frameTime) {
-
+        const position = self.getComponent(PositionComponent);
+        const shift = ROTATION_SPEED * frameTime / 1000;
+        position.direction -= shift;
     }
     static rotate_right(self, frameTime) {
-
-    }
-    // special reaction to give a time to next execution of brain.run()
-    static waiting(self, frameTime) {
-
+        const position = self.getComponent(PositionComponent);
+        const shift = ROTATION_SPEED * frameTime / 1000;
+        position.direction += shift;
     }
 }

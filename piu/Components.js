@@ -39,10 +39,17 @@ class SpriteComponent extends Component {
 
 class NeuroComponent extends Component {
     brain;
-    waitingTime = randomInt(MAX_WAITING_TIME);
+    waitingTime;
 
     constructor(entity, brain) {
         super(entity);
         this.brain = brain;
+        this.waitingTime = randomInt(MAX_WAITING_TIME);
+    }
+
+    calcWaitingTime(elementIndex) {
+        const rElements = this.brain.layers[this.brain.layers.length - 1].elements;
+        if (rElements[elementIndex] === undefined) return null;
+        this.waitingTime = MAX_WAITING_TIME * Math.abs(rElements[elementIndex].calculatedValue);
     }
 }

@@ -27,7 +27,7 @@ class Renderer {
     }
 
     start() {
-        Renderer.animRedraw(this);
+        Renderer.animRedraw(this, 0);
     }
 
     static animRedraw(that, time) {
@@ -71,7 +71,7 @@ class Renderer {
 
             ctx.save();
             ctx.translate(position.x - sprite.pivot.x, position.y - sprite.pivot.y);
-            ctx.rotate(position.direction);
+            ctx.rotate(position.direction + Math.PI / 2);
             ctx.drawImage(sprite.canvas, 0, 0);
             ctx.restore();
         }
