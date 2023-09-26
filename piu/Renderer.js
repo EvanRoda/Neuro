@@ -66,11 +66,13 @@ class Renderer {
 
         for (let i = 0, l = entities.length; i < l; i++) {
             const entity = entities[i];
+            const position = entity.getComponent(PositionComponent);
+            const sprite = entity.getComponent(SpriteComponent);
 
             ctx.save();
-            ctx.translate(entity.x - entity.center.x, entity.y - entity.center.y);
-            ctx.rotate(entity.direction);
-            ctx.drawImage(entity.canvas, 0, 0);
+            ctx.translate(position.x - sprite.pivot.x, position.y - sprite.pivot.y);
+            ctx.rotate(position.direction);
+            ctx.drawImage(sprite.canvas, 0, 0);
             ctx.restore();
         }
     }

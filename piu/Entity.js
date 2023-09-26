@@ -6,6 +6,8 @@ class Entity {
         this.uuid = generateUUID();
     }
 
+    evaluate(frameTime) {}
+
     addComponent(component) {
         this.components[component.constructor.name] = component;
         return this;

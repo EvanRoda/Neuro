@@ -72,9 +72,10 @@ function createBots() {
         for (let i = 0; i < BOTS_IN_TEAM; i++) {
             const brain = neuroFactory.make();
             const bot = new Bot(team, brain);
-            bot.x = randomInt(WIDTH);
-            bot.y = randomInt(HEIGHT);
-            bot.direction = randomFloat(2 * Math.PI);
+            const position = bot.getComponent(PositionComponent);
+            position.x = randomInt(WIDTH);
+            position.y = randomInt(HEIGHT);
+            position.direction = randomFloat(2 * Math.PI);
             bots[bot.uuid] = bot;
         }
     }

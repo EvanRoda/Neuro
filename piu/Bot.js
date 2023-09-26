@@ -3,7 +3,7 @@ const MAX_WAITING_TIME = 1000;  // milliseconds
 
 class Bot extends Entity {
     constructor(color, brain) {
-        super(22, 32);
+        super();
         this.addComponent(new PositionComponent(this))
             .addComponent(new SpriteComponent(this, 22, 32))
             .addComponent(new NeuroComponent(this, brain));
