@@ -39,35 +39,44 @@ class Bot extends Entity {
         }
     }
 
-    static move_slow(self, frameTime) {
-        const position = self.getComponent(PositionComponent);
-
-        const shift = (MAX_SPEED / 2) * frameTime / 1000;
+    static shift(position, shift) {
         const x = Math.cos(position.direction) * shift;
         const y = Math.sin(position.direction) * shift;
 
         position.x += x;
+        if (position.x < 0) position.x = 0;
+        if (position.x > WIDTH) position.x = WIDTH;
+
         position.y += y;
+        if (position.y < 0) position.y = 0;
+        if (position.y > HEIGHT) position.y = HEIGHT;
+    }
+
+    static rotate(position, shift) {
+        position.direction -= shift;
+        if (position.direction < 0) position.direction += (Math.PI * 2);
+        if (position.direction > (2 * Math.PI)) position.direction -= (Math.PI * 2);
+    }
+
+    // REACTIONS
+
+    static move_slow(self, frameTime) {
+        const position = self.getComponent(PositionComponent);
+        const shift = (MAX_SPEED / 2) * frameTime / 1000;
+
+        Bot.shift(position, shift);
     }
     static move_fast(self, frameTime) {
         const position = self.getComponent(PositionComponent);
-
         const shift = MAX_SPEED * frameTime / 1000;
-        const x = Math.cos(position.direction) * shift;
-        const y = Math.sin(position.direction) * shift;
 
-        position.x += x;
-        position.y += y;
+        Bot.shift(position, shift);
     }
     static move_back(self, frameTime) {
         const position = self.getComponent(PositionComponent);
-
         const shift = (-MAX_SPEED / 2) * frameTime / 1000;
-        const x = Math.cos(position.direction) * shift;
-        const y = Math.sin(position.direction) * shift;
 
-        position.x += x;
-        position.y += y;
+        Bot.shift(position, shift);
     }
     static range_attack(self, frameTime) {
 
@@ -78,11 +87,11 @@ class Bot extends Entity {
     static rotate_left(self, frameTime) {
         const position = self.getComponent(PositionComponent);
         const shift = ROTATION_SPEED * frameTime / 1000;
-        position.direction -= shift;
+        Bot.rotate(position, shift);
     }
     static rotate_right(self, frameTime) {
         const position = self.getComponent(PositionComponent);
         const shift = ROTATION_SPEED * frameTime / 1000;
-        position.direction += shift;
+        Bot.rotate(position, shift);
     }
 }
