@@ -1,6 +1,7 @@
 class Entity {
     uuid;
     components = {};
+    mustRemove = false;
 
     constructor() {
         this.uuid = generateUUID();

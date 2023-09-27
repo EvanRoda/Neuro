@@ -1,6 +1,7 @@
 let renderer;
 let canvas;
-const bots = {};
+const objects = {};
+const bullets = {};
 
 const WIDTH = 1281;
 const HEIGHT = 961;
@@ -52,17 +53,23 @@ function initUI() {
 // Return list of Entities
 function calculate(elapsedTime) {
     const entities = [];
-    for (const uuid in bots) {
-        const bot = bots[uuid];
-        bot.evaluate(elapsedTime);
-        entities.push(bot);
+    for (const uuid in objects) {
+        const entity = objects[uuid];
+        entity.evaluate(elapsedTime);
+        entities.push(entity);
     }
 
     return entities;
 }
 
 function afterDraw() {
-    // Draw UI elements
+    // GC
+    for (const uuid in objects) {
+        const entity = objects[uuid];
+        if (entity.mustRemove) {
+            delete this.objects[uuid];
+        }
+    }
 }
 
 function createBots() {
@@ -74,7 +81,7 @@ function createBots() {
             position.x = randomInt(WIDTH);
             position.y = randomInt(HEIGHT);
             position.direction = randomFloat(2 * Math.PI);
-            bots[bot.uuid] = bot;
+            objects[bot.uuid] = bot;
         }
     }
 }

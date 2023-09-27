@@ -4,11 +4,12 @@ const ROTATION_SPEED = Math.PI / 4; // radians per second
 
 class Bot extends Entity {
 
-    currentReaction = (self, frameTime) => {}
+    currentReaction = () => {}
     constructor(color, brain) {
         super();
         this.addComponent(new PositionComponent(this))
             .addComponent(new SpriteComponent(this, 22, 32))
+            .addComponent(new CircleColliderComponent(this, 20))
             .addComponent(new NeuroComponent(this, brain));
 
         this.createSprite(color);

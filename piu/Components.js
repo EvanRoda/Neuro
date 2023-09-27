@@ -5,6 +5,12 @@ class Component {
     }
 }
 
+class ColliderComponent extends Component {
+    constructor(entity) {
+        super(entity);
+    }
+}
+
 class PositionComponent extends Component {
     x = 0;
     y = 0;
@@ -51,5 +57,15 @@ class NeuroComponent extends Component {
         const rElements = this.brain.layers[this.brain.layers.length - 1].elements;
         if (rElements[elementIndex] === undefined) return null;
         this.waitingTime = MAX_WAITING_TIME * Math.abs(rElements[elementIndex].calculatedValue);
+    }
+}
+
+class CircleColliderComponent extends ColliderComponent {
+    radius = 0;
+    pivot = {x: 0, y: 0};
+    constructor(entity, radius) {
+        super(entity);
+
+        this.radius = radius;
     }
 }
