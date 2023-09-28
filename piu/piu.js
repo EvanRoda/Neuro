@@ -63,6 +63,25 @@ function calculate(elapsedTime) {
 }
 
 function afterDraw() {
+    // ColliderProcessor
+    const colliders = [];
+    for (const uuid in objects) {
+        const entity = objects[uuid];
+        const collider = entity.getComponent(ColliderComponent);
+        if (collider) colliders.push(collider);
+    }
+
+    let first = colliders.pop()
+    while (colliders.length) {
+        for (let i = 0, l = colliders.length; i < l; i++) {
+            const second = colliders[i];
+            if (first.isIntersect(second)) {
+                first.onCollision(second.entity);
+                second.onCollision(first.entity);
+            }
+        }
+    }
+
     // GC
     for (const uuid in objects) {
         const entity = objects[uuid];

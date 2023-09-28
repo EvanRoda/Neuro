@@ -6,8 +6,45 @@ class Component {
 }
 
 class ColliderComponent extends Component {
-    constructor(entity) {
+    radius = 0;
+    pivot = {x: 0, y: 0};
+    onCollision = (entity) => {};
+
+    constructor(entity, radius) {
         super(entity);
+
+        this.radius = radius;
+    }
+
+    bbox() {
+        const pos = this.entity.getComponent(PositionComponent);
+
+        return new Bbox(
+            pos.y + this.pivot.y - this.radius,
+            pos.y + this.pivot.y + this.radius,
+            pos.x + this.pivot.x - this.radius,
+            pos.x + this.pivot.x + this.radius,
+        )
+    }
+
+    position() {
+        const pos = this.entity.getComponent(PositionComponent);
+        return {
+            x: pos.x + this.pivot.x,
+            y: pos.y + this.pivot.y
+        };
+    }
+
+    squareOfDistance(other) {
+        const {ax, ay} = this.position();
+        const {bx, by} = other.position();
+
+        return (ax - bx) ** 2 + (ay - by) ** 2;
+    }
+
+    isIntersect(other) {
+        return this.bbox().isIntersect(other.bbox())
+            && ((this.radius + other.radius) ** 2 < this.squareOfDistance(other));
     }
 }
 
@@ -51,21 +88,5 @@ class NeuroComponent extends Component {
         super(entity);
         this.brain = brain;
         this.waitingTime = randomInt(MAX_WAITING_TIME);
-    }
-
-    calcWaitingTime(elementIndex) {
-        const rElements = this.brain.layers[this.brain.layers.length - 1].elements;
-        if (rElements[elementIndex] === undefined) return null;
-        this.waitingTime = MAX_WAITING_TIME * Math.abs(rElements[elementIndex].calculatedValue);
-    }
-}
-
-class CircleColliderComponent extends ColliderComponent {
-    radius = 0;
-    pivot = {x: 0, y: 0};
-    constructor(entity, radius) {
-        super(entity);
-
-        this.radius = radius;
     }
 }

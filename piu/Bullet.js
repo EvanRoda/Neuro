@@ -4,9 +4,16 @@ class Bullet extends Entity {
         super();
         this.addComponent(new PositionComponent(this))
             .addComponent(new SpriteComponent(this, 3, 4))
-            .addComponent(new CircleColliderComponent(this, 2));
+            .addComponent(new ColliderComponent(this, 2));
 
         this.createSprite();
+
+        this.getComponent(ColliderComponent).onCollision = (entity) => {
+            if (entity instanceof Bot) {
+                entity.mustRemove = true;
+                this.mustRemove = true;
+            }
+        }
     }
 
     evaluate(frameTime) {
