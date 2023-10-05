@@ -1,10 +1,13 @@
 const MAX_SPEED = 10;               // pixels per seconds
 const MAX_WAITING_TIME = 1000;      // milliseconds
 const ROTATION_SPEED = Math.PI / 4; // radians per second
+const RELOAD_TIME = 1000;
 
 class Bot extends Entity {
 
     currentReaction = () => {}
+
+    reload = RELOAD_TIME;
     constructor(color, brain) {
         super();
         this.addComponent(new PositionComponent(this))
@@ -33,7 +36,14 @@ class Bot extends Entity {
             // Brain run
             // Get reaction
             // Get waitingTime from waiting reaction neuron
-            this.currentReaction = Bot.move_slow;
+            const rnd = Math.random();
+            if (rnd < 0.33) {
+                this.currentReaction = Bot.rotate_right;
+            } else if (rnd < 0.66) {
+                this.currentReaction = Bot.move_slow;
+            } else {
+                this.currentReaction = Bot.range_attack;
+            }
             neuro.waitingTime = MAX_WAITING_TIME;
         } else {
             this.currentReaction(this, frameTime);
@@ -80,6 +90,14 @@ class Bot extends Entity {
         Bot.shift(position, shift);
     }
     static range_attack(self, frameTime) {
+        self.reload -= frameTime;
+        if (self.reload < 0) {
+            const position = self.getComponent(PositionComponent);
+            const x = Math.cos(position.direction) * 16;
+            const y = Math.sin(position.direction) * 16;
+            new Bullet(position.x + x, position.y + y, position.direction);
+            self.reload = RELOAD_TIME;
+        }
 
     }
     static melee_attack(self, frameTime) {

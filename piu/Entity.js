@@ -23,7 +23,6 @@ class Entity {
 class EntityController {
     static _instance;
     static getInstance() {
-        console.log("getInstance");
         if (!EntityController._instance) {
             EntityController._instance = new EntityController();
         }

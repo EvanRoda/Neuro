@@ -1,6 +1,6 @@
 class Bullet extends Entity {
 
-    constructor() {
+    constructor(x, y, direction) {
         super();
         this.addComponent(new PositionComponent(this))
             .addComponent(new SpriteComponent(this, 3, 4))
@@ -14,6 +14,11 @@ class Bullet extends Entity {
                 this.mustRemove = true;
             }
         }
+
+        const position = this.getComponent(PositionComponent);
+        position.x = x;
+        position.y = y;
+        position.direction = direction;
     }
 
     evaluate(frameTime) {
@@ -36,7 +41,7 @@ class Bullet extends Entity {
     }
 
     move(frameTime) {
-        const position = self.getComponent(PositionComponent);
+        const position = this.getComponent(PositionComponent);
         const shift = MAX_SPEED * frameTime / 1000;
 
         const x = Math.cos(position.direction) * shift;
