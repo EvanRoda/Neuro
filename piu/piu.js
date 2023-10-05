@@ -1,7 +1,5 @@
 let renderer;
 let canvas;
-const objects = {};
-const bullets = {};
 
 const WIDTH = 1281;
 const HEIGHT = 961;
@@ -45,13 +43,14 @@ window.addEventListener('load', () => {
 
 function initUI() {
     canvas = document.getElementById("screen");
-    canvas.addEventListener("click", (event) => {
+    canvas.addEventListener("click", () => {
 
     });
 }
 
 // Return list of Entities
 function calculate(elapsedTime) {
+    const objects = EntityController.getAll();
     const entities = [];
     for (const uuid in objects) {
         const entity = objects[uuid];
@@ -64,6 +63,7 @@ function calculate(elapsedTime) {
 
 function afterDraw() {
     // ColliderProcessor
+    const objects = EntityController.getAll();
     const colliders = [];
     for (const uuid in objects) {
         const entity = objects[uuid];
@@ -71,7 +71,7 @@ function afterDraw() {
         if (collider) colliders.push(collider);
     }
 
-    let first = colliders.pop()
+    let first = colliders.pop();
     while (colliders.length) {
         for (let i = 0, l = colliders.length; i < l; i++) {
             const second = colliders[i];
@@ -80,15 +80,11 @@ function afterDraw() {
                 second.onCollision(first.entity);
             }
         }
+        first = colliders.pop();
     }
 
     // GC
-    for (const uuid in objects) {
-        const entity = objects[uuid];
-        if (entity.mustRemove) {
-            delete this.objects[uuid];
-        }
-    }
+    EntityController.removeGarbage();
 }
 
 function createBots() {
@@ -100,7 +96,6 @@ function createBots() {
             position.x = randomInt(WIDTH);
             position.y = randomInt(HEIGHT);
             position.direction = randomFloat(2 * Math.PI);
-            objects[bot.uuid] = bot;
         }
     }
 }
