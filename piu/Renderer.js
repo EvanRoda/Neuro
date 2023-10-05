@@ -1,3 +1,5 @@
+const DEBUG = true;
+
 class Renderer {
     real = null;
     realCtx = null;
@@ -70,10 +72,39 @@ class Renderer {
             const sprite = entity.getComponent(SpriteComponent);
 
             ctx.save();
-            ctx.translate(position.x - sprite.pivot.x, position.y - sprite.pivot.y);
+            ctx.translate(position.x, position.y);
             ctx.rotate(position.direction + Math.PI / 2);
-            ctx.drawImage(sprite.canvas, 0, 0);
+            ctx.drawImage(sprite.canvas, -sprite.pivot.x, -sprite.pivot.y);
             ctx.restore();
+
+            if (DEBUG) {
+                ctx.fillStyle = 'red';
+                ctx.beginPath();
+                ctx.arc(position.x, position.y, 2, 0, 2 * Math.PI);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.save();
+                ctx.translate(position.x, position.y);
+                ctx.rotate(position.direction + Math.PI / 2);
+                ctx.strokeStyle = 'blue';
+                ctx.strokeRect(-sprite.pivot.x, -sprite.pivot.y, sprite.canvas.width, sprite.canvas.height);
+                ctx.restore();
+
+                const collider = entity.getComponent(ColliderComponent);
+                if (collider) {
+
+                    ctx.save();
+                    ctx.translate(position.x, position.y);
+                    ctx.rotate(position.direction + Math.PI / 2);
+                    ctx.strokeStyle = 'green';
+                    ctx.beginPath();
+                    ctx.arc(collider.pivot.x, collider.pivot.y, collider.radius, 0, 2 * Math.PI);
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
         }
     }
 
