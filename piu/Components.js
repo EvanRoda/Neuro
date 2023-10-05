@@ -8,7 +8,7 @@ class Component {
 class ColliderComponent extends Component {
     radius = 0;
     pivot = {x: 0, y: 0};
-    onCollision = (entity) => {};
+    onCollision = () => {};
 
     constructor(entity, radius) {
         super(entity);
@@ -36,10 +36,9 @@ class ColliderComponent extends Component {
     }
 
     squareOfDistance(other) {
-        const {ax, ay} = this.position();
-        const {bx, by} = other.position();
-
-        return (ax - bx) ** 2 + (ay - by) ** 2;
+        const a = this.position();
+        const b = other.position();
+        return (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
     }
 
     isIntersect(other) {

@@ -12,7 +12,7 @@ class Bot extends Entity {
         super();
         this.addComponent(new PositionComponent(this))
             .addComponent(new SpriteComponent(this, 22, 32))
-            .addComponent(new ColliderComponent(this, 20))
+            .addComponent(new ColliderComponent(this, 11))
             .addComponent(new NeuroComponent(this, brain));
 
         this.createSprite(color);

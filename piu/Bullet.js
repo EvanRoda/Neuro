@@ -9,6 +9,8 @@ class Bullet extends Entity {
         this.createSprite();
 
         this.getComponent(ColliderComponent).onCollision = (entity) => {
+
+            console.log("Target", entity, "Bullet", this);
             if (entity instanceof Bot) {
                 entity.mustRemove = true;
                 this.mustRemove = true;

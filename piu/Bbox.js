@@ -12,8 +12,8 @@ class Bbox {
     }
 
     isIntersect(other) {
-        return !(this.top < other.bottom
-            || this.bottom > other.top
+        return !(this.top > other.bottom
+            || this.bottom < other.top
             || this.left > other.right
             || this.right < other.left);
     }
