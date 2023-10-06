@@ -10,10 +10,8 @@ class ColliderComponent extends Component {
     pivot = {x: 0, y: 0};
     onCollision = () => {};
 
-    constructor(entity, radius) {
+    constructor(entity) {
         super(entity);
-
-        this.radius = radius;
     }
 
     bbox() {
@@ -43,7 +41,7 @@ class ColliderComponent extends Component {
 
     isIntersect(other) {
         return this.bbox().isIntersect(other.bbox())
-            && ((this.radius + other.radius) ** 2 < this.squareOfDistance(other));
+            && ((this.radius + other.radius) ** 2 >= this.squareOfDistance(other));
     }
 }
 
