@@ -10,16 +10,21 @@ class Bot extends Entity {
     reload = RELOAD_TIME;
     constructor(color, brain) {
         super();
-        this.addComponent(new PositionComponent(this))
-            .addComponent(new SpriteComponent(this, 22, 32))
-            .addComponent(new ColliderComponent(this, 11))
-            .addComponent(new NeuroComponent(this, brain));
+        this.addComponent(PositionComponent)
+            .addComponent(SpriteComponent)
+            .addComponent(ColliderComponent)
+            .addComponent(NeuroComponent);
 
-        this.createSprite(color);
+        this.initSprite(color);
+        this.getComponent(ColliderComponent).radius = 11;
+        this.getComponent(NeuroComponent).brain = brain;
     }
 
-    createSprite(color) {
-        const ctx = this.getComponent(SpriteComponent).getContext();
+    initSprite(color) {
+        const sprite = this.getComponent(SpriteComponent);
+        sprite.setDimensions(22, 32);
+        sprite.setPivot(11, 16);
+        const ctx = sprite.getContext();
         ctx.strokeStyle = color;
         ctx.beginPath();
         ctx.arc(11, 16, 10, 0, 2 * Math.PI);

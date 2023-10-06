@@ -58,18 +58,21 @@ class SpriteComponent extends Component {
     canvas = null;
     pivot = {x: 0, y: 0};
 
-    constructor(entity, w, h) {
+    constructor(entity) {
         super(entity);
-
         this.canvas = document.createElement('canvas');
+    }
 
+    setDimensions(w, h) {
         this.canvas.width = w;
         this.canvas.height = h;
         this.canvas.style.width = w + "px";
         this.canvas.style.height = h + "px"
+    }
 
-        this.pivot.x = w / 2;
-        this.pivot.y = h / 2;
+    setPivot(x, y) {
+        this.pivot.x = x;
+        this.pivot.y = y;
     }
 
     getContext() {
@@ -81,9 +84,8 @@ class NeuroComponent extends Component {
     brain;
     waitingTime;
 
-    constructor(entity, brain) {
+    constructor(entity) {
         super(entity);
-        this.brain = brain;
         this.waitingTime = randomInt(MAX_WAITING_TIME);
     }
 }

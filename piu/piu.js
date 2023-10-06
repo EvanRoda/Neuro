@@ -35,6 +35,8 @@ neuroFactory
 window.addEventListener('load', () => {
     console.log('page is fully loaded');
 
+    tests();
+
     initUI();
     createBots();
     renderer = new Renderer(canvas, WIDTH, HEIGHT, calculate, afterDraw);
@@ -55,7 +57,9 @@ function calculate(elapsedTime) {
     for (const uuid in objects) {
         const entity = objects[uuid];
         entity.evaluate(elapsedTime);
-        entities.push(entity);
+        if (entity.hasComponent(SpriteComponent)) {
+            entities.push(entity);
+        }
     }
 
     return entities;
@@ -97,5 +101,45 @@ function createBots() {
             position.y = randomInt(HEIGHT);
             position.direction = randomFloat(2 * Math.PI);
         }
+    }
+}
+
+function tests() {
+    const one = new Entity()
+        .addComponent(PositionComponent)
+        .addComponent(ColliderComponent);
+
+    const two = new Entity()
+        .addComponent(PositionComponent)
+        .addComponent(ColliderComponent);
+
+    const pos1 = one.getComponent(PositionComponent);
+    const col1 = one.getComponent(ColliderComponent);
+
+    const pos2 = two.getComponent(PositionComponent);
+    const col2 = two.getComponent(ColliderComponent);
+
+    console.log("Collider", col1);
+    console.log("Collider", col2);
+
+    console.log("BBOX", col1.bbox());
+    console.log("BBOX", col2.bbox());
+    console.log("BBOX Intersects", col1.bbox().isIntersect(col2.bbox()));
+
+    console.log("Square of radiuses", (col1.radius + col2.radius) ** 2);
+    console.log("Square of distance", col1.squareOfDistance(col2));
+    if (col1.isIntersect(col2)) {
+        console.info("Zero radius passed!");
+    } else {
+        console.error("Zero radius failed!");
+    }
+
+    col1.radius = 10;
+    col2.radius = 10;
+
+    if (col1.isIntersect(col2)) {
+        console.info("10 radius passed!");
+    } else {
+        console.error("10 radius failed!");
     }
 }

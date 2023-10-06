@@ -10,13 +10,17 @@ class Entity {
 
     evaluate(frameTime) {}
 
-    addComponent(component) {
-        this.components[component.constructor.name] = component;
+    addComponent(componentClass) {
+        this.components[componentClass.name] = new componentClass(this);
         return this;
     }
 
     getComponent(componentClass) {
         return this.components[componentClass.name];
+    }
+
+    hasComponent(componentClass) {
+        return !!this.components[componentClass.name];
     }
 }
 

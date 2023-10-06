@@ -2,34 +2,30 @@ class Bullet extends Entity {
 
     constructor(x, y, direction) {
         super();
-        this.addComponent(new PositionComponent(this))
-            .addComponent(new SpriteComponent(this, 3, 4))
-            .addComponent(new ColliderComponent(this, 2));
+        this.addComponent(PositionComponent)
+            .addComponent(SpriteComponent)
+            .addComponent(ColliderComponent);
 
-        this.createSprite();
-
-        this.getComponent(ColliderComponent).onCollision = (entity) => {
-
-            console.log("Target", entity, "Bullet", this);
-            if (entity instanceof Bot) {
-                entity.mustRemove = true;
-                this.mustRemove = true;
-            }
-        }
-
-        const position = this.getComponent(PositionComponent);
-        position.x = x;
-        position.y = y;
-        position.direction = direction;
+        this.initPosition(x, y, direction);
+        this.initSprite();
+        this.initCollider();
     }
 
     evaluate(frameTime) {
         this.move(frameTime);
     }
 
-    createSprite() {
+    initPosition(x, y, direction) {
+        const position = this.getComponent(PositionComponent);
+        position.x = x;
+        position.y = y;
+        position.direction = direction;
+    }
+
+    initSprite() {
         const sprite = this.getComponent(SpriteComponent);
-        sprite.pivot = { x: 1.5, y: 2 };
+        sprite.setDimensions(3, 4);
+        sprite.setPivot(1.5, 2);
         const ctx = sprite.getContext();
 
         ctx.strokeStyle = 'black';
@@ -40,6 +36,18 @@ class Bullet extends Entity {
         ctx.lineTo(0, 3);
         ctx.lineTo(0, 1);
         ctx.stroke();
+    }
+
+    initCollider() {
+        const collider = this.getComponent(ColliderComponent);
+        collider.radius = 2;
+        collider.onCollision = (entity) => {
+            console.log("Target", entity, "Bullet", this);
+            if (entity instanceof Bot) {
+                entity.mustRemove = true;
+                this.mustRemove = true;
+            }
+        }
     }
 
     move(frameTime) {
