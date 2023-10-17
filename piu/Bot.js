@@ -13,10 +13,12 @@ class Bot extends Entity {
         this.addComponent(PositionComponent)
             .addComponent(SpriteComponent)
             .addComponent(ColliderComponent)
+            .addComponent(EyesComponent)
             .addComponent(NeuroComponent);
 
         this.initSprite(color);
         this.getComponent(ColliderComponent).radius = 11;
+        this.getComponent(EyesComponent).initRays(7, 100);
         this.getComponent(NeuroComponent).brain = brain;
     }
 

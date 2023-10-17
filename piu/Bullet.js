@@ -42,7 +42,7 @@ class Bullet extends Entity {
         const collider = this.getComponent(ColliderComponent);
         collider.radius = 2;
         collider.onCollision = (entity) => {
-            console.log("Target", entity, "Bullet", this);
+            // console.log("Target", entity, "Bullet", this);
             if (entity instanceof Bot) {
                 entity.mustRemove = true;
                 this.mustRemove = true;

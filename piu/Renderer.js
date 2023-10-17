@@ -104,6 +104,20 @@ class Renderer {
                     ctx.stroke();
                     ctx.restore();
                 }
+
+                const eye = entity.getComponent(EyesComponent);
+                if (eye) {
+                    ctx.save();
+                    ctx.strokeStyle = 'red';
+                    ctx.beginPath();
+                    for (let i = 0, l = eye.rays.length; i < l; i++) {
+                        const p2 = eye.rays[i].p2();
+                        ctx.moveTo(position.x, position.y);
+                        ctx.lineTo(p2.x, p2.y);
+                    }
+                    ctx.stroke();
+                    ctx.restore();
+                }
             }
         }
     }
