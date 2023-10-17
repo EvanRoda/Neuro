@@ -1,4 +1,5 @@
-const MAX_SPEED = 10;               // pixels per seconds
+const MAX_BOT_SPEED = 10;           // pixels per seconds
+const MAX_BULLET_SPEED = 100;       // pixels per seconds
 const MAX_WAITING_TIME = 1000;      // milliseconds
 const ROTATION_SPEED = Math.PI / 4; // radians per second
 const RELOAD_TIME = 1000;
@@ -72,19 +73,19 @@ class Bot extends Entity {
 
     static move_slow(self, frameTime) {
         const position = self.getComponent(PositionComponent);
-        const shift = (MAX_SPEED / 2) * frameTime / 1000;
+        const shift = (MAX_BOT_SPEED / 2) * frameTime / 1000;
 
         Bot.shift(position, shift);
     }
     static move_fast(self, frameTime) {
         const position = self.getComponent(PositionComponent);
-        const shift = MAX_SPEED * frameTime / 1000;
+        const shift = MAX_BOT_SPEED * frameTime / 1000;
 
         Bot.shift(position, shift);
     }
     static move_back(self, frameTime) {
         const position = self.getComponent(PositionComponent);
-        const shift = (-MAX_SPEED / 2) * frameTime / 1000;
+        const shift = (-MAX_BOT_SPEED / 2) * frameTime / 1000;
 
         Bot.shift(position, shift);
     }

@@ -52,7 +52,7 @@ class Bullet extends Entity {
 
     move(frameTime) {
         const position = this.getComponent(PositionComponent);
-        const shift = MAX_SPEED * frameTime / 1000;
+        const shift = MAX_BULLET_SPEED * frameTime / 1000;
 
         const x = Math.cos(position.direction) * shift;
         const y = Math.sin(position.direction) * shift;
