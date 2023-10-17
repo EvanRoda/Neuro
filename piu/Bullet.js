@@ -1,7 +1,10 @@
 class Bullet extends Entity {
 
-    constructor(x, y, direction) {
+    parent;
+    constructor(parent, x, y, direction) {
         super();
+        this.parent = parent;
+
         this.addComponent(PositionComponent)
             .addComponent(SpriteComponent)
             .addComponent(ColliderComponent);

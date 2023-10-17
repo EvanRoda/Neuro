@@ -54,13 +54,7 @@ class Bot extends Entity {
         const x = Math.cos(position.direction) * shift;
         const y = Math.sin(position.direction) * shift;
 
-        position.x += x;
-        if (position.x < 0) position.x = 0;
-        if (position.x > WIDTH) position.x = WIDTH;
-
-        position.y += y;
-        if (position.y < 0) position.y = 0;
-        if (position.y > HEIGHT) position.y = HEIGHT;
+        position.add(x, y);
     }
 
     static rotate(position, shift) {
@@ -83,6 +77,28 @@ class Bot extends Entity {
 
         Bot.shift(position, shift);
     }
+
+    static strafe_right(self, frameTime) {
+        const position = self.getComponent(PositionComponent);
+        const shift = 0.75 * MAX_BOT_SPEED * frameTime / 1000;
+        const dir = position.direction + Math.PI * 0.5
+
+        const dx = Math.cos(dir) * shift;
+        const dy = Math.sin(dir) * shift;
+
+        position.add(dx, dy);
+    }
+
+    static strafe_left(self, frameTime) {
+        const position = self.getComponent(PositionComponent);
+        const shift = 0.75 * MAX_BOT_SPEED * frameTime / 1000;
+        const dir = position.direction - Math.PI * 0.5;
+
+        const dx = Math.cos(dir) * shift;
+        const dy = Math.sin(dir) * shift;
+
+        position.add(dx, dy);
+    }
     static move_back(self, frameTime) {
         const position = self.getComponent(PositionComponent);
         const shift = (-MAX_BOT_SPEED / 2) * frameTime / 1000;
@@ -98,7 +114,6 @@ class Bot extends Entity {
             new Bullet(position.x + x, position.y + y, position.direction);
             self.reload = RELOAD_TIME;
         }
-
     }
     static melee_attack(self, frameTime) {
 

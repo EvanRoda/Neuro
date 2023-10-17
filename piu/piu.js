@@ -30,6 +30,8 @@ brainFactory
     .addReaction(Bot.move_slow)
     .addReaction(Bot.move_fast)
     .addReaction(Bot.move_back)
+    .addReaction(Bot.strafe_left)
+    .addReaction(Bot.strafe_right)
     .addReaction(Bot.range_attack)
     // .addReaction(Bot.melee_attack)
     .addReaction(Bot.rotate_left)
@@ -48,8 +50,8 @@ window.addEventListener('load', () => {
     tests();
 
     initUI();
-    createBots();
     createObstacles();
+    createBots();
     renderer = new Renderer(canvas, WIDTH, HEIGHT, calculate, afterDraw);
     renderer.start();
 });
@@ -94,6 +96,7 @@ function afterDraw() {
     for (let i = 0, l = eyes.length; i < l; i++) {
         const eye = eyes[i];
         eye.clearView();
+        // todo: add bounds collision detection
         for (let j = 0, m = colliders.length; j < m; j++) {
             const collider = colliders[j];
             if (eye.entity.uuid !== collider.entity.uuid) {

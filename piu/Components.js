@@ -285,6 +285,16 @@ class PositionComponent extends Component {
     constructor(entity) {
         super(entity);
     }
+
+    add(dx, dy) {
+        this.x += dx;
+        if (this.x < 0) this.x = 0;
+        if (this.x > WIDTH) this.x = WIDTH;
+
+        this.y += dy;
+        if (this.y < 0) this.y = 0;
+        if (this.y > HEIGHT) this.y = HEIGHT;
+    }
 }
 
 class SpriteComponent extends Component {
