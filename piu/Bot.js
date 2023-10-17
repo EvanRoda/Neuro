@@ -7,9 +7,9 @@ const RAYS_LENGTH = 200;
 class Bot extends Entity {
 
     currentReaction = () => {}
-    // todo: сerebellum
+
     reload = RELOAD_TIME;
-    constructor(color, brain) {
+    constructor(color, brain, cerebellum) {
         super();
         this.addComponent(PositionComponent)
             .addComponent(SpriteComponent)
@@ -23,6 +23,7 @@ class Bot extends Entity {
         this.getComponent(ColliderComponent).radius = 11;
         this.getComponent(EyesComponent).initRays(RAYS_COUNT, RAYS_LENGTH);
         this.getComponent(NeuroComponent).brain = brain;
+        this.getComponent(NeuroComponent).cerebellum = cerebellum;
     }
 
     initSprite(color) {
@@ -40,19 +41,12 @@ class Bot extends Entity {
 
     evaluate(frameTime) {
         const neuro = this.getComponent(NeuroComponent);
-        neuro.waitingTime -= frameTime;
-        // Do not think and make in one frame
-        if (neuro.waitingTime < 0) {
-            const eye = this.getComponent(EyesComponent);
+        const eye = this.getComponent(EyesComponent);
 
-            this.brain.run(eye.getIntersectionData());
-            this.currentReaction = this.brain.getReaction();
+        neuro.cerebellum.run(eye.getShortIntersectionData());
+        const reaction = neuro.cerebellum.getReaction();
 
-            // todo: Get waitingTime from waiting reaction neuron
-            neuro.waitingTime = MAX_WAITING_TIME;
-        } else {
-            this.currentReaction(this, frameTime);
-        }
+        reaction(this, frameTime);
     }
 
     static shift(position, shift) {
@@ -117,5 +111,17 @@ class Bot extends Entity {
         const position = self.getComponent(PositionComponent);
         const shift = ROTATION_SPEED * frameTime / 1000;
         Bot.rotate(position, shift);
+    }
+
+    static do(self, frameTime) {
+        self.currentReaction(self, frameTime);
+    }
+
+    static think(self, frameTime) {
+        const neuro = self.getComponent(NeuroComponent);
+        const eye = self.getComponent(EyesComponent);
+
+        neuro.brain.run(eye.getIntersectionData());
+        self.currentReaction = neuro.brain.getReaction();
     }
 }

@@ -24,6 +24,8 @@ class FriendFoeComponent extends Component {
 class EyesComponent extends Component {
     rays = [];
 
+    _last = [];
+
     constructor(entity) {
         super(entity);
     }
@@ -36,7 +38,18 @@ class EyesComponent extends Component {
             const ray = new RayComponent(this.entity);
             ray.init(startAngle + (dAngle * i), distance)
             this.rays.push(ray);
+            this._last.push(-1);
         }
+    }
+
+    getShortIntersectionData() {
+        const data = [];
+        for (let i = 0, l = this.rays.length; i < l; i++) {
+            const ray = this.rays[i];
+            data.push(this._last[i] === ray.hasIntersected() ? 1 : -1);
+            this._last[i] = ray.hasIntersected();
+        }
+        return data;
     }
 
     getIntersectionData() {
@@ -44,18 +57,19 @@ class EyesComponent extends Component {
 
         for (let i = 0, l = this.rays.length; i < l; i++) {
             const ray = this.rays[i];
-            if (!ray.intersected) {
-                data.push(0);
-                data.push(0);
-            } else {
-                const isFriend = ray.intersected.entity.getComponent(FriendFoeComponent)
-                    .isFriend(this.entity.getComponent(FriendFoeComponent));
-                data.push(isFriend ? 1 : -1);
-                data.push(ray.intersected.distance);
-            }
+            data.push(ray.intersected.friend ? 1 : -1);
+            data.push(ray.intersected.foe ? 1 : -1);
+            data.push(ray.intersected.bullet ? 1 : -1);
+            data.push(ray.intersected.obstacle ? 1 : -1);
         }
 
         return data;
+    }
+
+    clearView() {
+        for (let i = 0, l = this.rays.length; i < l; i++) {
+            this.rays[i].clearIntersected();
+        }
     }
 
     clear() {
@@ -84,6 +98,7 @@ class RayComponent extends Component {
     init(dAngle, distance) {
         this.dAngle = dAngle;
         this.distance = distance;
+        this.clearIntersected();
     }
 
     clear() {
@@ -150,15 +165,32 @@ class RayComponent extends Component {
         return this._direction;
     }
 
-    putIntersected(otherCollider) {
-        const collider = this.entity.getComponent(ColliderComponent);
-        const dist = collider.squareOfDistance(otherCollider);
-        if (!this.intersected || (this.intersected && dist < this.intersected.distance)) {
-            this.intersected = {
-                distance: dist,
-                entity: otherCollider.entity,
-            };
+    clearIntersected() {
+        this.intersected = {
+            friend: false,
+            foe: false,
+            bullet: false,
+            obstacle: false,
+        };
+    }
+
+    putIntersected(other) {
+        if (other instanceof Bot) {
+            const isFriend = other.getComponent(FriendFoeComponent).isFriend(this.entity);
+
+            this.intersected.friend = isFriend;
+            this.intersected.foe = !isFriend;
+        } else if (other instanceof Bullet) {
+            this.intersected.bullet = true;
+        } else if (other instanceof Obstacle) {
+            this.intersected.obstacle = true;
+        } else {
+            console.warn("Unknown entity type!");
         }
+    }
+
+    hasIntersected() {
+        return this.intersected.friend || this.intersected.foe || this.intersected.bullet || this.intersected.obstacle;
     }
 
     isIntersect(otherCollider) {
@@ -283,6 +315,7 @@ class SpriteComponent extends Component {
 
 class NeuroComponent extends Component {
     brain;
+    cerebellum;
     waitingTime;
 
     constructor(entity) {

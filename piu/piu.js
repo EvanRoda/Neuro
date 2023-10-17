@@ -9,15 +9,20 @@ const TEAMS = [
 ];
 const BOTS_IN_TEAM = 8;
 
-const neuroFactory = new NeuroBuilder();
+const brainFactory = new NeuroBuilder();
+const cerebellumFactory = new NeuroBuilder();
 
 for (let i = 0; i < RAYS_COUNT; i++) {
-    neuroFactory
+    brainFactory
         .addSensor(DEFAULT_HANDLER)
-        .addSensor(getHandler(RAYS_LENGTH))
+        .addSensor(DEFAULT_HANDLER)
+        .addSensor(DEFAULT_HANDLER)
+        .addSensor(DEFAULT_HANDLER);
+
+    cerebellumFactory.addSensor(DEFAULT_HANDLER);
 }
 
-neuroFactory
+brainFactory
     .addSensor(BALANCER_HANDLER)
     .addHiddenLayers(4, RAYS_COUNT * 2)
 
@@ -27,8 +32,14 @@ neuroFactory
     .addReaction(Bot.range_attack)
     // .addReaction(Bot.melee_attack)
     .addReaction(Bot.rotate_left)
-    .addReaction(Bot.rotate_right)
-    .addReaction(Bot.nothing)
+    .addReaction(Bot.rotate_right);
+
+cerebellumFactory
+    .addSensor(BALANCER_HANDLER)
+    .addHiddenLayers(2, RAYS_COUNT)
+    .addReaction(Bot.do)
+    .addReaction(Bot.think)
+
 
 window.addEventListener('load', () => {
     console.log('page is fully loaded');
@@ -80,13 +91,14 @@ function afterDraw() {
 
     for (let i = 0, l = eyes.length; i < l; i++) {
         const eye = eyes[i];
+        eye.clearView();
         for (let j = 0, m = colliders.length; j < m; j++) {
             const collider = colliders[j];
             if (eye.entity.uuid !== collider.entity.uuid) {
                 for (let n = 0, k = eye.rays.length; n < k; n++) {
                     const ray = eye.rays[n];
                     if (ray.isIntersect(collider)) {
-                        ray.putIntersected(collider);
+                        ray.putIntersected(collider.entity);
                     }
                 }
             }
@@ -121,8 +133,9 @@ function afterDraw() {
 function createBots() {
     for (const team of TEAMS) {
         for (let i = 0; i < BOTS_IN_TEAM; i++) {
-            const brain = neuroFactory.make();
-            const bot = new Bot(team, brain);
+            const brain = brainFactory.make();
+            const cerebellum = cerebellumFactory.make();
+            const bot = new Bot(team, brain, cerebellum);
             const position = bot.getComponent(PositionComponent);
             position.x = randomInt(WIDTH);
             position.y = randomInt(HEIGHT);
