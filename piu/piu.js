@@ -18,6 +18,7 @@ for (let i = 0; i < RAYS_COUNT; i++) {
         .addSensor(DEFAULT_HANDLER)
         .addSensor(DEFAULT_HANDLER)
         .addSensor(DEFAULT_HANDLER)
+        .addSensor(DEFAULT_HANDLER)
         .addSensor(DEFAULT_HANDLER);
 
     cerebellumFactory.addSensor(DEFAULT_HANDLER);
@@ -96,7 +97,6 @@ function afterDraw() {
     for (let i = 0, l = eyes.length; i < l; i++) {
         const eye = eyes[i];
         eye.clearView();
-        // todo: add bounds collision detection
         for (let j = 0, m = colliders.length; j < m; j++) {
             const collider = colliders[j];
             if (eye.entity.uuid !== collider.entity.uuid) {
@@ -106,6 +106,14 @@ function afterDraw() {
                         ray.putIntersected(collider.entity);
                     }
                 }
+            }
+        }
+
+        for (let n = 0, k = eye.rays.length; n < k; n++) {
+            const ray = eye.rays[n];
+            const p2 = ray.p2();
+            if (p2.x <= 0 || p2.x >= WIDTH || p2.y <= 0 || p2.y >= HEIGHT) {
+                ray.putBounds();
             }
         }
     }

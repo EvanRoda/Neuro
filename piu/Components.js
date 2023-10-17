@@ -61,6 +61,7 @@ class EyesComponent extends Component {
             data.push(ray.intersected.foe ? 1 : -1);
             data.push(ray.intersected.bullet ? 1 : -1);
             data.push(ray.intersected.obstacle ? 1 : -1);
+            data.push(ray.intersected.bounds ? 1 : -1);
         }
 
         return data;
@@ -171,6 +172,7 @@ class RayComponent extends Component {
             foe: false,
             bullet: false,
             obstacle: false,
+            bounds: false,
         };
     }
 
@@ -189,8 +191,12 @@ class RayComponent extends Component {
         }
     }
 
+    putBounds() {
+        this.intersected.bounds = true;
+    }
+
     hasIntersected() {
-        return this.intersected.friend || this.intersected.foe || this.intersected.bullet || this.intersected.obstacle;
+        return this.intersected.friend || this.intersected.foe || this.intersected.bullet || this.intersected.obstacle || this.intersected.bounds;
     }
 
     isIntersect(otherCollider) {
