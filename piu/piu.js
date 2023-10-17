@@ -8,6 +8,7 @@ const TEAMS = [
     'green'
 ];
 const BOTS_IN_TEAM = 8;
+const OBSTACLES_COUNT = 10;
 
 const brainFactory = new NeuroBuilder();
 const cerebellumFactory = new NeuroBuilder();
@@ -48,6 +49,7 @@ window.addEventListener('load', () => {
 
     initUI();
     createBots();
+    createObstacles();
     renderer = new Renderer(canvas, WIDTH, HEIGHT, calculate, afterDraw);
     renderer.start();
 });
@@ -141,6 +143,12 @@ function createBots() {
             position.y = randomInt(HEIGHT);
             position.direction = randomFloat(2 * Math.PI);
         }
+    }
+}
+
+function createObstacles() {
+    for (let i = 0; i < OBSTACLES_COUNT; i++) {
+        new Obstacle(randomInt(WIDTH), randomInt(HEIGHT));
     }
 }
 
