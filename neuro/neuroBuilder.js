@@ -5,6 +5,10 @@ const ENERGY_HANDLER = (value) => { return -1 + 2 * value / MAX_ENERGY };
 const BALANCER_HANDLER = () => { return 1 };
 const DEFAULT_HANDLER = (value) => { return value};
 
+function getHandler(maxValue) {
+    return (value) => { return -1 + 2 * value / maxValue };
+}
+
 class NeuroBuilder {
     sensors = [];
     reactions = [];

@@ -5,6 +5,22 @@ class Component {
     }
 }
 
+class FriendFoeComponent extends Component {
+    team = null;
+
+    constructor(entity) {
+        super(entity);
+    }
+
+    setTeam(team) {
+        this.team = team;
+    }
+
+    isFriend(other) {
+        return this.team === other.team;
+    }
+}
+
 class EyesComponent extends Component {
     rays = [];
 
@@ -22,6 +38,26 @@ class EyesComponent extends Component {
             this.rays.push(ray);
         }
     }
+
+    getIntersectionData() {
+        const data = [];
+
+        for (let i = 0, l = this.rays.length; i < l; i++) {
+            const ray = this.rays[i];
+            if (!ray.intersected) {
+                data.push(0);
+                data.push(0);
+            } else {
+                const isFriend = ray.intersected.entity.getComponent(FriendFoeComponent)
+                    .isFriend(this.entity.getComponent(FriendFoeComponent));
+                data.push(isFriend ? 1 : -1);
+                data.push(ray.intersected.distance);
+            }
+        }
+
+        return data;
+    }
+
     clear() {
         for (let i = 0, l = this.rays.length; i < l; i++) {
             this.rays[i].clear();

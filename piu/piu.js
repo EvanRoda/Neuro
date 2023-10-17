@@ -11,17 +11,15 @@ const BOTS_IN_TEAM = 8;
 
 const neuroFactory = new NeuroBuilder();
 
-neuroFactory
-    // todo: change sensors
-    .addSensor(DIRECTION_HANDLER)
-    .addSensor(DEFAULT_HANDLER)
-    .addSensor(LIGHT_HANDLER)
-    .addSensor(ENERGY_HANDLER)
-    .addSensor(DIRECTION_HANDLER)
-    .addSensor(LIGHT_HANDLER)
-    .addSensor(BALANCER_HANDLER)
+for (let i = 0; i < RAYS_COUNT; i++) {
+    neuroFactory
+        .addSensor(DEFAULT_HANDLER)
+        .addSensor(getHandler(RAYS_LENGTH))
+}
 
-    .addHiddenLayers(4, 6)
+neuroFactory
+    .addSensor(BALANCER_HANDLER)
+    .addHiddenLayers(4, RAYS_COUNT * 2)
 
     .addReaction(Bot.move_slow)
     .addReaction(Bot.move_fast)

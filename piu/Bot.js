@@ -2,23 +2,26 @@ const MAX_SPEED = 10;               // pixels per seconds
 const MAX_WAITING_TIME = 1000;      // milliseconds
 const ROTATION_SPEED = Math.PI / 4; // radians per second
 const RELOAD_TIME = 1000;
-
+const RAYS_COUNT = 7;
+const RAYS_LENGTH = 200;
 class Bot extends Entity {
 
     currentReaction = () => {}
-
+    // todo: сerebellum
     reload = RELOAD_TIME;
     constructor(color, brain) {
         super();
         this.addComponent(PositionComponent)
             .addComponent(SpriteComponent)
             .addComponent(ColliderComponent)
+            .addComponent(FriendFoeComponent)
             .addComponent(EyesComponent)
             .addComponent(NeuroComponent);
 
         this.initSprite(color);
+        this.getComponent(FriendFoeComponent).setTeam(color);
         this.getComponent(ColliderComponent).radius = 11;
-        this.getComponent(EyesComponent).initRays(7, 100);
+        this.getComponent(EyesComponent).initRays(RAYS_COUNT, RAYS_LENGTH);
         this.getComponent(NeuroComponent).brain = brain;
     }
 
@@ -40,17 +43,12 @@ class Bot extends Entity {
         neuro.waitingTime -= frameTime;
         // Do not think and make in one frame
         if (neuro.waitingTime < 0) {
-            // Brain run
-            // Get reaction
-            // Get waitingTime from waiting reaction neuron
-            const rnd = Math.random();
-            if (rnd < 0.33) {
-                this.currentReaction = Bot.rotate_right;
-            } else if (rnd < 0.66) {
-                this.currentReaction = Bot.move_slow;
-            } else {
-                this.currentReaction = Bot.range_attack;
-            }
+            const eye = this.getComponent(EyesComponent);
+
+            this.brain.run(eye.getIntersectionData());
+            this.currentReaction = this.brain.getReaction();
+
+            // todo: Get waitingTime from waiting reaction neuron
             neuro.waitingTime = MAX_WAITING_TIME;
         } else {
             this.currentReaction(this, frameTime);
