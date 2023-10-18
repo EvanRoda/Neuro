@@ -7,7 +7,7 @@ const TEAMS = [
     'red',
     'green'
 ];
-const BOTS_IN_TEAM = 8;
+const BOTS_IN_TEAM = 12;
 const OBSTACLES_COUNT = 10;
 
 const brainFactory = new NeuroBuilder();
@@ -40,7 +40,7 @@ brainFactory
 
 cerebellumFactory
     .addSensor(BALANCER_HANDLER)
-    .addHiddenLayers(2, RAYS_COUNT)
+    .addHiddenLayers(3, RAYS_COUNT)
     .addReaction(Bot.do)
     .addReaction(Bot.think)
 
@@ -56,6 +56,11 @@ window.addEventListener('load', () => {
     renderer = new Renderer(canvas, WIDTH, HEIGHT, calculate, afterDraw);
     renderer.start();
 });
+
+function startNewRound(templates) {
+    createObstacles();
+    createBotsWithTemplates(templates);
+}
 
 function initUI() {
     canvas = document.getElementById("screen");
@@ -75,6 +80,8 @@ function calculate(elapsedTime) {
             entities.push(entity);
         }
     }
+
+    LearningController.getInstance().tick(elapsedTime);
 
     return entities;
 }
@@ -139,6 +146,10 @@ function afterDraw() {
         eyes[i].clear();
     }
 
+    // Скопировать мозги собирающихся помереть
+    LearningController.getInstance().deadInCache();
+    LearningController.getInstance().checkEndRound();
+
     // GC
     EntityController.removeGarbage();
 }
@@ -153,6 +164,32 @@ function createBots() {
             position.x = randomInt(WIDTH);
             position.y = randomInt(HEIGHT);
             position.direction = randomFloat(2 * Math.PI);
+        }
+    }
+}
+
+function createBotsWithTemplates(templates) {
+    let tIndex = 0;
+    for (const team of TEAMS) {
+        for (let i = 0; i < BOTS_IN_TEAM; i++) {
+            const brain = templates[tIndex % 3].brain.copy();
+            const cerebellum = templates[tIndex % 3].cerebellum.copy();
+
+            if (tIndex > 5) {
+                brain.hardMutate();
+                cerebellum.hardMutate();
+            } else if (tIndex > 2) {
+                brain.mutate();
+                cerebellum.mutate();
+            }
+
+            const bot = new Bot(team, brain, cerebellum);
+            const position = bot.getComponent(PositionComponent);
+            position.x = randomInt(WIDTH);
+            position.y = randomInt(HEIGHT);
+            position.direction = randomFloat(2 * Math.PI);
+
+            tIndex++;
         }
     }
 }

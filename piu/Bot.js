@@ -3,7 +3,7 @@ const MAX_BULLET_SPEED = 100;       // pixels per seconds
 const MAX_WAITING_TIME = 1000;      // milliseconds
 const ROTATION_SPEED = Math.PI / 4; // radians per second
 const RELOAD_TIME = 1000;
-const RAYS_COUNT = 7;
+const RAYS_COUNT = 11;
 const RAYS_LENGTH = 200;
 class Bot extends Entity {
 
@@ -17,6 +17,7 @@ class Bot extends Entity {
             .addComponent(ColliderComponent)
             .addComponent(FriendFoeComponent)
             .addComponent(EyesComponent)
+            .addComponent(LearningComponent)
             .addComponent(NeuroComponent);
 
         this.initSprite(color);
@@ -70,12 +71,18 @@ class Bot extends Entity {
         const shift = (MAX_BOT_SPEED / 2) * frameTime / 1000;
 
         Bot.shift(position, shift);
+
+        const learn = self.getComponent(LearningComponent);
+        learn.shift();
     }
     static move_fast(self, frameTime) {
         const position = self.getComponent(PositionComponent);
         const shift = MAX_BOT_SPEED * frameTime / 1000;
 
         Bot.shift(position, shift);
+
+        const learn = self.getComponent(LearningComponent);
+        learn.shift();
     }
 
     static strafe_right(self, frameTime) {
@@ -87,6 +94,9 @@ class Bot extends Entity {
         const dy = Math.sin(dir) * shift;
 
         position.add(dx, dy);
+
+        const learn = self.getComponent(LearningComponent);
+        learn.shift();
     }
 
     static strafe_left(self, frameTime) {
@@ -98,12 +108,17 @@ class Bot extends Entity {
         const dy = Math.sin(dir) * shift;
 
         position.add(dx, dy);
+
+        const learn = self.getComponent(LearningComponent);
+        learn.shift();
     }
     static move_back(self, frameTime) {
         const position = self.getComponent(PositionComponent);
         const shift = (-MAX_BOT_SPEED / 2) * frameTime / 1000;
 
         Bot.shift(position, shift);
+        const learn = self.getComponent(LearningComponent);
+        learn.shift();
     }
     static range_attack(self, frameTime) {
         self.reload -= frameTime;
@@ -111,8 +126,10 @@ class Bot extends Entity {
             const position = self.getComponent(PositionComponent);
             const x = Math.cos(position.direction) * 16;
             const y = Math.sin(position.direction) * 16;
-            new Bullet(position.x + x, position.y + y, position.direction);
+            new Bullet(self, position.x + x, position.y + y, position.direction);
             self.reload = RELOAD_TIME;
+            const learn = self.getComponent(LearningComponent);
+            learn.range_attack();
         }
     }
     static melee_attack(self, frameTime) {
@@ -122,11 +139,15 @@ class Bot extends Entity {
         const position = self.getComponent(PositionComponent);
         const shift = ROTATION_SPEED * frameTime / 1000;
         Bot.rotate(position, shift);
+        const learn = self.getComponent(LearningComponent);
+        learn.rotate();
     }
     static rotate_right(self, frameTime) {
         const position = self.getComponent(PositionComponent);
         const shift = ROTATION_SPEED * frameTime / 1000;
         Bot.rotate(position, shift);
+        const learn = self.getComponent(LearningComponent);
+        learn.rotate();
     }
 
     static do(self, frameTime) {
@@ -136,7 +157,9 @@ class Bot extends Entity {
     static think(self, frameTime) {
         const neuro = self.getComponent(NeuroComponent);
         const eye = self.getComponent(EyesComponent);
+        const learn = self.getComponent(LearningComponent);
 
+        learn.think();
         neuro.brain.run(eye.getIntersectionData());
         self.currentReaction = neuro.brain.getReaction();
     }

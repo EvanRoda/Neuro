@@ -42,6 +42,14 @@ class EntityController {
         return EntityController.getInstance().entities;
     }
 
+    static clear() {
+        const objects = EntityController.getAll();
+
+        for (const uuid in objects) {
+            delete objects[uuid];
+        }
+    }
+
     static removeGarbage() {
         const objects = EntityController.getAll();
 

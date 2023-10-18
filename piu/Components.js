@@ -5,6 +5,73 @@ class Component {
     }
 }
 
+class LearningComponent extends Component {
+
+    score = 0;
+    lastAction = null;
+
+    constructor(entity) {
+        super(entity);
+    }
+
+    think() {
+        const action = 'think';
+        if (this.lastAction !== action) {
+            this.score += 5;
+        }
+        this.lastAction = action;
+    }
+
+    shift() {
+        const action = 'shift';
+        if (this.lastAction !== action) {
+            this.score += 5;
+        }
+        this.lastAction = action;
+    }
+
+    rotate() {
+        const action = 'rotate';
+        if (this.lastAction !== action) {
+            this.score += 5;
+        }
+        this.lastAction = action;
+    }
+
+    range_attack() {
+        const action = 'range_attack';
+        if (this.lastAction !== action) {
+            this.score += 10;
+        }
+        this.lastAction = action;
+    }
+
+    shot_friend() {
+        const action = 'shot_friend';
+        this.score += 1;
+    }
+
+    shot_foe() {
+        const action = 'shot_foe';
+        this.score += 50;
+    }
+
+    shot_obstacle() {
+        const action = 'shot_obstacle';
+        this.score += 5;
+    }
+
+    hit_bounds() {
+        const action = 'hit_bounds';
+        this.score -= 5;
+    }
+
+    death() {
+        const action = 'death';
+        this.score -= 0;
+    }
+}
+
 class FriendFoeComponent extends Component {
     team = null;
 
@@ -294,12 +361,27 @@ class PositionComponent extends Component {
 
     add(dx, dy) {
         this.x += dx;
-        if (this.x < 0) this.x = 0;
-        if (this.x > WIDTH) this.x = WIDTH;
+        const learn = this.entity.getComponent(LearningComponent);
+
+
+        if (this.x < 0) {
+            this.x = 0;
+            learn.hit_bounds();
+        }
+        if (this.x > WIDTH) {
+            this.x = WIDTH;
+            learn.hit_bounds();
+        }
 
         this.y += dy;
-        if (this.y < 0) this.y = 0;
-        if (this.y > HEIGHT) this.y = HEIGHT;
+        if (this.y < 0) {
+            this.y = 0;
+            learn.hit_bounds();
+        }
+        if (this.y > HEIGHT) {
+            this.y = HEIGHT;
+            learn.hit_bounds();
+        }
     }
 }
 

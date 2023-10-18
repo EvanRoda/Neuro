@@ -49,6 +49,12 @@ class Bullet extends Entity {
             if (entity instanceof Bot) {
                 entity.mustRemove = true;
                 this.mustRemove = true;
+                const learn = this.parent.getComponent(LearningComponent);
+                if (this.parent.getComponent(FriendFoeComponent).isFriend(entity.getComponent(FriendFoeComponent))) {
+                    learn.shot_friend();
+                } else {
+                    learn.shot_foe();
+                }
             }
         }
     }

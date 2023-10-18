@@ -34,6 +34,7 @@ class Obstacle extends Entity {
             // console.log("Target", entity, "Bullet", this);
             if (entity instanceof Bullet) {
                 entity.mustRemove = true;
+                entity.parent.getComponent(LearningComponent).shot_obstacle();
             }
         }
     }
