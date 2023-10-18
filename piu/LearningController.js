@@ -11,16 +11,17 @@ class LearningController {
     }
 
     roundTime;
+    roundNumber;
     cache;
 
     constructor() {
         this.roundTime = 0;
+        this.roundNumber = 1;
         this.cache = [];
     }
 
     tick(elapsedTime) {
         this.roundTime += elapsedTime;
-
     }
 
     deadInCache() {
@@ -99,12 +100,13 @@ class LearningController {
     checkEndRound() {
         if (this.roundTime > TIME_OF_ROUND) {
             this.endRound();
-            this.roundTime = 0;
-            this.cache = [];
         }
     }
 
     endRound() {
         this.mutateBrains();
+        this.roundTime = 0;
+        this.roundNumber += 1;
+        this.cache = [];
     }
 }

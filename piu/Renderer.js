@@ -1,5 +1,3 @@
-const DEBUG = true;
-
 class Renderer {
     real = null;
     realCtx = null;
@@ -77,7 +75,7 @@ class Renderer {
             ctx.drawImage(sprite.canvas, -sprite.pivot.x, -sprite.pivot.y);
             ctx.restore();
 
-            if (DEBUG) {
+            if (debugToggle) {
                 ctx.fillStyle = 'red';
                 ctx.beginPath();
                 ctx.arc(position.x, position.y, 2, 0, 2 * Math.PI);

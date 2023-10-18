@@ -10,6 +10,11 @@ const TEAMS = [
 const BOTS_IN_TEAM = 12;
 const OBSTACLES_COUNT = 10;
 
+let counter;
+let roundCounter;
+let buttonDebugToggle;
+let debugToggle = false;
+
 const brainFactory = new NeuroBuilder();
 const cerebellumFactory = new NeuroBuilder();
 
@@ -67,6 +72,20 @@ function initUI() {
     canvas.addEventListener("click", () => {
 
     });
+
+    counter = document.getElementById("counter");
+    roundCounter = document.getElementById("round-counter");
+
+    buttonDebugToggle = document.getElementById("debugToggle");
+    buttonDebugToggle.addEventListener('click', () => {
+        debugToggle = !debugToggle;
+    });
+}
+
+function updateUI() {
+    const learningController = LearningController.getInstance()
+    counter.innerText = (15 - learningController.roundTime / 1000).toFixed(1);
+    roundCounter.innerText = learningController.roundNumber;
 }
 
 // Return list of Entities
@@ -152,6 +171,8 @@ function afterDraw() {
 
     // GC
     EntityController.removeGarbage();
+
+    updateUI();
 }
 
 function createBots() {
