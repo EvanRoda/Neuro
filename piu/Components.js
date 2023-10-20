@@ -9,66 +9,66 @@ class LearningComponent extends Component {
 
     score = 0;
     lastAction = null;
+    log = {};
 
     constructor(entity) {
         super(entity);
     }
 
-    think() {
-        const action = 'think';
+    handleAction(action, score) {
         if (this.lastAction !== action) {
-            this.score += 5;
+            this.score += score;
         }
         this.lastAction = action;
+        if (!this.log[action]) {
+            this.log[action] = 0;
+        }
+        this.log[action] += 1;
+    }
+
+    think() {
+        const action = 'think';
+        this.handleAction(action, 5);
     }
 
     shift() {
         const action = 'shift';
-        if (this.lastAction !== action) {
-            this.score += 5;
-        }
-        this.lastAction = action;
+        this.handleAction(action, 5);
     }
 
     rotate() {
         const action = 'rotate';
-        if (this.lastAction !== action) {
-            this.score += 5;
-        }
-        this.lastAction = action;
+        this.handleAction(action, 5);
     }
 
     range_attack() {
         const action = 'range_attack';
-        if (this.lastAction !== action) {
-            this.score += 10;
-        }
-        this.lastAction = action;
+        this.handleAction(action, 10);
     }
 
     shot_friend() {
         const action = 'shot_friend';
-        this.score += 1;
+        this.handleAction(action, 1);
     }
 
     shot_foe() {
         const action = 'shot_foe';
-        this.score += 50;
+        this.handleAction(action, 2000);
     }
 
     shot_obstacle() {
         const action = 'shot_obstacle';
-        this.score += 5;
+        this.handleAction(action, 5);
     }
 
     hit_bounds() {
         const action = 'hit_bounds';
-        this.score -= 5;
+        this.handleAction(action, 0);
     }
 
     death() {
         const action = 'death';
-        this.score -= 0;
+        this.handleAction(action, -2000);
     }
 }
 
@@ -254,7 +254,7 @@ class RayComponent extends Component {
         } else if (other instanceof Obstacle) {
             this.intersected.obstacle = true;
         } else {
-            console.warn("Unknown entity type!");
+            console.warn("Unknown entity type!", other);
         }
     }
 
@@ -314,13 +314,13 @@ class ColliderComponent extends Component {
 
     bbox() {
         if (!this._bbox) {
-            const pos = this.entity.getComponent(PositionComponent);
+            const pos = this.position();
 
             this._bbox = new Bbox(
-                pos.y + this.pivot.y - this.radius,
-                pos.y + this.pivot.y + this.radius,
-                pos.x + this.pivot.x - this.radius,
-                pos.x + this.pivot.x + this.radius,
+                pos.y  - this.radius,
+                pos.y + this.radius,
+                pos.x - this.radius,
+                pos.x + this.radius,
             )
         }
 
@@ -339,15 +339,19 @@ class ColliderComponent extends Component {
         return this._pos;
     }
 
-    squareOfDistance(other) {
+    squareOfDistance(point) {
         const a = this.position();
-        const b = other.position();
+        const b = point;
         return (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
     }
 
     isIntersect(other) {
         return this.bbox().isIntersect(other.bbox())
-            && ((this.radius + other.radius) ** 2 >= this.squareOfDistance(other));
+            && ((this.radius + other.radius) ** 2 >= this.squareOfDistance(other.position()));
+    }
+
+    containsPoint(point) {
+        return this.bbox().containsPoint(point) && (this.radius ** 2 >= this.squareOfDistance(point));
     }
 }
 
@@ -366,20 +370,24 @@ class PositionComponent extends Component {
 
         if (this.x < 0) {
             this.x = 0;
+            this.entity.mustRemove = true;
             learn.hit_bounds();
         }
         if (this.x > WIDTH) {
             this.x = WIDTH;
+            this.entity.mustRemove = true;
             learn.hit_bounds();
         }
 
         this.y += dy;
         if (this.y < 0) {
             this.y = 0;
+            this.entity.mustRemove = true;
             learn.hit_bounds();
         }
         if (this.y > HEIGHT) {
             this.y = HEIGHT;
+            this.entity.mustRemove = true;
             learn.hit_bounds();
         }
     }

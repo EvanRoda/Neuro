@@ -5,9 +5,11 @@ const WIDTH = 1281;
 const HEIGHT = 961;
 const TEAMS = [
     'red',
-    'green'
+    'green',
+    'blue',
+    'brown'
 ];
-const BOTS_IN_TEAM = 12;
+const BOTS_IN_TEAM = 48;
 const OBSTACLES_COUNT = 10;
 
 let counter;
@@ -69,8 +71,18 @@ function startNewRound(templates) {
 
 function initUI() {
     canvas = document.getElementById("screen");
-    canvas.addEventListener("click", () => {
-
+    canvas.addEventListener("click", (event) => {
+        const point = {x: event.offsetX, y: event.offsetY};
+        const objects = EntityController.getAll();
+        for (const uuid in objects) {
+            const entity = objects[uuid];
+            if (entity instanceof Bot) {
+                const collider = entity.getComponent(ColliderComponent);
+                if (collider.containsPoint(point)) {
+                    console.log('Bot', entity);
+                }
+            }
+        }
     });
 
     counter = document.getElementById("counter");
@@ -167,10 +179,11 @@ function afterDraw() {
 
     // Скопировать мозги собирающихся помереть
     LearningController.getInstance().deadInCache();
-    LearningController.getInstance().checkEndRound();
 
     // GC
     EntityController.removeGarbage();
+
+    LearningController.getInstance().checkEndRound();
 
     updateUI();
 }
@@ -246,7 +259,7 @@ function tests() {
     console.log("BBOX Intersects", col1.bbox().isIntersect(col2.bbox()));
 
     console.log("Square of radiuses", (col1.radius + col2.radius) ** 2);
-    console.log("Square of distance", col1.squareOfDistance(col2));
+    console.log("Square of distance", col1.squareOfDistance(col2.position()));
     if (col1.isIntersect(col2)) {
         console.info("Zero radius passed!");
     } else {
@@ -325,4 +338,7 @@ function tests() {
     col2.radius = 1;
 
     console.log('Check! Must false', ray1.isIntersect(col2));
+
+    one.mustRemove = true;
+    two.mustRemove = true;
 }

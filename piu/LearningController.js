@@ -31,6 +31,7 @@ class LearningController {
             const entity = objects[uuid];
             if (entity.mustRemove) {
                 if (entity instanceof Bot) {
+                    entity.getComponent(LearningComponent).death();
                     this.cache.push({
                             uuid: entity.uuid,
                             team: entity.getComponent(FriendFoeComponent).team,
@@ -58,7 +59,8 @@ class LearningController {
         }
 
         const objects = EntityController.getAll();
-        const teams = {}
+        const teams = {};
+        const leaderBoard = [];
         for (const uuid in objects) {
             const entity = objects[uuid];
             if (entity instanceof Bot) {
@@ -67,6 +69,9 @@ class LearningController {
                     teams[team] = [];
                 }
                 teams[team].push(entity);
+
+                const learn = entity.getComponent(LearningComponent);
+                learn.score += Object.keys(learn.log).length * 1000;
             }
         }
 
@@ -78,23 +83,31 @@ class LearningController {
             const bestNeuro = teams[team][0].getComponent(NeuroComponent);
 
             for(let i = 0, l = teams[team].length; i < l; i++) {
+                const bot = teams[team][i];
+                const learn = bot.getComponent(LearningComponent);
+
+                leaderBoard.push(`${bot.getComponent(FriendFoeComponent).team} ${bot.uuid} ${learn.score}`);
+
+                learn.score = 0;
                 if (i > Math.floor(0.9 * l)) {
-                    const neuro = teams[team][i].getComponent(NeuroComponent);
+                    const neuro = bot.getComponent(NeuroComponent);
                     neuro.cerebellum = bestNeuro.cerebellum.copy();
                     neuro.brain = bestNeuro.brain.copy();
                     neuro.cerebellum.mutate();
                     neuro.brain.mutate();
                 } else if (i > Math.floor(0.66 * l)) {
-                    const neuro = teams[team][i].getComponent(NeuroComponent);
+                    const neuro = bot.getComponent(NeuroComponent);
                     neuro.cerebellum.hardMutate();
                     neuro.brain.hardMutate();
                 } else if (i > Math.floor(0.33 * l)) {
-                    const neuro = teams[team][i].getComponent(NeuroComponent);
+                    const neuro = bot.getComponent(NeuroComponent);
                     neuro.cerebellum.mutate();
                     neuro.brain.mutate();
                 }
             }
         }
+
+        console.log('leaderBoard', leaderBoard);
     }
 
     checkEndRound() {

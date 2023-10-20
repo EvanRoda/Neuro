@@ -7,16 +7,15 @@ Piupiu
 [Done] 2. Add redraw cycle
 [Done] 3. Draw bots
 4. Bots reaction
-    move_slow
-    move_fast
-    move_back
-    range_attack
     melee_attack
-    rotate_left
-    rotate_right
-5. Bots sensors
-6. Colliders
+[Done] 5. Bots sensors
+[Done] 6. Colliders
 [Done] 7. Components
+
+8. Ограничить патроны (Наказывать за попытку стрельбы в холостую)
+9. Клик по боту.
+10. Рисование перцептронов.
+11. Сохранение и загрузка ботов.
 
 Lab
 [Failed] 1. Try GPU.js

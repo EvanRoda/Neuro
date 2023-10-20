@@ -1,4 +1,4 @@
-const MAX_BOT_SPEED = 10;           // pixels per seconds
+const MAX_BOT_SPEED = 20;           // pixels per seconds
 const MAX_BULLET_SPEED = 100;       // pixels per seconds
 const MAX_WAITING_TIME = 1000;      // milliseconds
 const ROTATION_SPEED = Math.PI / 4; // radians per second

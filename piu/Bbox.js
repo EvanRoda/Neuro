@@ -17,4 +17,11 @@ class Bbox {
             || this.left > other.right
             || this.right < other.left);
     }
+
+    containsPoint(point) {
+        return !(this.top > point.y
+            || this.bottom < point.y
+            || this.left > point.x
+            || this.right < point.x);
+    }
 }
