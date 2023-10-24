@@ -1,30 +1,3 @@
-
-/**
- * X
- * Y
- * Rotate (8 direction)
- *      7 0 1
- *      6 + 2
- *      5 4 3
- * eyes (0-nothing, 1-other bot)
- * geom difference (check bot on view sight)
- * light
- * energy
- *
- * */
-
-
-/**
- * Actions
- *
- * rotate (does not waste energy )
- * move (one of 8 directions)
- * photosynthesis
- * multiply
- * attack
- *
- * */
-
 let world;
 let animationId;
 let needRedraw = true;
@@ -33,9 +6,7 @@ let ctx;
 let hidden;
 let hctx;
 let pCanvas;
-let pCtx;
-let pHidden;
-let pHCtx;
+let perceptronRenderer;
 let counter;
 let botsCounter;
 let times;
@@ -50,7 +21,6 @@ let buttonClear;
 let selectedBotUuid = null;
 let clone = null;
 let selectedBotBinding = {};
-let selectedNeuronData = null;
 let botInfoContainer;
 let buttonCloseBot;
 let logContainer;
@@ -87,16 +57,6 @@ const HARD_MUTATE_DELAY = 5;
 const SOFT_MUTATE_COUNT = 3;
 const PERC_WIDTH = 469;
 const PERC_HEIGHT = 330;
-
-const NEURON_COLORS = {
-    S: '#dcdcdc',
-    A: '#d5f3a9',
-    B: '#a6e7d4',
-    C: '#ecbbeb',
-    D: '#f6c8c8',
-    E: '#e8df98',
-    R: '#dcdcdc',
-}
 
 const storage = [null, null, null, null, null, null];
 const buttonBox = [null, null, null, null, null, null];
@@ -324,136 +284,6 @@ function renderBot() {
     rgb.innerText = selectedBotBinding.rgb;
 }
 
-function getNeuron(eventX, eventY) {
-    if (!selectedBotUuid || !world.bots[selectedBotUuid]) return;
-
-    const perceptron = world.bots[selectedBotUuid].brain;
-
-    const wSpace = Math.floor(PERC_WIDTH / (perceptron.layers.length));
-    let x = wSpace / 2;
-
-    for (let i = 0, l = perceptron.layers.length; i < l; i++) {
-        const layer = perceptron.layers[i];
-        const hSpace = Math.floor(PERC_HEIGHT / (layer.size));
-        let y = hSpace / 2;
-
-        for (let j = 0, k = layer.size; j < k; j++) {
-            const neuron = layer.elements[j];
-
-            if ((x - eventX) ** 2 + (y - eventY) ** 2 < 400) {
-                const relsIn = [];
-                if (i > 0) {
-                    const prevLayer = perceptron.layers[i - 1];
-                    for (const n of prevLayer.elements) {
-                        relsIn.push(n.relations[j]);
-                    }
-                }
-
-                return {
-                    uuid: neuron.uuid,
-                    relationsIn: relsIn,
-                    relationsOut: [...neuron.relations]
-                };
-            }
-            y += hSpace;
-        }
-        x += wSpace;
-    }
-    return null;
-}
-
-function renderPerceptron() {
-    setDims(pHidden, PERC_WIDTH, PERC_HEIGHT);
-    if (!selectedBotUuid || !world.bots[selectedBotUuid]) return;
-
-    const perceptron = world.bots[selectedBotUuid].brain;
-
-    const wSpace = Math.floor(PERC_WIDTH / (perceptron.layers.length));
-    let x = wSpace / 2;
-
-    for (let i = 0, l = perceptron.layers.length; i < l; i++) {
-        const layer = perceptron.layers[i];
-        const hSpace = Math.floor(PERC_HEIGHT / (layer.size));
-        let y = hSpace / 2;
-
-        for (let j = 0, k = layer.size; j < k; j++) {
-            const neuron = layer.elements[j];
-
-            drawNeuron(neuron, x, y);
-            y += hSpace;
-
-            if (selectedNeuronData != null && neuron.uuid === selectedNeuronData.uuid) {
-                drawRelations(i, x, wSpace);
-            }
-
-        }
-        x += wSpace;
-    }
-}
-
-function drawNeuron(neuron, x, y) {
-    const label = neuron.type + ":" + neuron.calculatedValue.toFixed(2);
-    const temp = document.createElement("canvas");
-    const tempCtx = temp.getContext('2d');
-    setDims(temp, 44, 22);
-
-    tempCtx.roundRect(2, 1, 40, 20, 10);
-    tempCtx.fillStyle = NEURON_COLORS[neuron.type];
-    tempCtx.strokeStyle = '#777777';
-    if (selectedNeuronData != null && neuron.uuid === selectedNeuronData.uuid) {
-        tempCtx.strokeStyle = '#f13838';
-    }
-    tempCtx.fill();
-    tempCtx.stroke();
-
-    tempCtx.textAlign = 'start';
-    tempCtx.fillStyle = 'black';
-    tempCtx.fillText(label, 8, 15);
-
-    pHCtx.drawImage(temp, x - 22, y - 11);
-
-}
-
-function drawRelations(layerIndex, x, wSpace) {
-    if (selectedNeuronData == null) return;
-    const temp = document.createElement("canvas");
-    const tempCtx = temp.getContext('2d');
-
-    if (selectedNeuronData.relationsIn.length > 0) {
-        setDims(temp, 30, PERC_HEIGHT);
-        tempCtx.font = '14px monospace'
-        const hSpace = Math.floor(PERC_HEIGHT / selectedNeuronData.relationsIn.length);
-        let y = hSpace / 2;
-
-        for (let i = 0, l = selectedNeuronData.relationsIn.length; i < l; i++) {
-            tempCtx.fillText(selectedNeuronData.relationsIn[i] + '', 2, y + 4);
-            y += hSpace;
-        }
-
-        pHCtx.drawImage(temp, x - wSpace + 20, 0);
-    }
-
-    if (selectedNeuronData.relationsOut.length > 0) {
-        setDims(temp, 30, PERC_HEIGHT);
-        tempCtx.font = '14px monospace'
-        const hSpaceOut = Math.floor(PERC_HEIGHT / selectedNeuronData.relationsOut.length);
-        let y = hSpaceOut / 2;
-
-        for (let i = 0, l = selectedNeuronData.relationsOut.length; i < l; i++) {
-
-            tempCtx.fillText(selectedNeuronData.relationsOut[i] + '', 2, y + 4);
-            y += hSpaceOut;
-        }
-
-        pHCtx.drawImage(temp, x + wSpace - 50, 0);
-    }
-}
-
-function redrawPerceptron() {
-    setDims(pCanvas, PERC_WIDTH, PERC_HEIGHT);
-    pCtx.drawImage(pHidden, 0, 0);
-}
-
 function renderLog() {
     let log = "<p>" + selectedBotBinding.log.length + "</p>";
     selectedBotBinding.log.forEach(str => {
@@ -512,8 +342,7 @@ function draw() {
     coefficient.innerText = world.seasonLightCoef.toFixed(2);
     renderBot();
     if (selectedBotUuid && world.bots[selectedBotUuid] && showPerceptronToggle) {
-        renderPerceptron();
-        redrawPerceptron();
+        perceptronRenderer.draw();
     }
 }
 
@@ -642,11 +471,11 @@ function initUI() {
         }
     });
 
-    canvas.addEventListener("mousedown", (event) => {
+    canvas.addEventListener("mousedown", () => {
         mousePressed = true;
     });
 
-    window.addEventListener('mouseup', (event) => {
+    window.addEventListener('mouseup', () => {
         mousePressed = false;
     })
 
@@ -663,19 +492,6 @@ function initUI() {
     hctx.strokeStyle = "white";
 
     pCanvas = document.getElementById("p-view");
-    pCanvas.addEventListener("click", (event) => {
-        selectedNeuronData = getNeuron(event.offsetX, event.offsetY);
-        if (selectedBotUuid && world.bots[selectedBotUuid]) {
-            renderPerceptron();
-            redrawPerceptron();
-        }
-    });
-
-    pCtx = pCanvas.getContext("2d");
-    pHidden = document.createElement("canvas");
-    pHCtx = pHidden.getContext("2d");
-    pHCtx.strokeStyle = "white";
-
     initStorageUI();
 }
 
@@ -686,6 +502,7 @@ function onNormalMode(event) {
         console.log(cell.bot);
         selectedBotUuid = cell.bot.uuid;
         clone = cell.bot.clone();
+        perceptronRenderer = new PerceptronRenderer(cell.bot.brain, pCanvas, PERC_WIDTH, PERC_HEIGHT);
         showLogToggle = false;
         showPerceptronToggle = false;
         onChangeLogToggle();
@@ -698,8 +515,7 @@ function onNormalMode(event) {
     }
 
     if (selectedBotUuid && world.bots[selectedBotUuid]) {
-        renderPerceptron();
-        redrawPerceptron();
+        perceptronRenderer.draw()
     }
 }
 
