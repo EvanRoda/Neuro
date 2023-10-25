@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="main.css">
     <script src="neuro/neuroBuilder.js"></script>
     <script src="neuro/perceptron.js"></script>
+    <script src="neuro/PerceptronRenderer.js"></script>
     <script src="neuro/utils.js"></script>
     <script src="piu/Components.js"></script>
     <script src="piu/LearningController.js"></script>
@@ -26,7 +27,7 @@
   <div class="item">
     <div class="hud">
         <div class="buttons">
-            <button class="square-button" id="debugToggle" title="Debugg rendering">
+            <button class="square-button" id="debugToggle" title="Debug rendering">
                 <i class="las la-desktop"></i>
             </button>
 
@@ -41,7 +42,10 @@
                 </div>
             </div>
         </div>
-
+        <div id="perceptrons-container">
+            <canvas id="cerebellum"></canvas>
+            <canvas id="brain"></canvas>
+        </div>
     </div>
   </div>
 </div>

@@ -1,15 +1,18 @@
 let renderer;
 let canvas;
+let perceptronsContainer;
+let cerebellumCanvas;
+let brainCanvas;
+let cerebellumRenderer;
+let brainRenderer;
 
 const WIDTH = 1281;
 const HEIGHT = 961;
 const TEAMS = [
     'red',
-    'green',
-    'blue',
-    'brown'
+    'green'
 ];
-const BOTS_IN_TEAM = 48;
+const BOTS_IN_TEAM = 12;
 const OBSTACLES_COUNT = 10;
 
 let counter;
@@ -74,14 +77,33 @@ function initUI() {
     canvas.addEventListener("click", (event) => {
         const point = {x: event.offsetX, y: event.offsetY};
         const objects = EntityController.getAll();
+        let selectedBot = null;
         for (const uuid in objects) {
             const entity = objects[uuid];
             if (entity instanceof Bot) {
                 const collider = entity.getComponent(ColliderComponent);
                 if (collider.containsPoint(point)) {
                     console.log('Bot', entity);
+                    selectedBot = entity;
+                    break;
                 }
             }
+        }
+
+        if (selectedBot) {
+            const brain = selectedBot.getComponent(NeuroComponent).brain;
+            const cerebellum = selectedBot.getComponent(NeuroComponent).cerebellum;
+
+            const width = Math.floor(brain.layers.length * 1.5 * 44);
+            const cerebellumHeight = Math.floor(PerceptronRenderer.maxElementsCount(cerebellum) * 1.5 * 22);
+            const brainHeight = Math.floor(PerceptronRenderer.maxElementsCount(brain) * 1.5 * 22);
+            cerebellumRenderer = new PerceptronRenderer(cerebellum, cerebellumCanvas, width, cerebellumHeight);
+            brainRenderer = new PerceptronRenderer(brain, brainCanvas, width, brainHeight);
+        } else {
+            cerebellumRenderer.delete();
+            brainRenderer.delete();
+            cerebellumRenderer = null;
+            brainRenderer = null;
         }
     });
 
@@ -92,12 +114,20 @@ function initUI() {
     buttonDebugToggle.addEventListener('click', () => {
         debugToggle = !debugToggle;
     });
+
+    perceptronsContainer = document.getElementById("perceptrons-container");
+    cerebellumCanvas = document.getElementById("cerebellum");
+    brainCanvas = document.getElementById("brain");
 }
 
 function updateUI() {
     const learningController = LearningController.getInstance()
     counter.innerText = (15 - learningController.roundTime / 1000).toFixed(1);
     roundCounter.innerText = learningController.roundNumber;
+    if (cerebellumRenderer && brainRenderer) {
+        cerebellumRenderer.draw();
+        brainRenderer.draw();
+    }
 }
 
 // Return list of Entities

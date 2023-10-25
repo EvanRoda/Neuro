@@ -18,6 +18,14 @@ class PerceptronRenderer {
 
     selectedNeuronData = null;
 
+    static maxElementsCount(perceptron) {
+        let max = 0;
+        for (const layer of perceptron.layers) {
+            if (layer.size > max) max = layer.size;
+        }
+        return max;
+    }
+
     constructor(perceptron, canvas, w, h) {
         this.perceptron = perceptron;
         this.real = canvas;
@@ -161,5 +169,9 @@ class PerceptronRenderer {
             x += wSpace;
         }
         return null;
+    }
+
+    delete() {
+        this.clear(this.real, 0, 0);
     }
 }
