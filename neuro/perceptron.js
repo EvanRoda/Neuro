@@ -1,4 +1,40 @@
 class Perceptron {
+
+    static _fromLayers(layersData) {
+        const layers = [];
+
+        const currentLayer = layersData[layersData.length - 1];
+
+        const elements = [];
+        currentLayer.elements.forEach(_ => {
+            const newElement = new Reaction();
+            elements.push(newElement);
+        });
+        const layer = new Layer(null, elements);
+        layers.unshift(layer);
+
+        //copy A and S layers
+        for (let i = layersData.length - 2; i >= 0; --i) {
+            const currentLayer = layersData[i];
+
+            const elements = [];
+            currentLayer.elements.forEach(neuron => {
+                const newElement = new Neuron(neuron.type, neuron.handlerOptions);
+                newElement.setRelations([...neuron.relations]);
+                elements.push(newElement);
+            });
+
+            const layer = new Layer(layers[0], elements);
+            layers.unshift(layer);
+        }
+
+        return new Perceptron(layers);
+    }
+
+    static fromJson(json) {
+        return Perceptron._fromLayers(JSON.parse(json));
+    }
+
     layers;
     hash = "";
     neurons = [];
@@ -25,43 +61,6 @@ class Perceptron {
         if (this.hash.length === 0) this.calcHash();
 
         return this.hash;
-    }
-
-    copy() {
-        const layers = [];
-
-        const currentLayer = this.layers[this.layers.length - 1];
-
-        //copy reactions
-        const elements = [];
-        currentLayer.elements.forEach(neuron => {
-            const newElement = new Reaction(neuron.reaction);
-            elements.push(newElement);
-        });
-        const layer = new Layer(null, elements);
-        layers.unshift(layer);
-
-        //copy A and S layers
-        for (let i = this.layers.length - 2; i >= 0; --i) {
-            const currentLayer = this.layers[i];
-
-            const elements = [];
-            currentLayer.elements.forEach(neuron => {
-                const newElement = new Neuron(neuron.type, neuron.handlerOptions);
-                newElement.setRelations([...neuron.relations]);
-                elements.push(newElement);
-            });
-
-
-            const layer = new Layer(layers[0], elements);
-            layers.unshift(layer);
-        }
-
-        return new Perceptron(layers);
-    }
-
-    stringify() {
-        // return JSON.stringify(this);
     }
 
     hardMutate() {
@@ -112,12 +111,12 @@ class Perceptron {
 
     getReactionIndex() {
         let reactionIndex = -1;
-        let weight = -1;
+        let weight = null;
         const rElements = this.layers[this.layers.length - 1].elements;
         for (let i = 0, l = rElements.length; i < l; i++) {
             const neuron = rElements[i];
             const input = neuron.calculate();
-            if (weight < input) {
+            if (weight == null || weight < input) {
                 reactionIndex = i;
                 weight = input;
             }
@@ -137,6 +136,28 @@ class Perceptron {
                 }
             }
         }
+    }
+
+    copy() {
+        return Perceptron._fromLayers(this.layers);
+    }
+
+    toJson() {
+        const layers = [];
+        this.layers.forEach((layer) => {
+            const elements = [];
+            layer.elements.forEach(neuron => {
+                const neuronData = {
+                    uuid: neuron.uuid,
+                    type: neuron.type,
+                    relations: neuron.relations,
+                    handlerOptions: neuron.handlerOptions
+                };
+                elements.push(neuronData);
+            });
+            layers.push({elements: elements});
+        });
+        return JSON.stringify(layers);
     }
 }
 

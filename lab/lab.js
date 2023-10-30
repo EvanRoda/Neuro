@@ -495,7 +495,11 @@ function onNormalMode(event) {
         console.log(cell.bot);
         selectedBotUuid = cell.bot.uuid;
         clone = cell.bot.clone();
-        console.log(clone.brain.stringify());
+        const string = clone.brain.toJson();
+        console.log(string);
+        const newBrain = Perceptron.fromJson(string);
+        console.log(newBrain);
+        cell.bot.brain = newBrain;
         perceptronRenderer = new PerceptronRenderer(cell.bot.brain, pCanvas, PERC_WIDTH, PERC_HEIGHT);
         showLogToggle = false;
         showPerceptronToggle = false;

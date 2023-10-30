@@ -74,6 +74,7 @@ function initUI() {
                 const collider = entity.getComponent(ColliderComponent);
                 if (collider.containsPoint(point)) {
                     console.log('Bot', entity);
+                    console.log('Brain', entity.getComponent(NeuroComponent).brain.toJson());
                     selectedBot = entity;
                     break;
                 }
