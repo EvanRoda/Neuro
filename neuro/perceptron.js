@@ -47,7 +47,7 @@ class Perceptron {
 
             const elements = [];
             currentLayer.elements.forEach(neuron => {
-                const newElement = new Neuron(neuron.type, neuron.handler);
+                const newElement = new Neuron(neuron.type, neuron.handlerOptions);
                 newElement.setRelations([...neuron.relations]);
                 elements.push(newElement);
             });
@@ -60,13 +60,17 @@ class Perceptron {
         return new Perceptron(layers);
     }
 
+    stringify() {
+        // return JSON.stringify(this);
+    }
+
     hardMutate() {
         const layerIndex = randomInt(this.layers.length - 2) + 1;
         const layer = this.layers[layerIndex];
         const elementIndex = randomInt(layer.elements.length - 1);
 
-        const [type, handler] = randomHandler()
-        const neuron = new Neuron(type, handler);
+        const type = NeuroBuilder.randomHandlerType();
+        const neuron = new Neuron(type);
         neuron.setLayer(layer);
         neuron.generateRelations();
         layer.elements[elementIndex] = neuron;
@@ -103,25 +107,23 @@ class Perceptron {
         }
 
         this.evaluate();
+        return this.getReactionIndex();
     }
 
-    getReaction() {
-        let reaction = (self) => {
-            self.decreaseEnergy(1);
-            return "Default reaction";
-        };
+    getReactionIndex() {
+        let reactionIndex = -1;
         let weight = -1;
         const rElements = this.layers[this.layers.length - 1].elements;
         for (let i = 0, l = rElements.length; i < l; i++) {
             const neuron = rElements[i];
             const input = neuron.calculate();
             if (weight < input) {
-                reaction = neuron.reaction;
+                reactionIndex = i;
                 weight = input;
             }
         }
 
-        return reaction;
+        return reactionIndex;
     }
 
     evaluate() {
@@ -167,15 +169,21 @@ class Neuron {
     relations = [];
     input = [];
     calculatedValue = 0;
-
+    handlerOptions;
     handler = (value) => { return value }
 
-    constructor(type, handler) {
+    /**
+     * type - S, A, R
+     * handlerOptions - {type: A, maxValue: 1} only for V
+     */
+    constructor(type, handlerOptions) {
         this.uuid = generateUUID();
         this.type = type;
-        if (handler) {
-            this.handler = handler;
+        if (handlerOptions == null) {
+            handlerOptions = {type: type};
         }
+        this.handlerOptions = handlerOptions;
+        this.handler = NeuroBuilder.getHandler(this.handlerOptions);
     }
 
     setLayer(layer) {
@@ -224,16 +232,14 @@ class Neuron {
 
 class Sensor extends Neuron {
 
-    constructor(handler) {
-        super("S", handler);
+    constructor(handlerOptions) {
+        super("S", handlerOptions);
     }
 }
 
 class Reaction extends Neuron {
-    reaction;
 
-    constructor(reaction) {
-        super("R", null);
-        this.reaction = reaction;
+    constructor() {
+        super("R", {type: "F"});
     }
 }

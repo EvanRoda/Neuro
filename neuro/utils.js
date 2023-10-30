@@ -44,30 +44,6 @@ function changeColorInt(colorInt) {
     return (colorInt + 10) % 16777215;
 }
 
-const aHandler = (value) => { return value > 0 ? 1 : -1; };
-const bHandler = (value) => { return value > -0.5 && value < 0.5 ? 1 : -1; };
-const cHandler = (value) => { return Math.abs(value) >= Math.random() ? 1 : -1; };
-const eHandler = (value) => { return Math.tanh(value); };
-
-
-
-function randomHandler() {
-    // return ["A", aHandler];
-    // return ["B", bHandler];
-    // return ["C", cHandler];
-    // return ["E", eHandler];
-    const c = Math.random();
-    if (c < 0.4) {
-        return ["A", aHandler];
-    } else if (c < 0.8) {
-        return ["B", bHandler];
-    } else if (c < 0.99) {
-        return ["E", eHandler];
-    } else {
-        return ["C", cHandler];
-    }
-}
-
 function friendOrFoe(a, b) {
     let changes = 0;
     for (let i = 0; i < a.length; i++) {

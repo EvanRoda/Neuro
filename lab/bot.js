@@ -17,6 +17,17 @@ class Bot {
     g = 128;
     b = 128;
 
+    reactions = [
+        Bot.rotateLeft,
+        Bot.rotateRight,
+        Bot.move,
+        Bot.photo,
+        Bot.multiply,
+        Bot.attack,
+        Bot.nothing,
+        Bot.death,
+    ];
+
     constructor(brain, energy, cell, initialColor, r, g, b) {
         this.uuid = generateUUID();
         this.direction = randomInt(8);
@@ -72,8 +83,8 @@ class Bot {
 
         this.age += 1;
 
-        this.brain.run([this.direction, eye, this.cell.getLight(), this.energy, freeCellsCount, stepCell.getLight()]);
-        const reaction = this.brain.getReaction();
+        const reactionIndex = this.brain.run([this.direction, eye, this.cell.getLight(), this.energy, freeCellsCount, stepCell.getLight()]);
+        const reaction = this.reactions[reactionIndex];
         this.reactionLog.push(reaction(this));
     }
 

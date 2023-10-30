@@ -123,24 +123,17 @@ function onChangePaintingToggle() {
 const builder = new NeuroBuilder();
 
 builder
-    .addSensor(DIRECTION_HANDLER)           // Rotation
-    .addSensor(DEFAULT_HANDLER)             // Eyes 0-empty, ~0 = ally, ~1 = enemy
-    .addSensor(LIGHT_HANDLER)               // Light
-    .addSensor(ENERGY_HANDLER)              // Energy
-    .addSensor(DIRECTION_HANDLER)           // Free cells around
-    .addSensor(LIGHT_HANDLER)               // Light on step cell
-    .addSensor(BALANCER_HANDLER)            // Balancer
+    .addSensor({type: "V", maxValue: 7})           // Rotation
+    .addSensor({type: "F"})              // Eyes 0-empty, ~0 = ally, ~1 = enemy
+    .addSensor({type: "V", maxValue: 100})         // Light
+    .addSensor({type: "V", maxValue: MAX_ENERGY})  // Energy
+    .addSensor({type: "V", maxValue: 7})           // Free cells around
+    .addSensor({type: "V", maxValue: 7})           // Light on step cell
+    .addSensor({type: "D"})              // Balancer
 
     .addHiddenLayers(4, 6)
 
-    .addReaction(Bot.rotateLeft)
-    .addReaction(Bot.rotateRight)
-    .addReaction(Bot.move)
-    .addReaction(Bot.photo)
-    .addReaction(Bot.multiply)
-    .addReaction(Bot.attack)
-    .addReaction(Bot.nothing)
-    .addReaction(Bot.death)
+    .addReactionLayer(8);
 
 window.addEventListener('load', () => {
     console.log('page is fully loaded');
@@ -502,6 +495,7 @@ function onNormalMode(event) {
         console.log(cell.bot);
         selectedBotUuid = cell.bot.uuid;
         clone = cell.bot.clone();
+        console.log(clone.brain.stringify());
         perceptronRenderer = new PerceptronRenderer(cell.bot.brain, pCanvas, PERC_WIDTH, PERC_HEIGHT);
         showLogToggle = false;
         showPerceptronToggle = false;

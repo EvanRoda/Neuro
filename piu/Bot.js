@@ -10,6 +10,23 @@ class Bot extends Entity {
     currentReaction = () => {}
 
     reload = RELOAD_TIME;
+
+    brainReactions = [
+        Bot.move_slow,
+        Bot.move_fast,
+        Bot.move_back,
+        Bot.strafe_left,
+        Bot.strafe_right,
+        Bot.range_attack,
+        Bot.rotate_left,
+        Bot.rotate_right,
+    ];
+
+    cerebellumReactions = [
+        Bot.do,
+        Bot.think,
+    ];
+
     constructor(color, brain, cerebellum) {
         super();
         this.addComponent(PositionComponent)
@@ -45,8 +62,7 @@ class Bot extends Entity {
         const neuro = this.getComponent(NeuroComponent);
         const eye = this.getComponent(EyesComponent);
 
-        neuro.cerebellum.run(eye.getShortIntersectionData());
-        const reaction = neuro.cerebellum.getReaction();
+        const reaction = this.cerebellumReactions[neuro.cerebellum.run(eye.getShortIntersectionData())];
 
         reaction(this, frameTime);
     }
@@ -160,7 +176,6 @@ class Bot extends Entity {
         const learn = self.getComponent(LearningComponent);
 
         learn.think();
-        neuro.brain.run(eye.getIntersectionData());
-        self.currentReaction = neuro.brain.getReaction();
+        self.currentReaction = self.brainReactions[neuro.brain.run(eye.getIntersectionData())];
     }
 }

@@ -25,34 +25,24 @@ const cerebellumFactory = new NeuroBuilder();
 
 for (let i = 0; i < RAYS_COUNT; i++) {
     brainFactory
-        .addSensor(DEFAULT_HANDLER)
-        .addSensor(DEFAULT_HANDLER)
-        .addSensor(DEFAULT_HANDLER)
-        .addSensor(DEFAULT_HANDLER)
-        .addSensor(DEFAULT_HANDLER);
+        .addSensor({type: "F"})
+        .addSensor({type: "F"})
+        .addSensor({type: "F"})
+        .addSensor({type: "F"})
+        .addSensor({type: "F"});
 
-    cerebellumFactory.addSensor(DEFAULT_HANDLER);
+    cerebellumFactory.addSensor({type: "F"});
 }
 
 brainFactory
-    .addSensor(BALANCER_HANDLER)
+    .addSensor({type: "D"})
     .addHiddenLayers(4, RAYS_COUNT * 2)
-
-    .addReaction(Bot.move_slow)
-    .addReaction(Bot.move_fast)
-    .addReaction(Bot.move_back)
-    .addReaction(Bot.strafe_left)
-    .addReaction(Bot.strafe_right)
-    .addReaction(Bot.range_attack)
-    // .addReaction(Bot.melee_attack)
-    .addReaction(Bot.rotate_left)
-    .addReaction(Bot.rotate_right);
+    .addReactionLayer(8);
 
 cerebellumFactory
-    .addSensor(BALANCER_HANDLER)
+    .addSensor({type: "D"})
     .addHiddenLayers(3, RAYS_COUNT)
-    .addReaction(Bot.do)
-    .addReaction(Bot.think)
+    .addReactionLayer(2);
 
 
 window.addEventListener('load', () => {

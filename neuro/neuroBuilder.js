@@ -1,27 +1,48 @@
-
-const DIRECTION_HANDLER = (value) => { return -1 + 2 * value / 7 };
-const LIGHT_HANDLER = (value) => { return -1 + 2 * value / 100 };
-const ENERGY_HANDLER = (value) => { return -1 + 2 * value / MAX_ENERGY };
-const BALANCER_HANDLER = () => { return 1 };
-const DEFAULT_HANDLER = (value) => { return value};
-
-function getHandler(maxValue) {
-    return (value) => { return -1 + 2 * value / maxValue };
-}
-
 class NeuroBuilder {
+    static handlers = {
+        "A": (value) => { return value > 0 ? 1 : -1; },
+        "B": (value) => { return value > -0.5 && value < 0.5 ? 1 : -1; },
+        "C": (value) => { return Math.abs(value) >= Math.random() ? 1 : -1; },
+        "E": (value) => { return Math.tanh(value); },
+        "D": () => { return 1 },                                                        // BALANCER_HANDLER
+        "F": (value) => { return value},                                                // DEFAULT_HANDLER
+        "V": (maxValue) => { return (value) => { return -1 + 2 * value / maxValue }; }, // VALUE_HANDLER
+    };
+
+    static randomHandlerType() {
+        const c = Math.random();
+        if (c < 0.4) {
+            return "A";
+        } else if (c < 0.8) {
+            return "B";
+        } else if (c < 0.99) {
+            return "E";
+        } else {
+            return "C";
+        }
+    }
+
+    static getHandler(options) {
+        if (options.type === "V") {
+            return NeuroBuilder.handlers[options.type](options.maxValue);
+        } else {
+            return NeuroBuilder.handlers[options.type];
+        }
+    }
+
     sensors = [];
-    reactions = [];
+    // reactions = [];
+    reactionSize = 0;
     hiddenSize = 0;
     hiddenCount = 0
 
-    addSensor(handler) {
-        this.sensors.push(handler);
+    addSensor(handlerOptions) {
+        this.sensors.push(handlerOptions);
         return this;
     }
 
-    addReaction(handler) {
-        this.reactions.push(handler);
+    addReactionLayer(size) {
+        this.reactionSize = size;
         return this;
     }
 
@@ -32,9 +53,10 @@ class NeuroBuilder {
     }
 
     buildRLayer() {
-        const rNeurons = this.reactions.map((reaction) => {
-            return new Reaction(reaction);
-        });
+        const rNeurons = [];
+        for (let i = 0; i < this.reactionSize; i++) {
+            rNeurons.push(new Reaction());
+        }
 
         return new Layer(null, rNeurons);
     }
@@ -52,8 +74,8 @@ class NeuroBuilder {
     }
 
     buildSLayer(nextLayer) {
-        const sNeurons = this.sensors.map((handler) => {
-            return new Sensor(handler);
+        const sNeurons = this.sensors.map((handlerOptions) => {
+            return new Sensor(handlerOptions);
         });
 
         const layer = new Layer(nextLayer, sNeurons);
@@ -62,12 +84,12 @@ class NeuroBuilder {
     }
 
     buildANeuron() {
-        const [type, handler] = randomHandler()
-        return new Neuron(type, handler);
+        const type = NeuroBuilder.randomHandlerType();
+        return new Neuron(type);
     }
 
     buildBalancer() {
-        return new Neuron("D", BALANCER_HANDLER);
+        return new Neuron("D");
     }
 
 
