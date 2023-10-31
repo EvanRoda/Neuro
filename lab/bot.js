@@ -192,7 +192,8 @@ class Bot {
         const stepCell = self.cell.world.getStepCell(self.direction, self.cell.x, self.cell.y);
         self.decreaseEnergy(0.5);
         if (!stepCell.isFree() && stepCell.bot.energy > 0) {
-            const income = 1 * stepCell.bot.energy;
+            const income = stepCell.bot.energy;
+            stepCell.bot.energy = 0;
             self.energy += income;
             if (self.energy > MAX_ENERGY) {
                 self.energy = -MAX_ENERGY;
