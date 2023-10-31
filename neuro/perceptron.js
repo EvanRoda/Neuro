@@ -85,8 +85,8 @@ class Perceptron {
         if (element.relations.length > 0) {
             const relationIndex = randomInt(element.relations.length);
             element.relations[relationIndex] += Math.random() > 0.5 ? 0.1 : -0.1;
-            if (element.relations[relationIndex] < 0) element.relations[relationIndex] = 0
-            if (element.relations[relationIndex] > 1) element.relations[relationIndex] = 1
+            if (element.relations[relationIndex] < -1) element.relations[relationIndex] = -1;
+            if (element.relations[relationIndex] > 1) element.relations[relationIndex] = 1;
         }
     }
 
@@ -247,7 +247,8 @@ class Neuron {
     }
 
     static generateRelation() {
-        return Math.random() < 0.3 ? 0 : (1 + randomInt(10)) / 10;
+        return (1 + randomInt(20) - 10) / 10;
+        // return Math.random() < 0.3 ? 0 : (1 + randomInt(10)) / 10;
     }
 }
 
