@@ -46,6 +46,7 @@ class LearningController {
     }
 
     mutateBrains() {
+        // Восстанавливаем мертвых из кэша
         for (const element of this.cache) {
             const brain = element.brain.copy();
             const cerebellum = element.cerebellum.copy();
@@ -58,6 +59,8 @@ class LearningController {
             position.direction = randomFloat(2 * Math.PI);
         }
 
+        // Готовим ботов к сортировке
+        // Разбиваем их по командам
         const objects = EntityController.getAll();
         const teams = {};
         const leaderBoard = [];
@@ -70,12 +73,14 @@ class LearningController {
                 }
                 teams[team].push(entity);
 
+                // За одно добавляем очки за каждое уникальное действие в логе.
                 const learn = entity.getComponent(LearningComponent);
                 learn.score += Object.keys(learn.log).length * 1000;
             }
         }
 
         for (const team in teams) {
+            // Сортируем ботов по очкам
             teams[team].sort((a, b) => {
                 return b.getComponent(LearningComponent).score - a.getComponent(LearningComponent).score}
             )
