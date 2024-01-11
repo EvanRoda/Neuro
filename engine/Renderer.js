@@ -14,16 +14,15 @@ class Renderer {
     renderToggle = true;
     startTime = 0;
 
-    constructor(canvas, width, height, beforeDrawCallback, afterDrawCallback) {
-        this.real = canvas;
+    constructor(beforeDrawCallback, afterDrawCallback) {
+        this.real = GameContext.getCanvas()
         this.realCtx = this.real.getContext('2d');
         this.hidden = document.createElement('canvas');
         this.ctx = this.hidden.getContext('2d');
-        this.width = width;
-        this.height = height;
+        this.width = GameContext.getWidth();
+        this.height = GameContext.getHeight();
         this.before = beforeDrawCallback;
         this.after = afterDrawCallback;
-
     }
 
     start() {
@@ -45,7 +44,6 @@ class Renderer {
         that.needRedraw = false;
         if (that.playToggle) {
             that.draw(entities);
-            that.after();
         }
 
         that.needRedraw = true;
@@ -129,6 +127,6 @@ class Renderer {
         canvas.width = w;
         canvas.height = h;
         canvas.style.width = w + "px";
-        canvas.style.height = h + "px"
+        canvas.style.height = h + "px";
     }
 }
