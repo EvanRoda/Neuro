@@ -21,7 +21,7 @@ class ColliderComponent extends Component {
             const pos = this.position();
 
             this._bbox = new Bbox(
-                pos.y  - this.radius,
+                pos.y - this.radius,
                 pos.y + this.radius,
                 pos.x - this.radius,
                 pos.x + this.radius,

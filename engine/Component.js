@@ -3,4 +3,6 @@ class Component {
     constructor(entity) {
         this.entity = entity;
     }
+
+    clear() {}
 }

@@ -1,6 +1,16 @@
 class StartScene extends Scene {
+
+    static BACKGROUND_LAYER = 'background';
+    static UI_LAYER = 'ui';
     constructor() {
-        super();
+        const layers = {};
+        layers[StartScene.BACKGROUND_LAYER] = new RenderingLayer(GameContext.getWidth(), GameContext.getHeight());
+        layers[StartScene.UI_LAYER] = new RenderingLayer(GameContext.getWidth(), GameContext.getHeight());
+        super(null, layers);
+    }
+
+    onOpenScene() {
+
     }
 
     calculate(frameTime) {

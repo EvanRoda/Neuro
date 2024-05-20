@@ -1,33 +1,4 @@
 class Renderer {
-    real = null;
-    realCtx = null;
-    hidden = null;
-    width = 0;
-    height = 0;
-
-    before = () => { return []; }; // Return list of entities
-    after = () => {};
-
-    animationId = null;
-    needRedraw = true;
-    playToggle = true;
-    renderToggle = true;
-    startTime = 0;
-
-    constructor(beforeDrawCallback, afterDrawCallback) {
-        this.real = GameContext.getCanvas()
-        this.realCtx = this.real.getContext('2d');
-        this.hidden = document.createElement('canvas');
-        this.ctx = this.hidden.getContext('2d');
-        this.width = GameContext.getWidth();
-        this.height = GameContext.getHeight();
-        this.before = beforeDrawCallback;
-        this.after = afterDrawCallback;
-    }
-
-    start() {
-        Renderer.animRedraw(this, 0);
-    }
 
     static animRedraw(that, time) {
         let entities = [];
@@ -47,6 +18,51 @@ class Renderer {
         }
 
         that.needRedraw = true;
+    }
+
+    static clear(canvas, w, h) {
+        canvas.width = w;
+        canvas.height = h;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+    }
+
+    real = null;
+    realCtx = null;
+    hidden = null;
+    width = 0;
+    height = 0;
+
+    before = () => { return []; }; // Return list of entities
+    after = () => {};
+
+    animationId = null;
+    needRedraw = true;
+    playToggle = true;
+    renderToggle = true;
+    startTime = 0;
+    camera = null;
+    layers = {}
+
+
+    constructor(camera, layers, beforeDrawCallback, afterDrawCallback) {
+        this.real = GameContext.getCanvas()
+        this.realCtx = this.real.getContext('2d');
+        this.hidden = document.createElement('canvas');
+        this.ctx = this.hidden.getContext('2d');
+        this.width = GameContext.getWidth();
+        this.height = GameContext.getHeight();
+        this.camera = camera;
+        if (this.camera == null) {
+            this.camera = new Camera(new Vector2(), new Vector2(), this.width, this.height);
+        }
+
+        this.before = beforeDrawCallback;
+        this.after = afterDrawCallback;
+    }
+
+    start() {
+        Renderer.animRedraw(this, 0);
     }
 
     draw(entities) {
@@ -121,12 +137,5 @@ class Renderer {
     redraw() {
         Renderer.clear(this.real, this.width, this.height);
         this.realCtx.drawImage(this.hidden, 0, 0);
-    }
-
-    static clear(canvas, w, h) {
-        canvas.width = w;
-        canvas.height = h;
-        canvas.style.width = w + "px";
-        canvas.style.height = h + "px";
     }
 }

@@ -6,13 +6,19 @@ class Scene {
         sceneClass._instance.start();
     }
 
+    camera = null;
+
     renderer;
-    constructor() {
-        this.renderer = new Renderer(this.calculate, this.afterDraw);
+
+    constructor(camera, layers) {
+        this.camera = camera;
+
+        this.renderer = new Renderer(this.camera, layers, this.calculate, this.afterDraw);
     }
 
     start() {
         this.renderer.start();
+        this.onOpenScene();
     }
 
     goTo(sceneClass, bundle) {
@@ -20,9 +26,15 @@ class Scene {
         sceneClass.open(sceneClass, bundle);
     }
 
+    moveCamera(vector) {
+        this.camera.pos = this.camera.pos.add(vector);
+    }
+
     calculate(frameTime) {
         return [];
     }
 
     afterDraw() {}
+
+    onOpenScene() {}
 }
