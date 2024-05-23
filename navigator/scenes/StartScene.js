@@ -1,22 +1,35 @@
 class StartScene extends Scene {
 
     startButton = null;
+    background = null;
+    static OBJECT_LAYER = 'object'
     constructor() {
-        const layers = {};
-        layers[Renderer.BACKGROUND_LAYER] = new RenderingLayer(GameContext.getWidth(), GameContext.getHeight());
-        layers[Renderer.UI_LAYER] = new RenderingLayer(GameContext.getWidth(), GameContext.getHeight());
+        const layers = [
+            Renderer.BACKGROUND_LAYER,
+            StartScene.OBJECT_LAYER,
+            Renderer.UI_LAYER
+        ];
         super(null, layers);
     }
 
     onOpenScene() {
         this.startButton = new StartButtonEntity();
+        this.background = new BackgroundEntity();
+        this.background.initSprite(GameContext.getWidth(), GameContext.getHeight(), 'cyan');
     }
 
     calculate(scene, frameTime) {
+        const entities = [];
+
         if (scene.startButton != null) {
-            return [scene.startButton];
+            entities.push(scene.startButton);
         }
-        return [];
+
+        if (scene.background != null) {
+            entities.push(scene.background);
+        }
+
+        return entities;
     }
 
     afterDraw() {

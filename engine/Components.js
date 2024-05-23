@@ -60,34 +60,18 @@ class ColliderComponent extends Component {
 }
 
 class PositionComponent extends Component {
-    x = 0;
-    y = 0;
+    pos = new Vector2();
     direction = 0; // in radians from 0 to 2 * Math.PI
     constructor(entity) {
         super(entity);
     }
 
-    add(dx, dy) {
-        this.x += dx;
+    set(vec) {
+        this.pos = vec;
+    }
 
-        if (this.x < 0) {
-            this.x = 0;
-            this.entity.mustRemove = true;
-        }
-        if (this.x > WIDTH) {
-            this.x = WIDTH;
-            this.entity.mustRemove = true;
-        }
-
-        this.y += dy;
-        if (this.y < 0) {
-            this.y = 0;
-            this.entity.mustRemove = true;
-        }
-        if (this.y > HEIGHT) {
-            this.y = HEIGHT;
-            this.entity.mustRemove = true;
-        }
+    add(vec) {
+        this.pos.add(vec);
     }
 }
 

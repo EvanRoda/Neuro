@@ -46,7 +46,8 @@ class Renderer {
     renderToggle = true;
     startTime = 0;
     camera = null;
-    layers = {}
+    layers = {};
+    layerOrder = [];
 
 
     constructor(scene, layers) {
@@ -57,14 +58,33 @@ class Renderer {
         this.width = GameContext.getWidth();
         this.height = GameContext.getHeight();
         this.scene = scene;
-        this.layers = layers;
+        this.layerOrder = layers;
+
         this.camera = scene.camera;
         if (this.camera == null) {
             this.camera = new Camera(new Vector2(), new Vector2(), this.width, this.height);
         }
 
+        this.initLayers(layers);
+
         this.before = scene.calculate;
         this.after = scene.afterDraw;
+    }
+
+    initLayers(layerList) {
+        for (let i = 0, l = layerList.length; i < l; i++) {
+            if (layerList[i] === Renderer.UI_LAYER) {
+                this.layers[layerList[i]] = new RenderingLayer(GameContext.getWidth(), GameContext.getHeight());
+                continue;
+            }
+            this.layers[layerList[i]] = new RenderingLayer(this.camera.width, this.camera.height);
+        }
+    }
+
+    clearLayers() {
+        for (let i = 0, l = this.layerOrder.length; i < l; i++) {
+            this.layers[this.layerOrder[i]].clear();
+        }
     }
 
     start() {
@@ -74,74 +94,63 @@ class Renderer {
     draw(entities) {
         if (this.renderToggle) {
             this.render(entities);
-            this.redraw();
+            this.drawOnHidden();
+            this.drawOnReal();
         }
 
         this.after();
     }
 
     render(entities) {
-        console.log('render', entities);
-        Renderer.clear(this.hidden, this.width, this.height);
-        const ctx = this.hidden.getContext('2d');
+        this.clearLayers();
 
         for (let i = 0, l = entities.length; i < l; i++) {
             const entity = entities[i];
             const position = entity.getComponent(PositionComponent);
             const sprite = entity.getComponent(SpriteComponent);
+            const layer = this.layers[sprite.layer];
+            const ctx = layer.getContext();
+
+            let positionOnLayer;
+            switch (sprite.layer) {
+                case Renderer.BACKGROUND_LAYER:
+                case Renderer.UI_LAYER:
+                    positionOnLayer = position.pos;
+                    break;
+                default:
+                    positionOnLayer = position.pos.sub(this.camera.scenePosition);
+            }
 
             ctx.save();
-            ctx.translate(position.x, position.y);
+            ctx.translate(positionOnLayer.x, positionOnLayer.y);
             ctx.rotate(position.direction);
             ctx.drawImage(sprite.canvas, -sprite.pivot.x, -sprite.pivot.y);
             ctx.restore();
 
-            if (debugToggle) {
-                ctx.fillStyle = 'red';
-                ctx.beginPath();
-                ctx.arc(position.x, position.y, 2, 0, 2 * Math.PI);
-                ctx.closePath();
-                ctx.fill();
+            if (debugToggle) {}
+        }
+    }
 
-                ctx.save();
-                ctx.translate(position.x, position.y);
-                ctx.rotate(position.direction + Math.PI / 2);
-                ctx.strokeStyle = 'blue';
-                ctx.strokeRect(-sprite.pivot.x, -sprite.pivot.y, sprite.canvas.width, sprite.canvas.height);
-                ctx.restore();
+    drawOnHidden() {
+        Renderer.clear(this.hidden, this.width, this.height);
+        const hidden = this.hidden.getContext('2d');
 
-                const collider = entity.getComponent(ColliderComponent);
-                if (collider) {
-
-                    ctx.save();
-                    ctx.translate(position.x, position.y);
-                    ctx.rotate(position.direction + Math.PI / 2);
-                    ctx.strokeStyle = 'green';
-                    ctx.beginPath();
-                    ctx.arc(collider.pivot.x, collider.pivot.y, collider.radius, 0, 2 * Math.PI);
-                    ctx.closePath();
-                    ctx.stroke();
-                    ctx.restore();
-                }
-
-                const eye = entity.getComponent(EyesComponent);
-                if (eye) {
-                    ctx.save();
-                    ctx.strokeStyle = 'red';
-                    ctx.beginPath();
-                    for (let i = 0, l = eye.rays.length; i < l; i++) {
-                        const p2 = eye.rays[i].p2();
-                        ctx.moveTo(position.x, position.y);
-                        ctx.lineTo(p2.x, p2.y);
-                    }
-                    ctx.stroke();
-                    ctx.restore();
-                }
+        for (let i = 0, l = this.layerOrder.length; i < l; i++) {
+            const layer = this.layers[this.layerOrder[i]];
+            switch (this.layerOrder[i]) {
+                case Renderer.BACKGROUND_LAYER:
+                    hidden.drawImage(layer.getCanvas(), this.camera.canvasPosition.x, this.camera.canvasPosition.y);
+                    break;
+                case Renderer.UI_LAYER:
+                    hidden.drawImage(layer.getCanvas(), 0, 0);
+                    break;
+                default:
+                    hidden.drawImage(layer.getCanvas(), this.camera.canvasPosition.x, this.camera.canvasPosition.y);
             }
         }
     }
 
-    redraw() {
+    drawOnReal() {
         Renderer.clear(this.real, this.width, this.height);
         this.realCtx.drawImage(this.hidden, 0, 0);
     }

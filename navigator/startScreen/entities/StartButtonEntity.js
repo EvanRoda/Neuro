@@ -5,14 +5,14 @@ class StartButtonEntity extends Entity {
             .addComponent(SpriteComponent);
 
         this.initSprite();
-        this.getComponent(PositionComponent).add(100, 100);
+        this.getComponent(PositionComponent).set(new Vector2(100, 100));
     }
 
     initSprite() {
         console.log('initSprite');
         const sprite = this.getComponent(SpriteComponent);
         sprite.setDimensions(200, 50);
-        sprite.setLayer(StartScene.UI_LAYER)
+        sprite.setLayer(Renderer.UI_LAYER)
         sprite.setPivot(100, 25);
         const ctx = sprite.getContext();
 

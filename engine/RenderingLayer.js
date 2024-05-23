@@ -12,8 +12,11 @@ class RenderingLayer {
         Renderer.clear(this._canvas, this._canvas.width, this._canvas.height);
     }
 
-    draw(sprite, x, y) {
-        this.count++;
-        this._ctx.drawImage(sprite, x, y);
+    getContext() {
+        return this._ctx;
+    }
+
+    getCanvas() {
+        return this._canvas;
     }
 }
