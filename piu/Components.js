@@ -65,6 +65,44 @@ class LearningComponent extends Component {
     }
 }
 
+class PositionComponent extends Component {
+    x = 0;
+    y = 0;
+    direction = 0; // in radians from 0 to 2 * Math.PI
+    constructor(entity) {
+        super(entity);
+    }
+
+    add(dx, dy) {
+        this.x += dx;
+        const learn = this.entity.getComponent(LearningComponent);
+
+
+        if (this.x < 0) {
+            this.x = 0;
+            this.entity.mustRemove = true;
+            learn.hit_bounds();
+        }
+        if (this.x > WIDTH) {
+            this.x = WIDTH;
+            this.entity.mustRemove = true;
+            learn.hit_bounds();
+        }
+
+        this.y += dy;
+        if (this.y < 0) {
+            this.y = 0;
+            this.entity.mustRemove = true;
+            learn.hit_bounds();
+        }
+        if (this.y > HEIGHT) {
+            this.y = HEIGHT;
+            this.entity.mustRemove = true;
+            learn.hit_bounds();
+        }
+    }
+}
+
 class FriendFoeComponent extends Component {
     team = null;
 

@@ -1,9 +1,12 @@
 class Renderer {
 
+    static BACKGROUND_LAYER = 'background';
+    static UI_LAYER = 'ui';
+
     static animRedraw(that, time) {
         let entities = [];
         if (that.playToggle) {
-            entities = that.before(time - that.startTime);
+            entities = that.before(that.scene, time - that.startTime);
             that.startTime = time;
         }
 
@@ -36,6 +39,7 @@ class Renderer {
     before = () => { return []; }; // Return list of entities
     after = () => {};
 
+    scene = null;
     animationId = null;
     needRedraw = true;
     playToggle = true;
@@ -45,20 +49,22 @@ class Renderer {
     layers = {}
 
 
-    constructor(camera, layers, beforeDrawCallback, afterDrawCallback) {
+    constructor(scene, layers) {
         this.real = GameContext.getCanvas()
         this.realCtx = this.real.getContext('2d');
         this.hidden = document.createElement('canvas');
         this.ctx = this.hidden.getContext('2d');
         this.width = GameContext.getWidth();
         this.height = GameContext.getHeight();
-        this.camera = camera;
+        this.scene = scene;
+        this.layers = layers;
+        this.camera = scene.camera;
         if (this.camera == null) {
             this.camera = new Camera(new Vector2(), new Vector2(), this.width, this.height);
         }
 
-        this.before = beforeDrawCallback;
-        this.after = afterDrawCallback;
+        this.before = scene.calculate;
+        this.after = scene.afterDraw;
     }
 
     start() {
@@ -75,6 +81,7 @@ class Renderer {
     }
 
     render(entities) {
+        console.log('render', entities);
         Renderer.clear(this.hidden, this.width, this.height);
         const ctx = this.hidden.getContext('2d');
 
@@ -85,7 +92,7 @@ class Renderer {
 
             ctx.save();
             ctx.translate(position.x, position.y);
-            ctx.rotate(position.direction + Math.PI / 2);
+            ctx.rotate(position.direction);
             ctx.drawImage(sprite.canvas, -sprite.pivot.x, -sprite.pivot.y);
             ctx.restore();
 

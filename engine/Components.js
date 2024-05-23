@@ -69,36 +69,31 @@ class PositionComponent extends Component {
 
     add(dx, dy) {
         this.x += dx;
-        const learn = this.entity.getComponent(LearningComponent);
-
 
         if (this.x < 0) {
             this.x = 0;
             this.entity.mustRemove = true;
-            learn.hit_bounds();
         }
         if (this.x > WIDTH) {
             this.x = WIDTH;
             this.entity.mustRemove = true;
-            learn.hit_bounds();
         }
 
         this.y += dy;
         if (this.y < 0) {
             this.y = 0;
             this.entity.mustRemove = true;
-            learn.hit_bounds();
         }
         if (this.y > HEIGHT) {
             this.y = HEIGHT;
             this.entity.mustRemove = true;
-            learn.hit_bounds();
         }
     }
 }
 
 class SpriteComponent extends Component {
     canvas = null;
+    layer;
     pivot = {x: 0, y: 0};
 
     constructor(entity) {
@@ -116,6 +111,10 @@ class SpriteComponent extends Component {
     setPivot(x, y) {
         this.pivot.x = x;
         this.pivot.y = y;
+    }
+
+    setLayer(layer) {
+        this.layer = layer;
     }
 
     getContext() {

@@ -13,7 +13,7 @@ class Scene {
     constructor(camera, layers) {
         this.camera = camera;
 
-        this.renderer = new Renderer(this.camera, layers, this.calculate, this.afterDraw);
+        this.renderer = new Renderer(this, layers);
     }
 
     start() {
@@ -30,7 +30,7 @@ class Scene {
         this.camera.pos = this.camera.pos.add(vector);
     }
 
-    calculate(frameTime) {
+    calculate(scene, frameTime) {
         return [];
     }
 

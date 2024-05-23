@@ -18,7 +18,6 @@ class Camera {
 
     bbox() {
         if (!this._bbox) {
-
             this._bbox = new Bbox(
                 this.scenePosition.y,
                 this.scenePosition.y + this.height,
