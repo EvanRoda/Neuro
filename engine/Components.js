@@ -71,7 +71,7 @@ class PositionComponent extends Component {
     }
 
     add(vec) {
-        this.pos.add(vec);
+        this.pos = this.pos.add(vec);
     }
 }
 

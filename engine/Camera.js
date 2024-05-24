@@ -9,7 +9,7 @@ class Camera {
         height = 0) {
 
         this.scenePosition = positionOnScene;
-        this.canvasPosition = positionOnScene;
+        this.canvasPosition = positionOnCanvas;
         this.width = width;
         this.height = height;
 
