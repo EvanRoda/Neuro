@@ -148,6 +148,9 @@ class Renderer {
                     hidden.drawImage(layer.getCanvas(), this.camera.canvasPosition.x, this.camera.canvasPosition.y);
             }
         }
+
+        hidden.strokeStyle = 'red';
+        hidden.strokeRect(0, 0, this.width, this.height);
     }
 
     drawOnReal() {
