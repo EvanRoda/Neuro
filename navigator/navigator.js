@@ -1,5 +1,5 @@
-const WIDTH = 800;
-const HEIGHT = 600;
+const WIDTH = 500;
+const HEIGHT = 900;
 
 debugToggle = false;
 

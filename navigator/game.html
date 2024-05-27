@@ -28,8 +28,28 @@
     <script src="startScreen/entities/TestBoxEntity.js"></script>
 
     <script src="navigator.js"></script>
+
+    <style>
+        .parent {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+            overflow: auto;
+            background: #add697;
+        }
+    </style>
 </head>
 <body>
-  <canvas id="screen"></canvas>
+    <div class="parent">
+        <div class="block">
+            <canvas id="screen"></canvas>
+        </div>
+    </div>
 </body>
 </html>
