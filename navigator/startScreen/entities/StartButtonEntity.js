@@ -2,10 +2,13 @@ class StartButtonEntity extends Entity {
     constructor() {
         super();
         this.addComponent(PositionComponent)
-            .addComponent(SpriteComponent);
+            .addComponent(SpriteComponent)
+            .addComponent(RectColliderComponent);
 
         this.initSprite();
         this.getComponent(PositionComponent).set(new Vector2(100, 100));
+        this.getComponent(RectColliderComponent).width = 200;
+        this.getComponent(RectColliderComponent).height = 50;
     }
 
     initSprite() {

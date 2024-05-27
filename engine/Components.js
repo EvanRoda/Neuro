@@ -1,6 +1,6 @@
 class ColliderComponent extends Component {
     radius = 0;
-    pivot = {x: 0, y: 0};
+    pivot = new Vector2();
 
     _bbox = null;
     _pos = null;
@@ -33,11 +33,7 @@ class ColliderComponent extends Component {
 
     position() {
         if (!this._pos) {
-            const pos = this.entity.getComponent(PositionComponent);
-            this._pos = {
-                x: pos.x + this.pivot.x,
-                y: pos.y + this.pivot.y
-            };
+            this._pos = this.entity.getComponent(PositionComponent).pos.add(this.pivot);
         }
 
         return this._pos;
@@ -56,6 +52,58 @@ class ColliderComponent extends Component {
 
     containsPoint(point) {
         return this.bbox().containsPoint(point) && (this.radius ** 2 >= this.squareOfDistance(point));
+    }
+}
+
+class RectColliderComponent extends Component {
+    width = 0;
+    height = 0;
+    pivot = new Vector2();
+
+    _bbox = null;
+    _pos = null;
+
+    onCollision = () => {};
+
+    constructor(entity) {
+        super(entity);
+    }
+
+    clear() {
+        this._bbox = null;
+        this._pos = null;
+    }
+
+    bbox() {
+        if (!this._bbox) {
+            const pos = this.position();
+
+            this._bbox = new Bbox(
+                pos.y,
+                pos.y + this.height,
+                pos.x,
+                pos.x + this.width,
+            )
+        }
+
+        return this._bbox;
+    }
+
+    position() {
+        if (!this._pos) {
+            const pos = this.entity.getComponent(PositionComponent).pos;
+            this._pos = pos.sub(this.pivot)
+        }
+
+        return this._pos;
+    }
+
+    isIntersect(other) {
+        return this.bbox().isIntersect(other.bbox());
+    }
+
+    containsPoint(point) {
+        return this.bbox().containsPoint(point);
     }
 }
 

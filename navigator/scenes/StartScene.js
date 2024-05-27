@@ -13,8 +13,17 @@ class StartScene extends Scene {
         const camera = new Camera(new Vector2(), new Vector2(150, 175), 200, 200);
 
         addEventListener("mousemove", (event) => {
+            if (event.target !== GameContext.getCanvas()) return;
+            console.log(event.offsetX, event.offsetY);
             camera.scenePosition = new Vector2(event.offsetX-100, event.offsetY-100);
             camera.canvasPosition = camera.scenePosition;
+        });
+
+        addEventListener("click", (event) => {
+            if (event.target !== GameContext.getCanvas()) return;
+            if (this.startButton.getComponent(RectColliderComponent).containsPoint(new Vector2(event.offsetX, event.offsetY))) {
+                this.goTo(BattleScene, null);
+            }
         });
 
         super(camera, layers);
