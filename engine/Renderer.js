@@ -103,7 +103,7 @@ class Renderer {
 
     render(entities) {
         this.clearLayers();
-
+        // console.log(entities);
         for (let i = 0, l = entities.length; i < l; i++) {
             const entity = entities[i];
             const position = entity.getComponent(PositionComponent);

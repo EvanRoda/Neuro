@@ -16,7 +16,6 @@ class StartButtonEntity extends Entity {
         const sprite = this.getComponent(SpriteComponent);
         sprite.setDimensions(200, 50);
         sprite.setLayer(Renderer.UI_LAYER)
-        sprite.setPivot(100, 25);
         const ctx = sprite.getContext();
 
         ctx.fillStyle = 'black';
