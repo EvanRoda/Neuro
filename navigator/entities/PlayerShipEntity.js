@@ -43,5 +43,13 @@ class PlayerShipEntity extends Entity {
         } else {
             pos.set(playerShip.target);
         }
+
+        for (let i = 0; i < playerShip.guns.length; i++) {
+            playerShip.guns[i].reload -= frameTime;
+            if (playerShip.guns[i].reload <= 0) {
+                playerShip.guns[i].reload = playerShip.guns[i].reload_time;
+                new PlayerBulletEntity(pos.pos.add(new Vector2(playerShip.guns[i].shift_position, 0), ))
+            }
+        }
     }
 }
