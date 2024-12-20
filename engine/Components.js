@@ -121,6 +121,14 @@ class PositionComponent extends Component {
     add(vec) {
         this.pos = this.pos.add(vec);
     }
+
+    setDir(direction) {
+        this.direction = direction;
+    }
+
+    addDir(delta) {
+        this.direction += delta;
+    }
 }
 
 class SpriteComponent extends Component {
