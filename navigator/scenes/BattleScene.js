@@ -8,8 +8,6 @@ class BattleScene extends Scene {
             Renderer.UI_LAYER
         ];
 
-
-
         super(null, layers);
     }
 

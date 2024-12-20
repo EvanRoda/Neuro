@@ -15,7 +15,7 @@ class StartScene extends Scene {
         addEventListener("mousemove", (event) => {
             if (event.target !== GameContext.getCanvas()) return;
             // console.log(event.offsetX, event.offsetY);
-            camera.scenePosition = new Vector2(event.offsetX-100, event.offsetY-100);
+            camera.scenePosition = new Vector2(event.offsetX - 100, event.offsetY - 100);
             camera.canvasPosition = camera.scenePosition;
         });
 
