@@ -1,11 +1,14 @@
 class TestBoxEntity extends Entity {
+    static W = 20;
+    static H = 20;
+
     static factory(count, bounds) {
         const entities = [];
         for (let i = 0; i < count; i++) {
             const entity = new TestBoxEntity();
             entity.getComponent(PositionComponent).set(new Vector2(
                 Math.random() * bounds.x,
-                Math.random() * bounds.y
+                Math.random() * bounds.y / 3
             ));
             entities.push(entity);
         }
@@ -23,12 +26,11 @@ class TestBoxEntity extends Entity {
 
     initSprite() {
         const sprite = this.getComponent(SpriteComponent);
-        sprite.setDimensions(10, 10);
+        sprite.setDimensions(TestBoxEntity.W, TestBoxEntity.H);
         sprite.setLayer(StartScene.OBJECT_LAYER);
         const ctx = sprite.getContext();
 
-        ctx.fillStyle = 'black';
-        ctx.strokeWidth = 3;
-        ctx.strokeRect(0, 0, 10, 10);
+        ctx.fillStyle = 'rgb(96,48,27)';
+        ctx.fillRect(0, 0, TestBoxEntity.W, TestBoxEntity.H);
     }
 }
