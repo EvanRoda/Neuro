@@ -31,7 +31,7 @@ class Bot extends Entity {
         super();
         this.addComponent(PositionComponent)
             .addComponent(SpriteComponent)
-            .addComponent(ColliderComponent)
+            .addComponent(CircleColliderComponent)
             .addComponent(FriendFoeComponent)
             .addComponent(EyesComponent)
             .addComponent(LearningComponent)
@@ -39,7 +39,7 @@ class Bot extends Entity {
 
         this.initSprite(color);
         this.getComponent(FriendFoeComponent).setTeam(color);
-        this.getComponent(ColliderComponent).radius = 11;
+        this.getComponent(CircleColliderComponent).radius = 11;
         this.getComponent(EyesComponent).initRays(RAYS_COUNT, RAYS_LENGTH);
         this.getComponent(NeuroComponent).brain = brain;
         this.getComponent(NeuroComponent).cerebellum = cerebellum;

@@ -3,7 +3,7 @@ class Obstacle extends Entity {
         super();
         this.addComponent(PositionComponent)
             .addComponent(SpriteComponent)
-            .addComponent(ColliderComponent);
+            .addComponent(CircleColliderComponent);
 
         this.initPosition(x, y);
         this.initSprite();
@@ -28,7 +28,7 @@ class Obstacle extends Entity {
     }
 
     initCollider() {
-        const collider = this.getComponent(ColliderComponent);
+        const collider = this.getComponent(CircleColliderComponent);
         collider.radius = 14;
         collider.onCollision = (entity) => {
             // console.log("Target", entity, "Bullet", this);

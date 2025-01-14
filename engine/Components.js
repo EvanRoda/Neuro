@@ -1,5 +1,4 @@
 class ColliderComponent extends Component {
-    radius = 0;
     pivot = new Vector2();
 
     _bbox = null;
@@ -15,6 +14,44 @@ class ColliderComponent extends Component {
         this._bbox = null;
         this._pos = null;
     }
+
+    bbox() {
+        return null;
+    }
+
+    position() {
+        if (!this._pos) {
+            const pos = this.entity.getComponent(PositionComponent).pos;
+            this._pos = pos.sub(this.pivot)
+        }
+
+        return this._pos;
+    }
+
+    isIntersect(other) {
+        return false;
+    }
+
+    containsPoint(point) {
+        return false;
+    }
+
+    static circleIntersectRect(circle, rect) {
+        const rectBbox = rect.bbox();
+        const circlePosition = circle.position();
+
+        const closestX = Math.max(rectBbox.left, Math.min(circlePosition.x, rectBbox.right));
+        const closestY = Math.max(rectBbox.top, Math.min(circlePosition.y, rectBbox.bottom));
+
+        const distanceX = circlePosition.x - closestX;
+        const distanceY = circlePosition.y - closestY;
+
+        return (distanceX ** 2 + distanceY ** 2) < (circle.radius ** 2);
+    }
+}
+
+class CircleColliderComponent extends ColliderComponent {
+    radius = 0;
 
     bbox() {
         if (!this._bbox) {
@@ -31,14 +68,6 @@ class ColliderComponent extends Component {
         return this._bbox;
     }
 
-    position() {
-        if (!this._pos) {
-            this._pos = this.entity.getComponent(PositionComponent).pos.add(this.pivot);
-        }
-
-        return this._pos;
-    }
-
     squareOfDistance(point) {
         const a = this.position();
         const b = point;
@@ -46,8 +75,14 @@ class ColliderComponent extends Component {
     }
 
     isIntersect(other) {
-        return this.bbox().isIntersect(other.bbox())
-            && ((this.radius + other.radius) ** 2 >= this.squareOfDistance(other.position()));
+        if (other instanceof RectColliderComponent) {
+            return ColliderComponent.circleIntersectRect(this, other);
+        } else if (other instanceof CircleColliderComponent) {
+            return this.bbox().isIntersect(other.bbox())
+                && ((this.radius + other.radius) ** 2 >= this.squareOfDistance(other.position()));
+        }
+
+        return false;
     }
 
     containsPoint(point) {
@@ -55,24 +90,9 @@ class ColliderComponent extends Component {
     }
 }
 
-class RectColliderComponent extends Component {
+class RectColliderComponent extends ColliderComponent {
     width = 0;
     height = 0;
-    pivot = new Vector2();
-
-    _bbox = null;
-    _pos = null;
-
-    onCollision = () => {};
-
-    constructor(entity) {
-        super(entity);
-    }
-
-    clear() {
-        this._bbox = null;
-        this._pos = null;
-    }
 
     bbox() {
         if (!this._bbox) {
@@ -89,17 +109,14 @@ class RectColliderComponent extends Component {
         return this._bbox;
     }
 
-    position() {
-        if (!this._pos) {
-            const pos = this.entity.getComponent(PositionComponent).pos;
-            this._pos = pos.sub(this.pivot)
+    isIntersect(other) {
+        if (other instanceof CircleColliderComponent) {
+            return ColliderComponent.circleIntersectRect(other, this);
+        } else if (other instanceof RectColliderComponent) {
+            return this.bbox().isIntersect(other.bbox());
         }
 
-        return this._pos;
-    }
-
-    isIntersect(other) {
-        return this.bbox().isIntersect(other.bbox());
+        return false;
     }
 
     containsPoint(point) {

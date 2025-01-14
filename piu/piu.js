@@ -71,7 +71,7 @@ function initUI() {
         for (const uuid in objects) {
             const entity = objects[uuid];
             if (entity instanceof Bot) {
-                const collider = entity.getComponent(ColliderComponent);
+                const collider = entity.getComponent(CircleColliderComponent);
                 if (collider.containsPoint(point)) {
                     console.log('Bot', entity);
                     console.log('Brain', entity.getComponent(NeuroComponent).brain.toJson());
@@ -147,7 +147,7 @@ function afterDraw() {
     const eyes = [];
     for (const uuid in objects) {
         const entity = objects[uuid];
-        const collider = entity.getComponent(ColliderComponent);
+        const collider = entity.getComponent(CircleColliderComponent);
         if (collider) colliders.push(collider);
         const eye = entity.getComponent(EyesComponent);
         if (eye) eyes.push(eye);
@@ -259,18 +259,18 @@ function tests() {
     const one = new Entity()
         .addComponent(PositionComponent)
         .addComponent(RayComponent)
-        .addComponent(ColliderComponent);
+        .addComponent(CircleColliderComponent);
 
     const two = new Entity()
         .addComponent(PositionComponent)
-        .addComponent(ColliderComponent);
+        .addComponent(CircleColliderComponent);
 
     const pos1 = one.getComponent(PositionComponent);
-    const col1 = one.getComponent(ColliderComponent);
+    const col1 = one.getComponent(CircleColliderComponent);
     const ray1 = one.getComponent(RayComponent);
 
     const pos2 = two.getComponent(PositionComponent);
-    const col2 = two.getComponent(ColliderComponent);
+    const col2 = two.getComponent(CircleColliderComponent);
 
     console.log("Collider", col1);
     console.log("Collider", col2);
