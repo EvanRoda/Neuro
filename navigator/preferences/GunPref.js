@@ -5,7 +5,7 @@ class GunPref {
     fire_rate = 1; // shots per second
     shift_position = 0; // shift by x from the center of the entity
     spread = 0; // spread in degrees
-    bullet_speed = 100; // bullet speed px per second
+    bullet_speed = 300; // bullet speed px per second
     reload_time = 1000; // in milliseconds
     reload = 1000; // in milliseconds
 }

@@ -40,5 +40,7 @@ class BattleScene extends Scene {
     }
 
     afterDraw() {
+        CollisionController.evaluate();
+        EntityController.removeGarbage();
     }
 }

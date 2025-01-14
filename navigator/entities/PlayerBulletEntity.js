@@ -6,9 +6,11 @@ class PlayerBulletEntity extends Entity {
         super();
         this.addComponent(PositionComponent)
             .addComponent(SpriteComponent)
+            .addComponent(CircleColliderComponent)
             .addComponent(BulletPrefComponent);
 
         this.initSprite();
+        this.initCollider()
         this.getComponent(PositionComponent).set(startPosition);
         this.getComponent(PositionComponent).setDir(direction);
         this.getComponent(BulletPrefComponent).set(bulletPref);
@@ -23,6 +25,19 @@ class PlayerBulletEntity extends Entity {
 
         ctx.fillStyle = '#9a3fd5';
         ctx.fillRect(0, 0, PlayerBulletEntity.W, PlayerBulletEntity.H);
+    }
+
+    initCollider() {
+        const collider = this.getComponent(CircleColliderComponent);
+        collider.radius = 2;
+        collider.onCollision = (entity) => {
+
+            if (entity instanceof TestBoxEntity) {
+                console.log("Boom");
+                entity.mustRemove = true;
+                this.mustRemove = true;
+            }
+        }
     }
 
     evaluate(frameTime) {

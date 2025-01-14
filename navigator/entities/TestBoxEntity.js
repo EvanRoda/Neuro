@@ -18,9 +18,11 @@ class TestBoxEntity extends Entity {
     constructor() {
         super();
         this.addComponent(PositionComponent)
-            .addComponent(SpriteComponent);
+            .addComponent(SpriteComponent)
+            .addComponent(RectColliderComponent);
 
         this.initSprite();
+        this.initCollider();
         this.getComponent(PositionComponent);
     }
 
@@ -32,5 +34,11 @@ class TestBoxEntity extends Entity {
 
         ctx.fillStyle = 'rgb(96,48,27)';
         ctx.fillRect(0, 0, TestBoxEntity.W, TestBoxEntity.H);
+    }
+
+    initCollider() {
+        const collider = this.getComponent(RectColliderComponent);
+        collider.width = TestBoxEntity.W;
+        collider.height = TestBoxEntity.H;
     }
 }
