@@ -4,12 +4,12 @@ class RenderingLayer {
     constructor(width, height) {
         this._canvas = document.createElement('canvas');
         this._ctx = this._canvas.getContext('2d');
-        Renderer.clear(this._canvas, width, height);
+        RenderingController.clear(this._canvas, width, height);
     }
 
     clear() {
         this.count = 0;
-        Renderer.clear(this._canvas, this._canvas.width, this._canvas.height);
+        RenderingController.clear(this._canvas, this._canvas.width, this._canvas.height);
     }
 
     getContext() {
