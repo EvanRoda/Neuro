@@ -7,6 +7,10 @@ class Scene {
         this.layers = layers;
     }
 
+    getCamera() {
+        return this.camera;
+    }
+
     moveCamera(vector) {
         this.camera.pos = this.camera.pos.add(vector);
     }

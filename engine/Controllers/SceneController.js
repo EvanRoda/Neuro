@@ -32,4 +32,8 @@ class SceneController {
     currentScene = null;
 
     constructor() {}
+
+    getCurrent() {
+        return this.currentScene;
+    }
 }

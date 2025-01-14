@@ -52,6 +52,6 @@ class PlayerBulletEntity extends Entity {
 
         pos.add(new Vector2(x, y));
 
-        // if (!screenBbox.containsPoint(pos.pos)) this.mustRemove = true;
+        SceneController.getInstance().getCurrent().getCamera().bbox().containsPoint(pos.pos) || (this.mustRemove = true);
     }
 }
