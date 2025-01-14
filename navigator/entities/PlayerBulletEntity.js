@@ -17,7 +17,7 @@ class PlayerBulletEntity extends Entity {
     initSprite() {
         const sprite = this.getComponent(SpriteComponent);
         sprite.setDimensions(PlayerBulletEntity.W, PlayerBulletEntity.H);
-        sprite.setLayer(StartScene.OBJECT_LAYER);
+        sprite.setLayer(BattleScene.OBJECT_LAYER);
         sprite.setPivot(PlayerBulletEntity.W / 2, PlayerBulletEntity.H / 2);
         const ctx = sprite.getContext();
 
@@ -25,7 +25,7 @@ class PlayerBulletEntity extends Entity {
         ctx.fillRect(0, 0, PlayerBulletEntity.W, PlayerBulletEntity.H);
     }
 
-    evaluate(frameTime, screenBbox) {
+    evaluate(frameTime) {
         super.evaluate(frameTime);
 
         const pos = this.getComponent(PositionComponent);
@@ -37,6 +37,6 @@ class PlayerBulletEntity extends Entity {
         const y = Math.sin(pos.direction) * shift;
 
         pos.add(new Vector2(x, y));
-        if (!screenBbox.containsPoint(pos.pos)) this.mustRemove = true;
+        // if (!screenBbox.containsPoint(pos.pos)) this.mustRemove = true;
     }
 }

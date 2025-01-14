@@ -13,7 +13,7 @@ class PlayerShipEntity extends Entity {
         this.getComponent(ShipPrefComponent).set(new ShipPref(
             100,
             100,
-            new GunPref(),
+            [new GunPref()],
             0.5));
     }
 
@@ -45,10 +45,18 @@ class PlayerShipEntity extends Entity {
         }
 
         for (let i = 0; i < playerShip.guns.length; i++) {
-            playerShip.guns[i].reload -= frameTime;
-            if (playerShip.guns[i].reload <= 0) {
-                playerShip.guns[i].reload = playerShip.guns[i].reload_time;
-                new PlayerBulletEntity(pos.pos.add(new Vector2(playerShip.guns[i].shift_position, 0), ))
+            const gun = playerShip.guns[i];
+            gun.reload -= frameTime;
+            if (gun.reload <= 0) {
+                gun.reload = gun.reload_time;
+                const bulletPref = new BulletPref(
+                    gun.damage,
+                    gun.bullet_speed,
+                    gun.aoe_radius,
+                    gun.aoe_damage,
+                );
+
+                new PlayerBulletEntity(pos.pos.add(new Vector2(gun.shift_position, 0)), 3 * Math.PI / 2, bulletPref);
             }
         }
     }
