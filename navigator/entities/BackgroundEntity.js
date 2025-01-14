@@ -9,7 +9,7 @@ class BackgroundEntity extends Entity {
         console.log('initSprite');
         const sprite = this.getComponent(SpriteComponent);
         sprite.setDimensions(w, h);
-        sprite.setLayer(Renderer.BACKGROUND_LAYER);
+        sprite.setLayer(RenderingController.BACKGROUND_LAYER);
         const ctx = sprite.getContext();
 
         ctx.fillStyle = color;

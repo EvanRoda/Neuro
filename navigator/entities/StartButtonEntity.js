@@ -15,7 +15,7 @@ class StartButtonEntity extends Entity {
         console.log('initSprite');
         const sprite = this.getComponent(SpriteComponent);
         sprite.setDimensions(200, 50);
-        sprite.setLayer(Renderer.UI_LAYER)
+        sprite.setLayer(RenderingController.UI_LAYER)
         const ctx = sprite.getContext();
 
         ctx.fillStyle = 'black';

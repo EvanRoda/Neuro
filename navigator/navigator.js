@@ -5,7 +5,13 @@ debugToggle = false;
 
 window.addEventListener('load', () => {
     console.log('page is fully loaded');
-    const canvas = document.getElementById('screen');
-    GameContext.create(canvas, WIDTH, HEIGHT);
-    StartScene.open(StartScene, null);
+
+    GameContext.create(document.getElementById('screen'), WIDTH, HEIGHT);
+
+    EntityController.init();
+    RenderingController.init();
+    SceneController.init();
+    StorageController.init();
+
+    SceneController.getInstance().open(StartScene);
 });

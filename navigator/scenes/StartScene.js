@@ -5,9 +5,9 @@ class StartScene extends Scene {
     static OBJECT_LAYER = 'object'
     constructor() {
         const layers = [
-            Renderer.BACKGROUND_LAYER,
+            RenderingController.BACKGROUND_LAYER,
             StartScene.OBJECT_LAYER,
-            Renderer.UI_LAYER
+            RenderingController.UI_LAYER
         ];
 
         const camera = new Camera(new Vector2(), new Vector2(150, 175), 200, 200);
@@ -22,14 +22,14 @@ class StartScene extends Scene {
         addEventListener("click", (event) => {
             if (event.target !== GameContext.getCanvas()) return;
             if (this.startButton.getComponent(RectColliderComponent).containsPoint(new Vector2(event.offsetX, event.offsetY))) {
-                this.goTo(BattleScene, null);
+                SceneController.getInstance().goTo(BattleScene);
             }
         });
 
         super(camera, layers);
     }
 
-    onOpenScene() {
+    onOpen() {
         TestBoxEntity.factory(10, new Vector2(GameContext.getWidth(), GameContext.getHeight()));
 
         this.startButton = new StartButtonEntity();
@@ -37,7 +37,7 @@ class StartScene extends Scene {
         this.background.initSprite(GameContext.getWidth(), GameContext.getHeight(), 'cyan');
     }
 
-    calculate(scene, frameTime) {
+    calculate(frameTime) {
         return Object.values(EntityController.getAll());
     }
 

@@ -11,7 +11,7 @@ class MapScene extends Scene {
         super(null, layers);
     }
 
-    onOpenScene() {
+    onOpen() {
 
     }
 

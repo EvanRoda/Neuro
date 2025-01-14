@@ -3,15 +3,17 @@ class BattleScene extends Scene {
     static PROJECTILE_LAYER = 'projectile'
     constructor() {
         const layers = [
-            Renderer.BACKGROUND_LAYER,
+            RenderingController.BACKGROUND_LAYER,
             BattleScene.OBJECT_LAYER,
-            Renderer.UI_LAYER
+            RenderingController.UI_LAYER
         ];
 
-        super(null, layers);
+        const camera = new Camera(new Vector2(), new Vector2(), GameContext.getWidth(), GameContext.getHeight());
+
+        super(camera, layers);
     }
 
-    onOpenScene() {
+    onOpen() {
         TestBoxEntity.factory(10, new Vector2(GameContext.getWidth(), GameContext.getHeight()));
         this.player = new PlayerShipEntity();
         this.background = new BackgroundEntity();
@@ -30,7 +32,7 @@ class BattleScene extends Scene {
         });
     }
 
-    calculate(scene, frameTime) {
+    calculate(frameTime) {
         const entities = Object.values(EntityController.getAll());
 
         for (let i = 0, l = entities.length; i < l; i++) {

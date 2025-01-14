@@ -11,7 +11,7 @@ class EditScene extends Scene {
         super(null, layers);
     }
 
-    onOpenScene() {
+    onOpen() {
 
     }
 

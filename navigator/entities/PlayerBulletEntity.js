@@ -33,7 +33,6 @@ class PlayerBulletEntity extends Entity {
         collider.onCollision = (entity) => {
 
             if (entity instanceof TestBoxEntity) {
-                console.log("Boom");
                 entity.mustRemove = true;
                 this.mustRemove = true;
             }
@@ -52,6 +51,7 @@ class PlayerBulletEntity extends Entity {
         const y = Math.sin(pos.direction) * shift;
 
         pos.add(new Vector2(x, y));
+
         // if (!screenBbox.containsPoint(pos.pos)) this.mustRemove = true;
     }
 }
