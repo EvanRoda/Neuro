@@ -53,7 +53,7 @@ window.addEventListener('load', () => {
     initUI();
     createObstacles();
     createBots();
-    renderer = new Renderer(canvas, WIDTH, HEIGHT, calculate, afterDraw);
+    renderer = new RenderingController(canvas, WIDTH, HEIGHT, calculate, afterDraw);
     renderer.start();
 });
 
